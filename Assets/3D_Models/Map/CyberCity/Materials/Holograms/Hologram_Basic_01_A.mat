@@ -1,0 +1,81 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Hologram_Basic_01_A
+  m_Shader: {fileID: 4800000, guid: d846f451e8979e845ae581e0acd531bd, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 2
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: _Direction
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _AlbedoTexture:
+        m_Texture: {fileID: 2800000, guid: 18f698a95ab215742a622c214015079e, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissionMask:
+        m_Texture: {fileID: 2800000, guid: 31993c12d00def94f877434602256422, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _FlickerTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _HoloLines:
+        m_Texture: {fileID: 2800000, guid: 958eec7fed3631d4f9e0913252524525, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _texcoord:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _Albedo_FlatColourSwitch: 0
+    - _Alpha: 1
+    - _AlphaCutoff: 0.5
+    - _Brightness: 3
+    - _Cutoff: 0.5
+    - _EmissionMask_FlatColourSwitch: 0
+    - _EmissionMask_TintSwitch: 0
+    - _Emission_Power: 1.16
+    - _FlickerSpeed: 1
+    - _Fold: 1
+    - _GlitchIntensity: 0
+    - _GlitchSpeed: 1
+    - _GlowSpeed: 1
+    - _GlowTiling: 0.05
+    - _Metallic: 0
+    - _Opacity: 0.3
+    - _RimPower: 5
+    - _ScanSpeed: 1
+    - _ScanTiling: 0.05
+    - _Scroll_Speed: 0.1
+    - _Smoothness: 0
+    - __dirty: 0
+    m_Colors:
+    - _BaseColour: {r: 0, g: 0.82828283, b: 1, a: 0.6313726}
+    - _Direction: {r: 0, g: 1, b: 0, a: 0}
+    - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
+    - _MainColor: {r: 0.3160377, g: 0.95465463, b: 1, a: 1}
+    - _Neon_Colour_01: {r: 0, g: 0.84923697, b: 1, a: 0}
+    - _RimColor: {r: 0.75226945, g: 0.990566, b: 0.97175825, a: 1}
+  m_BuildTextureStacks: []

@@ -12,7 +12,7 @@ using UnityEngine;
 
 namespace MK.Toon.Examples
 {
-    public class SpectateDefault : Spectate
+/*    public class SpectateDefault : Spectate
     {
         #if UNITY_POST_PROCESSING_STACK_V2
         [SerializeField]
@@ -32,5 +32,5 @@ namespace MK.Toon.Examples
                 aoSettings.enabled.value = true;
         }
         #endif
-    }
+    }*/
 }

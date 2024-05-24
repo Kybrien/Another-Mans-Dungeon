@@ -3319,13 +3319,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2659593936282678333, guid: 97377189423e2bc428d4eaa72f09bf30, type: 3}
+      propertyPath: maxMonsters
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 2659593936282678333, guid: 97377189423e2bc428d4eaa72f09bf30, type: 3}
+      propertyPath: monsterPrefabs.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2659593936282678333, guid: 97377189423e2bc428d4eaa72f09bf30, type: 3}
+      propertyPath: monsterPrefabs.Array.data[4]
+      value: 
+      objectReference: {fileID: 4002710532697217020, guid: a92d309b1feb19b4b9cc9a1ecc0ee8cc, type: 3}
     - target: {fileID: 7899749188618789624, guid: 97377189423e2bc428d4eaa72f09bf30, type: 3}
       propertyPath: m_LocalPosition.x
       value: -11.32
       objectReference: {fileID: 0}
     - target: {fileID: 7899749188618789624, guid: 97377189423e2bc428d4eaa72f09bf30, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.94
+      value: 0.651
       objectReference: {fileID: 0}
     - target: {fileID: 7899749188618789624, guid: 97377189423e2bc428d4eaa72f09bf30, type: 3}
       propertyPath: m_LocalPosition.z

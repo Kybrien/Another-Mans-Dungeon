@@ -34,7 +34,11 @@ public class MobSpawner : MonoBehaviour
             Vector3 spawnLocation = new Vector3(spawnPosition.x, 0, spawnPosition.y) + transform.position;
 
             // Instancier le monstre à la position générée
-            Instantiate(monsterPrefab, spawnLocation, Quaternion.identity);
+            GameObject spawnedMonster = Instantiate(monsterPrefab, spawnLocation, Quaternion.identity);
+
+            // Définir une taille aléatoire entre 0.8 et 1.2
+            float randomScale = Random.Range(0.8f, 1.2f);
+            spawnedMonster.transform.localScale = new Vector3(randomScale, randomScale, randomScale);
 
             // Incrémenter le compteur de monstres actuels
             currentMonsterCount++;

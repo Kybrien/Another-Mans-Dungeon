@@ -44,18 +44,6 @@ public class ChasePlayer : MonoBehaviour
             }
             aiPath.canMove = false;
         }
-
-        CheckGrounded();
-    }
-
-    void CheckGrounded()
-    {
-        RaycastHit hit;
-        if (!Physics.Raycast(transform.position, Vector3.down, out hit, 0.5f))
-        {
-            // Si le monstre n'est pas en contact avec le sol, applique une force vers le bas
-            rb.AddForce(Vector3.down * 20f);
-        }
     }
 
     void OnDrawGizmosSelected()

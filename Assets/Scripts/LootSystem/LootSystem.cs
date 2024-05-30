@@ -21,20 +21,18 @@ public class LootSystem : MonoBehaviour
         LootTable lootTable = GetMonsterLootTable();
         if (lootTable != null)
         {
-            foreach (LootItem lootItem in lootTable.lootItems)
+            LootItem selectedLootItem = SelectLootItem(lootTable);
+            if (selectedLootItem != null)
             {
-                if (Random.value <= lootItem.dropChance)
+                GameObject loot = Instantiate(selectedLootItem.itemPrefab, position, Quaternion.identity);
+                Rigidbody rb = loot.GetComponent<Rigidbody>();
+                if (rb == null)
                 {
-                    GameObject loot = Instantiate(lootItem.itemPrefab, position, Quaternion.identity);
-                    Rigidbody rb = loot.GetComponent<Rigidbody>();
-                    if (rb == null)
-                    {
-                        rb = loot.AddComponent<Rigidbody>(); // Ajouter un Rigidbody si non existant
-                    }
-                    rb.isKinematic = false;
-                    rb.detectCollisions = true;
-                    loot.tag = "Weapon"; // Assurez-vous que l'objet est étiqueté correctement pour le ramassage
+                    rb = loot.AddComponent<Rigidbody>(); // Ajouter un Rigidbody si non existant
                 }
+                rb.isKinematic = false;
+                rb.detectCollisions = true;
+                loot.tag = "Weapon"; // Assurez-vous que l'objet est étiqueté correctement pour le ramassage
             }
         }
         else
@@ -46,5 +44,28 @@ public class LootSystem : MonoBehaviour
     private LootTable GetMonsterLootTable()
     {
         return Resources.Load<LootTable>("MonsterLootTable");
+    }
+
+    private LootItem SelectLootItem(LootTable lootTable)
+    {
+        float totalWeight = 0f;
+        foreach (LootItem item in lootTable.lootItems)
+        {
+            totalWeight += item.dropChance;
+        }
+
+        float randomValue = Random.value * totalWeight;
+        float cumulativeWeight = 0f;
+
+        foreach (LootItem item in lootTable.lootItems)
+        {
+            cumulativeWeight += item.dropChance;
+            if (randomValue <= cumulativeWeight)
+            {
+                return item;
+            }
+        }
+
+        return null; // En cas d'erreur, aucun item n'est sélectionné
     }
 }

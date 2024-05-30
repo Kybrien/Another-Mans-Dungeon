@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Effects
   - Weapon
+  - Icon
+  - Monster
   layers:
   - Default
   - TransparentFX

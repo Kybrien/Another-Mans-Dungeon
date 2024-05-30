@@ -28,11 +28,11 @@ public class LootSystem : MonoBehaviour
                 Rigidbody rb = loot.GetComponent<Rigidbody>();
                 if (rb == null)
                 {
-                    rb = loot.AddComponent<Rigidbody>(); // Ajouter un Rigidbody si non existant
+                    rb = loot.AddComponent<Rigidbody>(); 
                 }
                 rb.isKinematic = false;
                 rb.detectCollisions = true;
-                loot.tag = "Weapon"; // Assurez-vous que l'objet est étiqueté correctement pour le ramassage
+                loot.tag = "Weapon"; 
             }
         }
         else
@@ -66,6 +66,6 @@ public class LootSystem : MonoBehaviour
             }
         }
 
-        return null; // En cas d'erreur, aucun item n'est sélectionné
+        return null; 
     }
 }

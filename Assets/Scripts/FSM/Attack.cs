@@ -2,19 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class AttackState : State
 {
     private float attackDistance = 4f;
     private float attackInterval = 0.5f; // Intervalle entre les attaques
-    private float nextAttackTime; // Temps de la prochaine attaque
 
     public AttackState(MonsterController monsterController) : base(monsterController) { }
 
     public override void EnterState()
     {
         Debug.Log("Monster in Attack STATE");
-        nextAttackTime = Time.time + attackInterval; // Initialiser le temps de la prochaine attaque
+        PerformAttack(); // Initialiser la première attaque
     }
 
     public override void Update()
@@ -25,37 +23,48 @@ public class AttackState : State
         {
             monsterController.TransitionToState(monsterController.chaseState);
         }
-        else if (Time.time >= nextAttackTime) // Si le temps de la prochaine attaque est atteint
-        {
-            PerformAttack();
-            nextAttackTime = Time.time + attackInterval; // Mettre à jour le temps de la prochaine attaque
-        }
     }
 
     private void PerformAttack()
     {
-        // Générer un nombre aléatoire entre 1 et 3
-        int random = Random.Range(1, 4);
-        Debug.Log("Random Attack Chosen: " + random);
+        monsterController.StartCoroutine(AttackRoutine());
+    }
 
-        if (random == 1)
+    private IEnumerator AttackRoutine()
+    {
+        while (Vector3.Distance(monsterController.transform.position, GameObject.FindGameObjectWithTag("Player").transform.position) <= attackDistance)
         {
-            SetAnimationTrigger("isAttacking");
-        }
-        else if (random == 2)
-        {
-            SetAnimationTrigger("isAttacking2");
-        }
-        else if (random == 3)
-        {
-            SetAnimationTrigger("isAttacking3");
+            // Générer un nombre aléatoire entre 1 et 3
+            int random = Random.Range(1, 4);
+            Debug.Log("Random Attack Chosen: " + random);
+
+            if (random == 1)
+            {
+                SetAnimationTrigger("isAttacking");
+            }
+            else if (random == 2)
+            {
+                SetAnimationTrigger("isAttacking2");
+            }
+            else if (random == 3)
+            {
+                SetAnimationTrigger("isAttacking3");
+            }
+
+            Debug.Log("Performing attack: " + random);
+
+            // Attendre l'intervalle avant de permettre une nouvelle attaque
+            yield return new WaitForSeconds(attackInterval);
         }
 
-        Debug.Log("Performing attack: " + random);
+        // Si le joueur sort de la portée d'attaque, retourner à l'état de poursuite
+        monsterController.TransitionToState(monsterController.chaseState);
     }
 
     public override void ExitState()
     {
-        // Logique de nettoyage de l'état d'attaque
+        // Arrêter toutes les coroutines en cours lorsque l'état est quitté
+        monsterController.StopAllCoroutines();
     }
 }
+

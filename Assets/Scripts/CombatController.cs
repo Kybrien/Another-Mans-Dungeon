@@ -5,8 +5,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.HID;
+using Mirror;
 
-public class CombatController : MonoBehaviour
+public class CombatController : NetworkBehaviour
 {
     bool isClicking = false;
     [SerializeField] private GameObject HitboxPrefab;

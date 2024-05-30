@@ -49,7 +49,7 @@ public class WeaponPickup : MonoBehaviour
         }
 
         // Afficher ou masquer le message en fonction de la proximité d'une arme
-        pickupMessageText.gameObject.SetActive(weaponNearby);
+        //pickupMessageText.gameObject.SetActive(weaponNearby);
     }
 
     void AttemptPickup()
@@ -69,6 +69,9 @@ public class WeaponPickup : MonoBehaviour
 
     void PickupWeapon(GameObject weapon)
     {
+        //faire l'anim de pick up
+        animator.SetTrigger("Pickup");
+
         if (weapon1 == null)
         {
             weapon1 = weapon;
@@ -88,7 +91,7 @@ public class WeaponPickup : MonoBehaviour
             DropCurrentWeapon();
             PickupWeapon(weapon);
         }
-
+        animator.SetTrigger("Idle");
         // Masquer le message de ramassage
         pickupMessageText.gameObject.SetActive(false);
     }
@@ -124,10 +127,10 @@ public class WeaponPickup : MonoBehaviour
     void PositionWeapon(GameObject weapon)
     {
         // Déclencher l'animation de récupération
-        if (animator != null)
+        /*if (animator != null)
         {
             animator.SetTrigger("Pickup"); // Utiliser le trigger pour jouer l'animation de récupération
-        }
+        }*/
 
         // Désactiver la physique de l'arme pour qu'elle ne tombe pas
         Rigidbody rb = weapon.GetComponent<Rigidbody>();

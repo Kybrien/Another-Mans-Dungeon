@@ -12,6 +12,7 @@ public class WeaponPickup : MonoBehaviour
     private GameObject weapon2; // Référence à la deuxième arme
     private GameObject activeWeapon; // Référence à l'arme actuellement active
     private int activeWeaponIndex = 0; // Index de l'arme active (0 ou 1)
+    private GameObject nearestWeapon; // Référence à l'arme la plus proche
 
     void Update()
     {
@@ -35,42 +36,58 @@ public class WeaponPickup : MonoBehaviour
 
     void DisplayPickupMessage()
     {
-        // Trouver tous les colliders dans la portée de ramassage
+        nearestWeapon = null;
         Collider[] colliders = Physics.OverlapSphere(transform.position, pickupRange);
-        bool weaponNearby = false;
 
         foreach (Collider collider in colliders)
         {
             if (collider.CompareTag("Weapon"))
             {
-                weaponNearby = true;
+                nearestWeapon = collider.gameObject;
                 break;
             }
         }
 
-        // Afficher ou masquer le message en fonction de la proximité d'une arme
-        //pickupMessageText.gameObject.SetActive(weaponNearby);
+        if (nearestWeapon != null)
+        {
+            WeaponNamespace.Weapon weaponComponent = nearestWeapon.GetComponent<WeaponNamespace.Weapon>();
+            if (weaponComponent != null)
+            {
+                pickupMessageText.text = $"F pour ramasser {weaponComponent.weaponName}";
+                pickupMessageText.gameObject.SetActive(true);
+            }
+        }
+        else
+        {
+            pickupMessageText.gameObject.SetActive(false);
+        }
     }
 
     void AttemptPickup()
     {
-        // Trouver tous les colliders dans la portée de ramassage
-        Collider[] colliders = Physics.OverlapSphere(transform.position, pickupRange);
-
-        foreach (Collider collider in colliders)
+        if (nearestWeapon != null)
         {
-            if (collider.CompareTag("Weapon"))
-            {
-                PickupWeapon(collider.gameObject);
-                break;
-            }
+            PickupWeapon(nearestWeapon);
         }
     }
 
     void PickupWeapon(GameObject weapon)
     {
-        //faire l'anim de pick up
-        animator.SetTrigger("Pickup");
+        if (weapon == null)
+        {
+            Debug.LogError("Weapon is null.");
+            return;
+        }
+
+        // Faire l'animation de ramassage
+        if (animator != null)
+        {
+            animator.SetTrigger("Pickup");
+        }
+        else
+        {
+            Debug.LogError("Animator is not assigned.");
+        }
 
         if (weapon1 == null)
         {
@@ -91,7 +108,12 @@ public class WeaponPickup : MonoBehaviour
             DropCurrentWeapon();
             PickupWeapon(weapon);
         }
-        animator.SetTrigger("Idle");
+
+        if (animator != null)
+        {
+            animator.SetTrigger("Idle");
+        }
+
         // Masquer le message de ramassage
         pickupMessageText.gameObject.SetActive(false);
     }
@@ -126,12 +148,6 @@ public class WeaponPickup : MonoBehaviour
 
     void PositionWeapon(GameObject weapon)
     {
-        // Déclencher l'animation de récupération
-        /*if (animator != null)
-        {
-            animator.SetTrigger("Pickup"); // Utiliser le trigger pour jouer l'animation de récupération
-        }*/
-
         // Désactiver la physique de l'arme pour qu'elle ne tombe pas
         Rigidbody rb = weapon.GetComponent<Rigidbody>();
         if (rb != null)

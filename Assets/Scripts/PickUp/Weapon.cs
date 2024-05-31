@@ -1,20 +1,14 @@
-﻿using TMPro;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace Weapon
+namespace WeaponNamespace
 {
     public class Weapon : MonoBehaviour
     {
+        public string weaponName;
+
         public static bool IsWeapon(GameObject obj)
         {
-            if (obj.transform.root.gameObject.GetComponent<Weapon>() != null)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return obj.transform.root.gameObject.GetComponent<Weapon>() != null;
         }
     }
 }

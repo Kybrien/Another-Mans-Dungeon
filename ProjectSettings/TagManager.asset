@@ -3,20 +3,12 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags:
-<<<<<<< Updated upstream
-  - Node
-=======
-  - Effects
-  - Weapon
-  - Ground
-  - Obstacle
->>>>>>> Stashed changes
+  tags: []
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Obstacle
+  - 
   - Water
   - UI
   - 

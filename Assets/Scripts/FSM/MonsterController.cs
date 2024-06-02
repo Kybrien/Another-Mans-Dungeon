@@ -8,7 +8,6 @@ public class MonsterController : MonoBehaviour
     public Transform player;
     public AIPath aiPath;
     public Animator animator;
-
     public Rigidbody rb;
 
     private State currentState;
@@ -16,8 +15,7 @@ public class MonsterController : MonoBehaviour
     public State chaseState;
     public State attackState;
     public State rushState;
-    public State ranged1State;
-    public State ranged2State;
+    public State rangedState;
     public State takingDamageState;
     public State deadState;
 
@@ -40,6 +38,17 @@ public class MonsterController : MonoBehaviour
     [SerializeField] private string attackStrategyDescription = "Le monstre attaque de manière agressive lorsque le joueur est à portée.";
 
 
+    [Header("-- Ranged Attack --")]
+    [Tooltip("Le monstre peut-il attaquer à distance ?")]
+    [SerializeField] public bool isRanged = false;
+
+    [Tooltip("Prefab de l'attaque simple à distance.")]
+    [SerializeField] public GameObject rangedAttackPrefab1;
+
+    [Tooltip("Prefab de l'attaque lourde à distance.")]
+    [SerializeField] public GameObject rangedAttackPrefab2;
+
+
     void Start()
     {
         aiPath = GetComponent<AIPath>();
@@ -50,8 +59,7 @@ public class MonsterController : MonoBehaviour
         chaseState = new ChaseState(this);
         attackState = new AttackState(this);
         rushState = new RushState(this);
-        //ranged1State = new Ranged1State(this);
-        //ranged2State = new Ranged2State(this);
+        rangedState = new RangedState(this);
         //takingDamageState = new TakingDamageState(this);
         //deadState = new DeadState(this);
 

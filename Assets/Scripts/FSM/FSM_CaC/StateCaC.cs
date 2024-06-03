@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class State
+public abstract class StateCaC
 {
-    protected MonsterController monsterController;
+    protected MonsterControllerCaC monsterController;
 
-    public State(MonsterController monsterController)
+    public StateCaC(MonsterControllerCaC monsterController)
     {
         this.monsterController = monsterController;
     }

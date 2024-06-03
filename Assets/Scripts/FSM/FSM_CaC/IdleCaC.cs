@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IdleState : State
+public class IdleCaCState : StateCaC
 {
-    public IdleState(MonsterController monsterController) : base(monsterController) { }
+    public IdleCaCState(MonsterControllerCaC monsterControllerCaC) : base(monsterControllerCaC) { }
 
     public override void EnterState()
     {

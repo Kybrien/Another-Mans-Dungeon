@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AttackState : State
+public class AttackState : StateCaC
 {
     private float attackDistance = 4f;
     private float attackInterval = 0.5f; // Intervalle entre les attaques
 
-    public AttackState(MonsterController monsterController) : base(monsterController) { }
+    public AttackState(MonsterControllerCaC monsterController) : base(monsterController) { }
 
     public override void EnterState()
     {

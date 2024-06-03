@@ -1,17 +1,19 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class RangedState: State
+public class PatrolRangedState : StateRanged 
 {
     private Transform player;
-
-    public RangedState(MonsterController monsterController) : base(monsterController)
+    public PatrolRangedState(MonsterControllerRanged monsterController) : base(monsterController)
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
     public override void EnterState()
     {
-
+        Debug.Log("Monster in Patrol STATE");
+        // Logique d'initialisation de l'état Idle
     }
 
     public override void Update()

@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using Pathfinding;
 
-public class ChaseState : State
+public class ChaseState : StateCaC
 {
     private AIPath aiPath;
     private Transform player;
     private bool playerDetected;
 
-    public ChaseState(MonsterController monsterController) : base(monsterController)
+    public ChaseState(MonsterControllerCaC monsterController) : base(monsterController)
     {
         aiPath = monsterController.GetComponent<AIPath>();
         player = GameObject.FindGameObjectWithTag("Player").transform; // Assurez-vous que le joueur a ce tag

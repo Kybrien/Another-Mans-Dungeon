@@ -1,7 +1,7 @@
 using UnityEngine;
 using Pathfinding;
 
-public class RushState : State
+public class RushState : StateCaC
 {
     private Transform player;
     private AIPath aiPath;
@@ -9,7 +9,7 @@ public class RushState : State
     private float originalSpeed;
     private bool isRushing;
 
-    public RushState(MonsterController monsterController) : base(monsterController)
+    public RushState(MonsterControllerCaC monsterController) : base(monsterController)
     {
         aiPath = monsterController.GetComponent<AIPath>();
         player = GameObject.FindGameObjectWithTag("Player").transform; // Assurez-vous que le joueur a ce tag

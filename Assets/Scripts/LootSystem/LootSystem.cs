@@ -72,7 +72,7 @@ public class LootSystem : MonoBehaviour
         float noDropProbability = lootTable.noDropChance / 100f;
         if (Random.value < noDropProbability)
         {
-            return selectedLootItems; // Aucun objet n'est droppé
+            return selectedLootItems; 
         }
 
         bool weaponDropped = false;

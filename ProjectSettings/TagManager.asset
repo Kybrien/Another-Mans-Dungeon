@@ -8,6 +8,7 @@ TagManager:
   - Weapon
   - Icon
   - Monster
+  - Potion
   layers:
   - Default
   - TransparentFX

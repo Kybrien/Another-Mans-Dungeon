@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class LootSystem : MonoBehaviour
@@ -21,18 +22,36 @@ public class LootSystem : MonoBehaviour
         LootTable lootTable = GetMonsterLootTable();
         if (lootTable != null)
         {
-            LootItem selectedLootItem = SelectLootItem(lootTable);
-            if (selectedLootItem != null)
+            List<LootItem> selectedLootItems = SelectLootItems(lootTable);
+            foreach (LootItem selectedLootItem in selectedLootItems)
             {
-                GameObject loot = Instantiate(selectedLootItem.itemPrefab, position, Quaternion.identity);
-                Rigidbody rb = loot.GetComponent<Rigidbody>();
-                if (rb == null)
+                if (selectedLootItem != null)
                 {
-                    rb = loot.AddComponent<Rigidbody>(); 
+                    GameObject loot = Instantiate(selectedLootItem.itemPrefab, position, Quaternion.identity);
+                    Rigidbody rb = loot.GetComponent<Rigidbody>();
+                    if (rb == null)
+                    {
+                        rb = loot.AddComponent<Rigidbody>();
+                    }
+                    rb.isKinematic = false;
+                    rb.detectCollisions = true;
+
+                    switch (selectedLootItem.itemType)
+                    {
+                        case LootItem.ItemType.Weapon:
+                            loot.tag = "Weapon";
+                            break;
+                        case LootItem.ItemType.Potion:
+                            loot.tag = "Potion";
+                            break;
+                        case LootItem.ItemType.Armor:
+                            loot.tag = "Armor";
+                            break;
+                        case LootItem.ItemType.Other:
+                            loot.tag = "Other";
+                            break;
+                    }
                 }
-                rb.isKinematic = false;
-                rb.detectCollisions = true;
-                loot.tag = "Weapon"; 
             }
         }
         else
@@ -46,26 +65,37 @@ public class LootSystem : MonoBehaviour
         return Resources.Load<LootTable>("MonsterLootTable");
     }
 
-    private LootItem SelectLootItem(LootTable lootTable)
+    private List<LootItem> SelectLootItems(LootTable lootTable)
     {
-        float totalWeight = 0f;
-        foreach (LootItem item in lootTable.lootItems)
+        List<LootItem> selectedLootItems = new List<LootItem>();
+
+        float noDropProbability = lootTable.noDropChance / 100f;
+        if (Random.value < noDropProbability)
         {
-            totalWeight += item.dropChance;
+            return selectedLootItems; // Aucun objet n'est droppé
         }
 
-        float randomValue = Random.value * totalWeight;
-        float cumulativeWeight = 0f;
-
+        bool weaponDropped = false;
         foreach (LootItem item in lootTable.lootItems)
         {
-            cumulativeWeight += item.dropChance;
-            if (randomValue <= cumulativeWeight)
+            float itemDropProbability = item.dropChance / 100f;
+            if (Random.value < itemDropProbability)
             {
-                return item;
+                if (item.itemType == LootItem.ItemType.Weapon)
+                {
+                    if (!weaponDropped)
+                    {
+                        selectedLootItems.Add(item);
+                        weaponDropped = true;
+                    }
+                }
+                else
+                {
+                    selectedLootItems.Add(item);
+                }
             }
         }
 
-        return null; 
+        return selectedLootItems;
     }
 }

@@ -390,6 +390,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fd2bb3128777bc45bbf86e82c1301fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   HitboxPrefab: {fileID: 1169305782704711723, guid: 110822ef52b1c284294753836e4c93d5, type: 3}
 --- !u!114 &73761698649755314
 MonoBehaviour:

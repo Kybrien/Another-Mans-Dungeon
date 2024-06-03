@@ -4,4 +4,5 @@ using UnityEngine;
 public class LootTable : ScriptableObject
 {
     public LootItem[] lootItems;
+    public float noDropChance; 
 }

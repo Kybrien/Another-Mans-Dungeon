@@ -24,11 +24,11 @@ public class MonsterControllerRanged : MonoBehaviour
     public float increasedRadius => initialRadius + 5f;
 
     [Tooltip("Distance d'attaque...")]
-    [SerializeField][Range(2f, 12f)] public float attackDistance = 15f;
+    [SerializeField][Range(12f, 24f)] public float attackDistance = 15f;
 
     [Tooltip("Description de la stratégie d'attaque du monstre.")]
     [TextArea(3, 5)]
-    [SerializeField] private string attackStrategyDescription = "Le monstre attaque de manière agressive lorsque le joueur est à portée.";
+    [SerializeField] private string attackStrategyDescription = "//DESCRIPTION";
 
 
     [Header("-- Ranged Attack --")]
@@ -39,6 +39,11 @@ public class MonsterControllerRanged : MonoBehaviour
     [Tooltip("Prefab de l'attaque lourde à distance.")]
     [SerializeField] public GameObject rangedAttackPrefab2;
 
+    [Tooltip("Prefab de l'attaque au corps a corps")]
+    [SerializeField] public GameObject meleeAttackPrefab;
+
+    [Tooltip("Vitesse du projectile")]
+    [SerializeField] [Range(10f, 20f)] public float projectileSpeed = 15f;
 
     void Start()
     {

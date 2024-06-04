@@ -1,8 +1,14 @@
 fileFormatVersion: 2
-guid: bfd0f90f8fe456540a9f4585e7ce84ec
+<<<<<<<< HEAD:Assets/Scenes/_Pathfinding.meta
+guid: 2d9913f3ea4c1e2429bf72a3b43755f9
 folderAsset: yes
 DefaultImporter:
+========
+guid: 794039b479ef5994cac73e9294e30939
+NativeFormatImporter:
+>>>>>>>> origin/PickUp:Assets/3D_Models/Animations/Kitten.controller.meta
   externalObjects: {}
+  mainObjectFileID: 9100000
   userData: 
   assetBundleName: 
   assetBundleVariant: 

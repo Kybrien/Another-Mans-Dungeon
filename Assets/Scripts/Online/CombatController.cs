@@ -6,22 +6,30 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.HID;
 using Mirror;
+using Palmmedia.ReportGenerator.Core.Reporting.Builders;
+using Steamworks;
 
-public class CombatController : NetworkBehaviour
+public class CombatController : MonoBehaviour
 {
     bool isClicking = false;
     [SerializeField] private GameObject HitboxPrefab;
     private Transform ModelRoot;
+    private Animator PlayerAnimator;
+    private int comboCount = 0;
+    private Coroutine comboCoroutine;
 
     // TEMP VALUES
-    float cooldown = 0.5f;
+    string weaponType = "Axe";
+    float cooldown = 0.3f;
     float currCooldown = 0;
-    bool isRange = true;
+    bool isRange = false;
 
     // Start is called before the first frame update
     void Start()
     {
         ModelRoot = gameObject.transform.Find("ModelRoot");
+        PlayerAnimator = ModelRoot.transform.Find("Model").GetComponent<Animator>();
+        //SetAnimation(weaponType + "Idle");
     }
 
     // Update is called once per frame
@@ -35,6 +43,11 @@ public class CombatController : NetworkBehaviour
     private void FixedUpdate()
     {
         SendDebugRaycast();
+    }
+
+    private void SetAnimation(string animationName)
+    {
+        PlayerAnimator.SetTrigger(animationName);
     }
 
     private GameObject CreateHitbox(Vector3 size)
@@ -82,7 +95,8 @@ public class CombatController : NetworkBehaviour
         else if (!isClicking && state > 0)
         {
             isClicking = true;
-        } else
+        }
+        else
         {
             return;
         }
@@ -90,21 +104,71 @@ public class CombatController : NetworkBehaviour
         HandleCombat(isClicking);
     }
 
+    private void ResetCombo()
+    {
+        comboCount = 0;
+        //SetAnimation(weaponType + "Idle");
+    }
+
+    private IEnumerator WaitAndResetCombo()
+    {
+        // Attendre 1 seconde
+        yield return new WaitForSeconds(1f);
+        ResetCombo();
+    }
+
+    private IEnumerator ComboTick()
+    {
+        SetAnimation(weaponType + "Attack" + comboCount.ToString());
+        yield return new WaitForSeconds(1f);
+        ResetCombo();
+    }
+
+    private void HandleCombo()
+    {
+        if (comboCount >= 4)
+        {
+            return;
+        }
+
+        if (comboCoroutine != null)
+        {
+            StopCoroutine(comboCoroutine);
+        }
+
+        comboCount++;
+
+        if (comboCount >= 4)
+        {
+            comboCoroutine = StartCoroutine(WaitAndResetCombo());
+        }
+        else
+        {
+            comboCoroutine = StartCoroutine(ComboTick());
+        }
+
+        if (isRange)
+        {
+            RaycastHit result = SendRaycast();
+            Debug.Log(result.transform.gameObject.name);
+            if (result.transform.tag == "Enemy")
+            {
+                result.transform.gameObject.GetComponent<MonsterHealth>().TakeDamage(10);
+            }
+        }
+        else
+        {
+            CreateHitbox(new Vector3(4, 4, 4));
+            currCooldown = cooldown;
+        }
+
+        //CreateHitbox(new Vector3(1, 1, 1));
+    }
     private void HandleCombat(bool pressing)
     {
         if (pressing && currCooldown <= 0)
         {
-            if (isRange)
-            {
-                RaycastHit result = SendRaycast();
-                Debug.Log(result.transform.gameObject.name);
-            }
-            else
-            {
-                Debug.Log("Can fight");
-                CreateHitbox(new Vector3(4, 4, 4));
-                currCooldown = cooldown;
-            }
+            HandleCombo();
         }
     }
 }

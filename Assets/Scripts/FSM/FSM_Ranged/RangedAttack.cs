@@ -43,7 +43,7 @@ public class RangedAttackState : StateRanged
             lastAttackTime = Time.time;
             monsterController.TransitionToState(monsterController.idleState);
         }
-        else if (distanceToPlayer < 7f)
+        else if (distanceToPlayer < 5f)
         {
             MeleeAttack();
         }

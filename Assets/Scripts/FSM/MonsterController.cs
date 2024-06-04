@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MonsterHealth : MonoBehaviour
+public class MonsterController : MonoBehaviour
 {
+    [Header("-- Monster Stats --")]
     [SerializeField] private int maxHealth = 100;
     [SerializeField] private int health = 100;
 
@@ -16,7 +17,7 @@ public class MonsterHealth : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public int GetHealth()

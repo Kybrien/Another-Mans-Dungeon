@@ -30,7 +30,7 @@ public class HitboxManager : MonoBehaviour
                 return;
             }
 
-            MonsterHealth monsterHealth = other.GetComponent<MonsterHealth>();
+            MonsterController monsterHealth = other.GetComponent<MonsterController>();
 
             debounce.Add(other.gameObject);
             monsterHealth.TakeDamage(10);

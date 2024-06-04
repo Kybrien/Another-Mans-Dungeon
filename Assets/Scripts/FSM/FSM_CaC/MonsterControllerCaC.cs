@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Pathfinding;
 
-public class MonsterControllerCaC : MonoBehaviour
+public class MonsterControllerCaC : MonsterController
 {
     public Transform player;
     public AIPath aiPath;
@@ -46,8 +46,7 @@ public class MonsterControllerCaC : MonoBehaviour
         chaseState = new ChaseState(this);
         attackState = new AttackState(this);
         rushState = new RushState(this);
-        //rangedState = new RangedState(this);
-        //takingDamageState = new TakingDamageState(this);
+        takingDamageState = new TakingDamageCaCState(this);
         //deadState = new DeadState(this);
 
         currentState = idleState; // Début en état Idle
@@ -74,4 +73,5 @@ public class MonsterControllerCaC : MonoBehaviour
             rushState.OnCollisionEnter(collision);
         }
     }
+
 }

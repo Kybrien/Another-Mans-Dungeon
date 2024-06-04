@@ -153,7 +153,7 @@ public class CombatController : MonoBehaviour
             Debug.Log(result.transform.gameObject.name);
             if (result.transform.tag == "Enemy")
             {
-                result.transform.gameObject.GetComponent<MonsterHealth>().TakeDamage(10);
+                result.transform.gameObject.GetComponent<MonsterController>().TakeDamage(10);
             }
         }
         else

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Pathfinding;
 
-public class MonsterControllerRanged : MonoBehaviour
+public class MonsterControllerRanged : MonsterController
 {
     public Transform player;
     public AIPath aiPath;
@@ -54,7 +54,7 @@ public class MonsterControllerRanged : MonoBehaviour
         idleState = new IdleRangedState(this);
         rangedAttackState = new RangedAttackState(this);
         patrolRangedState = new PatrolRangedState(this);
-        //takingDamageState = new TakingDamageState(this);
+        takingDamageState = new TakingDamageRangedState(this);
         //deadState = new DeadState(this);
 
         currentState = idleState; // Début en état Idle
@@ -72,4 +72,7 @@ public class MonsterControllerRanged : MonoBehaviour
         currentState = nextState;
         currentState.EnterState();
     }
+
+    
+
 }

@@ -9,6 +9,8 @@ TagManager:
   - Icon
   - Monster
   - Potion
+  - Armor
+  - Other
   layers:
   - Default
   - TransparentFX

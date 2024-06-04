@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using TMPro;
+using System.Collections.Generic;
 
 public class WeaponPickup : MonoBehaviour
 {
@@ -12,7 +13,9 @@ public class WeaponPickup : MonoBehaviour
     private GameObject weapon2; // Référence à la deuxième arme
     private GameObject activeWeapon; // Référence à l'arme actuellement active
     private int activeWeaponIndex = 0; // Index de l'arme active (0 ou 1)
-    private GameObject nearestWeapon; // Référence à l'arme la plus proche
+    private GameObject nearestPickup; // Référence à l'objet le plus proche
+
+    private List<GameObject> collectedItems = new List<GameObject>(); // Liste des objets collectés (non-armes)
 
     void Update()
     {
@@ -36,26 +39,31 @@ public class WeaponPickup : MonoBehaviour
 
     void DisplayPickupMessage()
     {
-        nearestWeapon = null;
+        nearestPickup = null;
         Collider[] colliders = Physics.OverlapSphere(transform.position, pickupRange);
 
         foreach (Collider collider in colliders)
         {
-            if (collider.CompareTag("Weapon"))
+            if (collider.CompareTag("Weapon") || collider.CompareTag("Potion") || collider.CompareTag("Armor") || collider.CompareTag("Other"))
             {
-                nearestWeapon = collider.gameObject;
+                nearestPickup = collider.gameObject;
                 break;
             }
         }
 
-        if (nearestWeapon != null)
+        if (nearestPickup != null)
         {
-            WeaponNamespace.Weapon weaponComponent = nearestWeapon.GetComponent<WeaponNamespace.Weapon>();
+            WeaponNamespace.Weapon weaponComponent = nearestPickup.GetComponent<WeaponNamespace.Weapon>();
+            ItemNamespace.Item itemComponent = nearestPickup.GetComponent<ItemNamespace.Item>();
             if (weaponComponent != null)
             {
                 pickupMessageText.text = $"F pour ramasser {weaponComponent.weaponName}";
-                pickupMessageText.gameObject.SetActive(true);
             }
+            else if (itemComponent != null)
+            {
+                pickupMessageText.text = $"F pour ramasser {itemComponent.itemName}";
+            }
+            pickupMessageText.gameObject.SetActive(true);
         }
         else
         {
@@ -65,9 +73,19 @@ public class WeaponPickup : MonoBehaviour
 
     void AttemptPickup()
     {
-        if (nearestWeapon != null)
+        if (nearestPickup != null)
         {
-            PickupWeapon(nearestWeapon);
+            WeaponNamespace.Weapon weaponComponent = nearestPickup.GetComponent<WeaponNamespace.Weapon>();
+            ItemNamespace.Item itemComponent = nearestPickup.GetComponent<ItemNamespace.Item>();
+
+            if (weaponComponent != null)
+            {
+                PickupWeapon(nearestPickup);
+            }
+            else if (itemComponent != null)
+            {
+                PickupItem(nearestPickup);
+            }
         }
     }
 
@@ -108,6 +126,37 @@ public class WeaponPickup : MonoBehaviour
             DropCurrentWeapon();
             PickupWeapon(weapon);
         }
+
+        if (animator != null)
+        {
+            animator.SetTrigger("Idle");
+        }
+
+        // Masquer le message de ramassage
+        pickupMessageText.gameObject.SetActive(false);
+    }
+
+    void PickupItem(GameObject item)
+    {
+        if (item == null)
+        {
+            Debug.LogError("Item is null.");
+            return;
+        }
+
+        // Faire l'animation de ramassage
+        if (animator != null)
+        {
+            animator.SetTrigger("Pickup");
+        }
+        else
+        {
+            Debug.LogError("Animator is not assigned.");
+        }
+
+        // Ajouter l'objet à la liste des objets collectés
+        collectedItems.Add(item);
+        item.SetActive(false);
 
         if (animator != null)
         {

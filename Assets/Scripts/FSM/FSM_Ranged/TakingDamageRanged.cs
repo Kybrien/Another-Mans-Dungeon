@@ -7,12 +7,14 @@ public class TakingDamageRangedState : StateRanged
 
     public TakingDamageRangedState(MonsterControllerRanged monsterController) : base(monsterController)
     {
+
     }
 
 
     // Start is called before the first frame update
     public override void EnterState()
     {
+        SetAnimationTrigger("isTakingDamage");
         Debug.Log("Monster Taking Damage");
     }
 

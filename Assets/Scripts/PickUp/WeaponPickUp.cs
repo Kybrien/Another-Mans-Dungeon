@@ -5,7 +5,7 @@ public class WeaponPickup : MonoBehaviour
 {
     public float pickupRange = 2.0f; // Distance maximale pour ramasser une arme
     public Transform weaponHoldPosition; // Position où l'arme sera tenue
-    public Animator animator; // Référence à l'Animator
+    //public Animator animator; // Référence à l'Animator
     public TextMeshProUGUI pickupMessageText; // Référence à l'élément TextMeshPro de l'UI
 
     private GameObject weapon1; // Référence à la première arme
@@ -70,7 +70,7 @@ public class WeaponPickup : MonoBehaviour
     void PickupWeapon(GameObject weapon)
     {
         //faire l'anim de pick up
-        animator.SetTrigger("Pickup");
+        //animator.SetTrigger("Pickup");
 
         if (weapon1 == null)
         {
@@ -91,7 +91,7 @@ public class WeaponPickup : MonoBehaviour
             DropCurrentWeapon();
             PickupWeapon(weapon);
         }
-        animator.SetTrigger("Idle");
+        //animator.SetTrigger("Idle");
         // Masquer le message de ramassage
         pickupMessageText.gameObject.SetActive(false);
     }

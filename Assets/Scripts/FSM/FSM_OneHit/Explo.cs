@@ -1,71 +1,82 @@
-using System.Collections;
-using System.Collections.Generic;
+using Pathfinding;
 using UnityEngine;
+using System.Collections;
 
 public class ExploState : StateHit
 {
+    private AIPath aiPath;
+    private Transform player;
     private float attackDistance = 4f;
+    private SkinnedMeshRenderer monsterRenderer;
 
-    public ExploState(MonsterControllerHit monsterController) : base(monsterController) { }
+    public ExploState(MonsterControllerHit monsterController) : base(monsterController)
+    {
+        aiPath = monsterController.GetComponent<AIPath>();
+        player = GameObject.FindGameObjectWithTag("Player").transform;
+        monsterRenderer = monsterController.GetComponentInChildren<SkinnedMeshRenderer>(); // Trouver le SkinnedMeshRenderer dans les enfants
+    }
 
     public override void EnterState()
     {
-        Debug.Log("Monster in Attack STATE");
+        aiPath.canMove = false;
+        Debug.Log("Monster in Explo STATE");
+        SetAnimationTrigger("isExplo");
         PerformExplo(); // Initialiser la première attaque
     }
 
     public override void Update()
     {
-        /*float distanceToPlayer = Vector3.Distance(monsterController.transform.position, GameObject.FindGameObjectWithTag("Player").transform.position);
-
-        if (distanceToPlayer > attackDistance) // Si le joueur est hors de portée d'attaque
-        {
-            monsterController.TransitionToState(monsterController.chaseState);
-        }*/
+        RotateTowardsPlayer();
     }
 
     private void PerformExplo()
     {
-        SetAnimationTrigger("isExplo");
-        //on instancie l'explosion a l'endroit du monstre
-
+        // Démarrer la coroutine pour attendre la fin de l'animation
+        monsterController.StartCoroutine(WaitForAnimationAndExplode());
     }
 
-    /*private IEnumerator AttackRoutine()
+    private IEnumerator WaitForAnimationAndExplode()
     {
-        while (Vector3.Distance(monsterController.transform.position, GameObject.FindGameObjectWithTag("Player").transform.position) <= attackDistance)
+        Animator animator = monsterController.GetComponent<Animator>();
+        if (animator != null)
         {
-            // Générer un nombre aléatoire entre 1 et 3
-            int random = Random.Range(1, 4);
-            Debug.Log("Random Attack Chosen: " + random);
+            // Obtenir les informations sur l'état actuel de l'animation
+            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
 
-            if (random == 1)
-            {
-                SetAnimationTrigger("isAttacking");
-            }
-            else if (random == 2)
-            {
-                SetAnimationTrigger("isAttacking2");
-            }
-            else if (random == 3)
-            {
-                SetAnimationTrigger("isAttacking3");
-            }
+            // Attendre la durée de l'animation
+            yield return new WaitForSeconds(stateInfo.length);
 
-            Debug.Log("Performing attack: " + random);
+            // Vérifier si le monstre n'a pas été détruit avant d'instancier l'explosion
+            if (monsterController != null && monsterRenderer != null)
+            {
+                // Désactiver le rendu du monstre
+                monsterRenderer.enabled = false;
 
-            // Attendre l'intervalle avant de permettre une nouvelle attaque
-            yield return new WaitForSeconds(attackInterval);
+                // Instancier l'explosion à l'emplacement exact du monstre avec la même rotation
+                GameObject explosion = GameObject.Instantiate(monsterController.explosionVFX, monsterController.transform.position, monsterController.transform.rotation);
+
+                // Attendre que l'explosion se termine
+                yield return new WaitForSeconds(1f);
+
+                // Détruire le monstre et l'explosion
+                GameObject.Destroy(monsterController.gameObject, 1f);
+            }
         }
-
-        // Si le joueur sort de la portée d'attaque, retourner à l'état de poursuite
-        monsterController.TransitionToState(monsterController.chaseState);
-    }*/
+    }
 
     public override void ExitState()
     {
         // Arrêter toutes les coroutines en cours lorsque l'état est quitté
         monsterController.StopAllCoroutines();
     }
+
+    private void RotateTowardsPlayer()
+    {
+        // Utiliser Lerp pour la rotation
+        Vector3 direction = player.position - monsterController.transform.position;
+        Quaternion toRotation = Quaternion.LookRotation(direction);
+        monsterController.transform.rotation = Quaternion.Lerp(monsterController.transform.rotation, toRotation, 10 * Time.deltaTime);
+    }
 }
+
 

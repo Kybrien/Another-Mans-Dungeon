@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Pathfinding;
 
@@ -27,14 +25,9 @@ public class MonsterControllerHit : MonsterController
     [Tooltip("Distance d'attaque...")]
     [SerializeField][Range(2f, 12f)] public float attackDistance = 4f;
 
-    [Tooltip("Le monstre peut-il rush ?")]
-    [SerializeField] public bool CanRush = false;
-    [Tooltip("Vitesse de rush...")]
-    [SerializeField] public float rushSpeedMultiplier = 1.3f;
-
     [Tooltip("Description de la stratégie d'attaque du monstre.")]
     [TextArea(3, 5)]
-    [SerializeField] private string attackStrategyDescription = "Le monstre attaque de manière agressive lorsque le joueur est à portée.";
+    [SerializeField] private string attackStrategyDescription = "Le monstre explose a portee du joueur";
 
     void Start()
     {
@@ -45,8 +38,7 @@ public class MonsterControllerHit : MonsterController
         idleState = new IdleHitState(this);
         chaseState = new ChaseHitState(this);
         exploState = new ExploState(this);
-        takingDamageState = new TakingDamageHitState(this);
-        //deadState = new DeadState(this);
+        //takingDamageState = new TakingDamageHitState(this);
 
         currentState = idleState; // Début en état Idle
         currentState.EnterState(); // Entrer dans l'état initial
@@ -63,14 +55,5 @@ public class MonsterControllerHit : MonsterController
         currentState = nextState;
         currentState.EnterState();
     }
-
-    /*private void OnCollisionEnter(Collision collision)
-    {
-        // Déléguer la gestion de collision à l'état actuel
-        if (currentState is RushState rushState)
-        {
-            rushState.OnCollisionEnter(collision);
-        }
-    }*/
 
 }

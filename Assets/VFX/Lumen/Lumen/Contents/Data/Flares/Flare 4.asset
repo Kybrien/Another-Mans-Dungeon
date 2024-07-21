@@ -17,19 +17,19 @@ MonoBehaviour:
     flareMesh: {fileID: 0}
     scale: 3.07
     brightness: 0.219
-    colorMultiplier: {r: 1, g: 1, b: 1, a: 1}
+    colorMultiplier: {r: 0.9433962, g: 0.026699731, b: 0.026699731, a: 1}
     open: 0
   - flareShape: 0
     flareMesh: {fileID: 0}
     scale: 3.02
     brightness: 0.446
-    colorMultiplier: {r: 1, g: 1, b: 1, a: 1}
+    colorMultiplier: {r: 0.9811321, g: 0.058620907, b: 0.058620907, a: 1}
     open: 0
   - flareShape: 7
     flareMesh: {fileID: 0}
     scale: 1.25
     brightness: 0.387
-    colorMultiplier: {r: 1, g: 1, b: 1, a: 1}
+    colorMultiplier: {r: 0.9308176, g: 0.073177285, b: 0.073177285, a: 1}
     open: 0
   - flareShape: 27
     flareMesh: {fileID: 0}
@@ -41,8 +41,8 @@ MonoBehaviour:
     flareMesh: {fileID: 0}
     scale: 2.41
     brightness: 0.191
-    colorMultiplier: {r: 0.972549, g: 0.972549, b: 0.972549, a: 1}
-    open: 0
+    colorMultiplier: {r: 0.8930817, g: 0.05897697, b: 0.05897697, a: 1}
+    open: 1
   flareMaterial: {fileID: 2100000, guid: 7724528df85009d4dadb42eb105e754e, type: 2}
   globalScale: 0.63
   globalBrightness: 1

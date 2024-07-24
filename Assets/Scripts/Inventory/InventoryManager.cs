@@ -87,7 +87,7 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
             }
             else
             {
-                Debug.Log("No item in the clicked slot");
+                Debug.Log("No item in the clicked slot or slot is null");
             }
         }
     }
@@ -96,93 +96,12 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
     {
         Debug.Log("OnPointerUp called");
 
-        if (draggedObject != null && eventData.pointerCurrentRaycast.gameObject != null && eventData.button == PointerEventData.InputButton.Left)
+        if (draggedObject != null && eventData.button == PointerEventData.InputButton.Left)
         {
             GameObject clickedObject = eventData.pointerCurrentRaycast.gameObject;
-            if (clickedObject == null)
-            {
-                Debug.LogError("Clicked object is null in OnPointerUp");
-                return;
-            }
 
-            InventorySlot slot = clickedObject.GetComponent<InventorySlot>();
-            if (slot == null)
-            {
-                Debug.LogError("Clicked object does not have an InventorySlot component in OnPointerUp");
-                // Attempt to handle the case where the object clicked isn't an inventory slot but the draggedObject needs to be returned
-                if (lastItemSlot != null)
-                {
-                    InventorySlot lastSlot = lastItemSlot.GetComponent<InventorySlot>();
-                    if (lastSlot != null)
-                    {
-                        lastSlot.SetHeldItem(draggedObject);
-                        if (lastSlot.transform.parent != null && lastSlot.transform.parent.parent != null)
-                        {
-                            draggedObject.transform.SetParent(lastSlot.transform.parent.parent.GetChild(2));
-                            Debug.Log("Item returned to last slot");
-                        }
-                        else
-                        {
-                            Debug.LogError("Parent transform hierarchy is incorrect for the last slot");
-                        }
-                    }
-                    else
-                    {
-                        Debug.LogError("Last item slot does not have an InventorySlot component!");
-                    }
-                }
-                else
-                {
-                    Debug.LogError("Last item slot is null!");
-                }
-                draggedObject = null;
-                return;
-            }
-
-            if (slot.heldItem == null)
-            {
-                slot.SetHeldItem(draggedObject);
-                Transform parentTransform = slot.transform.parent?.parent?.GetChild(2);
-                if (parentTransform != null)
-                {
-                    draggedObject.transform.SetParent(parentTransform);
-                    Debug.Log("Item placed in slot");
-                }
-                else
-                {
-                    Debug.LogError("Parent transform is null when trying to set draggedObject's parent");
-                }
-            }
-            else if (clickedObject.name != "DropItem")
-            {
-                if (lastItemSlot != null)
-                {
-                    InventorySlot lastSlot = lastItemSlot.GetComponent<InventorySlot>();
-                    if (lastSlot != null)
-                    {
-                        lastSlot.SetHeldItem(draggedObject);
-                        Transform parentTransform = lastSlot.transform.parent?.parent?.GetChild(2);
-                        if (parentTransform != null)
-                        {
-                            draggedObject.transform.SetParent(parentTransform);
-                            Debug.Log("Item returned to last slot");
-                        }
-                        else
-                        {
-                            Debug.LogError("Parent transform is null when trying to set draggedObject's parent back to last slot");
-                        }
-                    }
-                    else
-                    {
-                        Debug.LogError("Last item slot does not have an InventorySlot component!");
-                    }
-                }
-                else
-                {
-                    Debug.LogError("Last item slot is null!");
-                }
-            }
-            else
+            // Check if we clicked outside of inventory slots to drop the item
+            if (clickedObject == null || clickedObject.GetComponent<InventorySlot>() == null)
             {
                 if (cam == null)
                 {
@@ -193,34 +112,104 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
                 Ray ray = cam.ScreenPointToRay(Input.mousePosition);
                 Vector3 position = ray.GetPoint(3);
 
-                if (draggedObject.GetComponent<InventoryItem>() != null && draggedObject.GetComponent<InventoryItem>().itemScriptableObject != null)
+                InventoryItem draggedInventoryItem = draggedObject.GetComponent<InventoryItem>();
+                if (draggedInventoryItem != null && draggedInventoryItem.itemScriptableObject != null)
                 {
-                    GameObject newItem = Instantiate(draggedObject.GetComponent<InventoryItem>().itemScriptableObject.prefab, position, Quaternion.identity);
-                    newItem.GetComponent<itemPickable>().itemScriptableObject = draggedObject.GetComponent<InventoryItem>().itemScriptableObject;
-
-                    if (lastItemSlot != null)
+                    GameObject newItem = Instantiate(draggedInventoryItem.itemScriptableObject.prefab, position, Quaternion.identity);
+                    itemPickable itemPickableComponent = newItem.GetComponent<itemPickable>();
+                    if (itemPickableComponent != null)
                     {
-                        InventorySlot lastSlot = lastItemSlot.GetComponent<InventorySlot>();
-                        if (lastSlot != null)
+                        itemPickableComponent.itemScriptableObject = draggedInventoryItem.itemScriptableObject;
+
+                        if (lastItemSlot != null)
                         {
-                            lastSlot.heldItem = null;
-                            Debug.Log("Item dropped");
+                            InventorySlot lastSlot = lastItemSlot.GetComponent<InventorySlot>();
+                            if (lastSlot != null)
+                            {
+                                lastSlot.heldItem = null;
+                                Debug.Log("Item dropped");
+                            }
+                            else
+                            {
+                                Debug.LogError("Last item slot does not have an InventorySlot component!");
+                            }
                         }
                         else
                         {
-                            Debug.LogError("Last item slot does not have an InventorySlot component!");
+                            Debug.LogError("Last item slot is null!");
                         }
+
+                        Destroy(draggedObject);
                     }
                     else
                     {
-                        Debug.LogError("Last item slot is null!");
+                        Debug.LogError("New item does not have itemPickable component!");
                     }
-
-                    Destroy(draggedObject);
                 }
                 else
                 {
                     Debug.LogError("Dragged object does not have InventoryItem component or its itemScriptableObject is null!");
+                }
+
+                draggedObject = null;
+                return;
+            }
+
+            // Handle case when clickedObject is an InventorySlot
+            InventorySlot slot = clickedObject.GetComponent<InventorySlot>();
+            if (slot == null)
+            {
+                Debug.LogError("Clicked object does not have an InventorySlot component in OnPointerUp");
+
+                // Attempt to return the dragged object to its last slot
+                if (lastItemSlot != null)
+                {
+                    InventorySlot lastSlot = lastItemSlot.GetComponent<InventorySlot>();
+                    if (lastSlot != null)
+                    {
+                        lastSlot.SetHeldItem(draggedObject);
+                        draggedObject.transform.SetParent(lastSlot.transform.parent.parent.GetChild(2));
+                        Debug.Log("Item returned to last slot");
+                    }
+                    else
+                    {
+                        Debug.LogError("Last item slot does not have an InventorySlot component!");
+                    }
+                }
+                else
+                {
+                    Debug.LogError("Last item slot is null!");
+                }
+
+                draggedObject = null;
+                return;
+            }
+
+            if (slot.heldItem == null)
+            {
+                slot.SetHeldItem(draggedObject);
+                draggedObject.transform.SetParent(slot.transform.parent.parent.GetChild(2));
+                Debug.Log("Item placed in slot");
+            }
+            else
+            {
+                if (lastItemSlot != null)
+                {
+                    InventorySlot lastSlot = lastItemSlot.GetComponent<InventorySlot>();
+                    if (lastSlot != null)
+                    {
+                        lastSlot.SetHeldItem(draggedObject);
+                        draggedObject.transform.SetParent(lastSlot.transform.parent.parent.GetChild(2));
+                        Debug.Log("Item returned to last slot");
+                    }
+                    else
+                    {
+                        Debug.LogError("Last item slot does not have an InventorySlot component!");
+                    }
+                }
+                else
+                {
+                    Debug.LogError("Last item slot is null!");
                 }
             }
 
@@ -271,3 +260,5 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
         }
     }
 }
+
+

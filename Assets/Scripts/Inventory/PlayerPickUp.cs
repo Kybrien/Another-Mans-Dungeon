@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -7,33 +8,45 @@ public class Player : MonoBehaviour
     [SerializeField] private Camera cam;
     [SerializeField] private InventoryManager inventoryManager;
 
+    void Start()
+    {
+
+    }
+
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKey(KeyCode.E))
         {
-            Debug.Log("E key pressed");
+            if (cam == null)
+            {
+                Debug.LogError("Camera reference is missing!");
+                return;
+            }
+
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
             RaycastHit hitInfo;
 
-            if (Physics.Raycast(ray, out hitInfo, 10))
+            if (Physics.Raycast(ray, out hitInfo, 3))
             {
-                Debug.Log("Raycast hit: " + hitInfo.collider.gameObject.name);
                 itemPickable item = hitInfo.collider.gameObject.GetComponent<itemPickable>();
 
-                if (item != null)
+                if (item == null)
                 {
-                    Debug.Log("Item found: " + item.name);
-                    inventoryManager.ItemPicked(hitInfo.collider.gameObject);
+                    Debug.Log("itemPickable component is missing on hit object");
                 }
                 else
                 {
-                    Debug.Log("No itemPickable component found on hit object");
+                    if (inventoryManager == null)
+                    {
+                        Debug.LogError("InventoryManager reference is missing!");
+                        return;
+                    }
+
+                    inventoryManager.ItemPicked(hitInfo.collider.gameObject);
                 }
             }
-            else
-            {
-                Debug.Log("Raycast did not hit anything");
-            }
+
         }
     }
+
 }

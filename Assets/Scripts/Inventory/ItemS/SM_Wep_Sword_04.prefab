@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 365775142}
   - component: {fileID: -5527364592790828470}
   - component: {fileID: -4500199312947515472}
+  - component: {fileID: 8240847834785537575}
   m_Layer: 0
   m_Name: SM_Wep_Sword_04
   m_TagString: Untagged
@@ -156,3 +157,16 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.12854928, y: 1.4316894, z: 0.32428592}
   m_Center: {x: 0, y: 0.54417604, z: 0}
+--- !u!114 &8240847834785537575
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 500755019436056275}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5362aecd2335c2499acdf7a14081e6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemScriptableObject: {fileID: 11400000, guid: 7d885c0f9345c84469725131b4e5fb80, type: 2}

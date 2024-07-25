@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using UnityEditor.SceneManagement;
 
 public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
@@ -151,6 +150,8 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
                     Debug.LogError("Dragged object does not have InventoryItem component or its itemScriptableObject is null!");
                 }
 
+                // Supprimer l'image de l'icône
+                Destroy(draggedObject);
                 draggedObject = null;
                 return;
             }
@@ -260,5 +261,3 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
         }
     }
 }
-
-

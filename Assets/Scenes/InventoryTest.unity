@@ -2397,7 +2397,6 @@ GameObject:
   m_Component:
   - component: {fileID: 502629359}
   - component: {fileID: 502629360}
-  - component: {fileID: 502629361}
   m_Layer: 5
   m_Name: Item
   m_TagString: Untagged
@@ -2427,20 +2426,6 @@ RectTransform:
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &502629360
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 502629358}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7052b34d986e4c04a902debf86af4c77, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  itemScriptableObject: {fileID: 11400000, guid: 7bb6062d5165a0a47929f8b263138cc9, type: 2}
-  iconImage: {fileID: 560145294}
---- !u!114 &502629361
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8423,8 +8408,6 @@ MonoBehaviour:
   - {fileID: 1229281750}
   - {fileID: 1072379556}
   inventoryParent: {fileID: 1718494208}
-  storageParent: {fileID: 0}
-  handParent: {fileID: 0}
   itemPrefab: {fileID: 502629358}
   cam: {fileID: 1104540058}
 --- !u!1001 &1687928499

@@ -42,11 +42,31 @@ public class Player : MonoBehaviour
                         return;
                     }
 
-                    inventoryManager.ItemPicked(hitInfo.collider.gameObject);
+                    GameObject hitObject = hitInfo.collider.gameObject;
+                    if (hitObject != null)
+                    {
+                        if (hitObject.activeInHierarchy)
+                        {
+                            Debug.Log("Item picked: " + hitObject.name);
+                            inventoryManager.ItemPicked(hitObject);
+                        }
+                        else
+                        {
+                            Debug.LogError("Hit object is inactive or has been destroyed!");
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogError("Hit object is null or has been destroyed!");
+                    }
                 }
             }
-
         }
     }
+
+
+
+
+
 
 }

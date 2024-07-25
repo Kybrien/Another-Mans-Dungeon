@@ -99,7 +99,6 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
         {
             GameObject clickedObject = eventData.pointerCurrentRaycast.gameObject;
 
-            // Check if we clicked outside of inventory slots to drop the item
             if (clickedObject == null || clickedObject.GetComponent<InventorySlot>() == null)
             {
                 if (cam == null)
@@ -139,6 +138,7 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
                         }
 
                         Destroy(draggedObject);
+                        draggedObject = null;  // Assurez-vous de ne pas utiliser l'objet après sa destruction
                     }
                     else
                     {
@@ -150,19 +150,14 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
                     Debug.LogError("Dragged object does not have InventoryItem component or its itemScriptableObject is null!");
                 }
 
-                // Supprimer l'image de l'icône
-                Destroy(draggedObject);
-                draggedObject = null;
                 return;
             }
 
-            // Handle case when clickedObject is an InventorySlot
             InventorySlot slot = clickedObject.GetComponent<InventorySlot>();
             if (slot == null)
             {
                 Debug.LogError("Clicked object does not have an InventorySlot component in OnPointerUp");
 
-                // Attempt to return the dragged object to its last slot
                 if (lastItemSlot != null)
                 {
                     InventorySlot lastSlot = lastItemSlot.GetComponent<InventorySlot>();
@@ -222,23 +217,38 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
         }
     }
 
+
     public void ItemPicked(GameObject pickedItem)
     {
         Debug.Log("ItemPicked called");
 
-        if (pickedItem == null)
+        // Vérifiez si l'objet est nul ou a été détruit
+        if (pickedItem == null || !pickedItem.activeInHierarchy)
         {
-            Debug.LogError("Picked item is null!");
+            Debug.LogError("Picked item is null or has been destroyed!");
             return;
         }
 
-        GameObject emptySlot = null;
+        itemPickable pickableComponent = pickedItem.GetComponent<itemPickable>();
+        if (pickableComponent == null)
+        {
+            Debug.LogError("Picked item does not have itemPickable component!");
+            return;
+        }
 
+        ItemSO itemSO = pickableComponent.itemScriptableObject;
+        if (itemSO == null)
+        {
+            Debug.LogError("Picked item does not have a valid ItemSO!");
+            return;
+        }
+
+        // Cherche un slot vide
+        GameObject emptySlot = null;
         for (int i = 0; i < slots.Length; i++)
         {
             InventorySlot slot = slots[i].GetComponent<InventorySlot>();
-
-            if (slot.heldItem == null)
+            if (slot != null && slot.heldItem == null)
             {
                 emptySlot = slots[i];
                 break;
@@ -247,17 +257,39 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 
         if (emptySlot != null)
         {
+            // Vérifiez si itemPrefab est assigné
+            if (itemPrefab == null)
+            {
+                Debug.LogError("Item prefab is not assigned!");
+                return;
+            }
+
+            // Instancie un nouvel objet et le configure
             GameObject newItem = Instantiate(itemPrefab);
-            newItem.GetComponent<InventoryItem>().itemScriptableObject = pickedItem.GetComponent<itemPickable>().itemScriptableObject;
-            newItem.transform.SetParent(emptySlot.transform.parent.parent.GetChild(2));
-            emptySlot.GetComponent<InventorySlot>().SetHeldItem(newItem);
-            newItem.transform.localScale = new Vector3(1, 1, 1);
-            Destroy(pickedItem);
-            Debug.Log("Item placed in inventory slot");
+            InventoryItem inventoryItemComponent = newItem.GetComponent<InventoryItem>();
+            if (inventoryItemComponent != null)
+            {
+                inventoryItemComponent.itemScriptableObject = itemSO;
+                newItem.transform.SetParent(emptySlot.transform.parent.parent.GetChild(2));
+                emptySlot.GetComponent<InventorySlot>().SetHeldItem(newItem);
+                newItem.transform.localScale = new Vector3(1, 1, 1);
+
+                // Détruit l'objet pickedItem après avoir vérifié
+                Destroy(pickedItem);
+                Debug.Log("Item placed in inventory slot");
+            }
+            else
+            {
+                Debug.LogError("New item does not have InventoryItem component!");
+            }
         }
         else
         {
             Debug.LogError("No empty slot available in inventory!");
         }
     }
+
+
+
+
 }

@@ -1,12 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] private Camera cam;
-    [SerializeField] private InventoryManager inventoryManager;
+    [SerializeField] Camera cam;
+    [SerializeField] InventoryManager inventoryManager;
 
     void Start()
     {
@@ -17,56 +16,31 @@ public class Player : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.E))
         {
-            if (cam == null)
-            {
-                Debug.LogError("Camera reference is missing!");
-                return;
-            }
-
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
             RaycastHit hitInfo;
 
             if (Physics.Raycast(ray, out hitInfo, 3))
             {
                 itemPickable item = hitInfo.collider.gameObject.GetComponent<itemPickable>();
+                Storage storage = hitInfo.collider.gameObject.GetComponent<Storage>();
 
-                if (item == null)
+                if (item != null)
                 {
-                    Debug.Log("itemPickable component is missing on hit object");
+                    inventoryManager.ItemPicked(hitInfo.collider.gameObject);
                 }
-                else
-                {
-                    if (inventoryManager == null)
-                    {
-                        Debug.LogError("InventoryManager reference is missing!");
-                        return;
-                    }
 
-                    GameObject hitObject = hitInfo.collider.gameObject;
-                    if (hitObject != null)
+                else if (storage != null)
+                {
+                    if (Input.GetKeyDown(KeyCode.E) && inventoryManager.isStorageOpened)
                     {
-                        if (hitObject.activeInHierarchy)
-                        {
-                            Debug.Log("Item picked: " + hitObject.name);
-                            inventoryManager.ItemPicked(hitObject);
-                        }
-                        else
-                        {
-                            Debug.LogError("Hit object is inactive or has been destroyed!");
-                        }
+                        inventoryManager.CloseStorage(storage);
                     }
-                    else
+                    else if (Input.GetKeyDown(KeyCode.E) && !inventoryManager.isStorageOpened)
                     {
-                        Debug.LogError("Hit object is null or has been destroyed!");
+                        inventoryManager.OpenStorage(storage);
                     }
                 }
             }
         }
     }
-
-
-
-
-
-
 }

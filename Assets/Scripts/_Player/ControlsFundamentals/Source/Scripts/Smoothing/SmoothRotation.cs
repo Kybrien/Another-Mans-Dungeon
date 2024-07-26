@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Mirror;
 
 namespace CMF
 {
 	//This script smoothes the rotation of a gameobject;
-	public class SmoothRotation : MonoBehaviour {
+	public class SmoothRotation : NetworkBehaviour {
 
 		//The target transform, whose rotation values will be copied and smoothed;
 		public Transform target;

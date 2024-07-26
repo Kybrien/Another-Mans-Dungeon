@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Mirror;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -24,9 +25,11 @@ namespace CMF
         // Use this for initialization
         void Start()
         {
-            tr = transform;
+            tr = NetworkManager.singleton.GetStartPosition();
             mover = GetComponent<Mover>();
             characterInput = GetComponent<CharacterInput>();
+
+            Debug.Log(NetworkManager.singleton.GetStartPosition());
         }
 
         void FixedUpdate()

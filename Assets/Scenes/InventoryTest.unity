@@ -6274,6 +6274,8 @@ MonoBehaviour:
   items:
   - currentStack: 1
     itemScriptableObject: {fileID: 11400000, guid: 7bb6062d5165a0a47929f8b263138cc9, type: 2}
+  itemsToSpawn: {fileID: 11400000, guid: 47b4fff6d77c0fb4ca73a75f61f4611b, type: 2}
+  spawnItems: 1
 --- !u!65 &1003021161
 BoxCollider:
   m_ObjectHideFlags: 0

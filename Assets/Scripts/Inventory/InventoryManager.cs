@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEditor;
 
 public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
@@ -11,6 +12,8 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
     [SerializeField] GameObject[] hotbarSlots = new GameObject[4];
     [SerializeField] GameObject[] slots = new GameObject[20];
     [SerializeField] GameObject inventoryParent;
+    [SerializeField] Transform handParent;
+
 
     [SerializeField] GameObject itemPrefab;
     [SerializeField] Camera cam;
@@ -22,21 +25,15 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 
     void Start()
     {
+        HotbarItemChanged();
+
         Cursor.lockState = CursorLockMode.Locked;
 
-        // Vérification des références
-        if (inventoryParent == null)
-            Debug.LogError("Inventory parent is not assigned!");
-
-        if (itemPrefab == null)
-            Debug.LogError("Item prefab is not assigned!");
-
-        if (cam == null)
-            Debug.LogError("Camera is not assigned!");
     }
 
     void Update()
     {
+        CheckForHotBarInput();
         inventoryParent.SetActive(isInventoryOpened);
 
         // Move item
@@ -60,6 +57,70 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
             }
         }
     }
+
+    private void CheckForHotBarInput ()
+        {
+        if(Input.GetKeyDown(KeyCode.Alpha1)) 
+        {
+            selectedHotbarSlot = 0;
+            HotbarItemChanged();
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            selectedHotbarSlot = 1;
+            HotbarItemChanged();
+
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            selectedHotbarSlot = 2;
+            HotbarItemChanged();
+
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            selectedHotbarSlot = 3;
+            HotbarItemChanged();
+
+        }
+
+    }
+
+    private void HotbarItemChanged()
+    {
+        for (int i = 0; i < handParent.childCount; i++)
+        {
+            handParent.GetChild(i).gameObject.SetActive(false);
+        }
+        foreach(GameObject slot in hotbarSlots)
+        {
+            Vector3 scale;
+
+            if (slot == hotbarSlots[selectedHotbarSlot])
+            {
+                scale = new Vector3 (1.1f, 1.1f, 1.1f);
+
+                if (slot.GetComponent<InventorySlot>().heldItem != null)
+                {
+                    for (int i = 0; i < handParent.childCount; i++)
+                    {
+                        if (handParent.GetChild(i).GetComponent<ItemHand>().itemScriptableObject == hotbarSlots[selectedHotbarSlot].GetComponent<InventorySlot>().heldItem.GetComponent<InventoryItem>().itemScriptableObject)
+                        {
+                            handParent.GetChild(i).gameObject.SetActive (true);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                scale = new Vector3(0.9f, 0.9f, 0.9f);
+            }
+
+            slot.transform.localScale = scale;
+        }
+    }
+
+
 
     public void OnPointerDown(PointerEventData eventData)
     {
@@ -93,129 +154,73 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        Debug.Log("OnPointerUp called");
-
-        if (draggedObject != null && eventData.button == PointerEventData.InputButton.Left)
+        if (draggedObject != null && eventData.pointerCurrentRaycast.gameObject != null && eventData.button == PointerEventData.InputButton.Left)
         {
             GameObject clickedObject = eventData.pointerCurrentRaycast.gameObject;
-
-            if (clickedObject == null || clickedObject.GetComponent<InventorySlot>() == null)
-            {
-                if (cam == null)
-                {
-                    Debug.LogError("Camera reference is missing!");
-                    return;
-                }
-
-                Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-                Vector3 position = ray.GetPoint(3);
-
-                InventoryItem draggedInventoryItem = draggedObject.GetComponent<InventoryItem>();
-                if (draggedInventoryItem != null && draggedInventoryItem.itemScriptableObject != null)
-                {
-                    GameObject newItem = Instantiate(draggedInventoryItem.itemScriptableObject.prefab, position, Quaternion.identity);
-                    itemPickable itemPickableComponent = newItem.GetComponent<itemPickable>();
-                    if (itemPickableComponent != null)
-                    {
-                        itemPickableComponent.itemScriptableObject = draggedInventoryItem.itemScriptableObject;
-
-                        if (lastItemSlot != null)
-                        {
-                            InventorySlot lastSlot = lastItemSlot.GetComponent<InventorySlot>();
-                            if (lastSlot != null)
-                            {
-                                lastSlot.heldItem = null;
-                                Debug.Log("Item dropped");
-                            }
-                            else
-                            {
-                                Debug.LogError("Last item slot does not have an InventorySlot component!");
-                            }
-                        }
-                        else
-                        {
-                            Debug.LogError("Last item slot is null!");
-                        }
-
-                        Destroy(draggedObject);
-                        draggedObject = null;  // Assurez-vous de ne pas utiliser l'objet après sa destruction
-                    }
-                    else
-                    {
-                        Debug.LogError("New item does not have itemPickable component!");
-                    }
-                }
-                else
-                {
-                    Debug.LogError("Dragged object does not have InventoryItem component or its itemScriptableObject is null!");
-                }
-
-                return;
-            }
-
             InventorySlot slot = clickedObject.GetComponent<InventorySlot>();
-            if (slot == null)
-            {
-                Debug.LogError("Clicked object does not have an InventorySlot component in OnPointerUp");
 
-                if (lastItemSlot != null)
-                {
-                    InventorySlot lastSlot = lastItemSlot.GetComponent<InventorySlot>();
-                    if (lastSlot != null)
-                    {
-                        lastSlot.SetHeldItem(draggedObject);
-                        draggedObject.transform.SetParent(lastSlot.transform.parent.parent.GetChild(2));
-                        Debug.Log("Item returned to last slot");
-                    }
-                    else
-                    {
-                        Debug.LogError("Last item slot does not have an InventorySlot component!");
-                    }
-                }
-                else
-                {
-                    Debug.LogError("Last item slot is null!");
-                }
-
-                draggedObject = null;
-                return;
-            }
-
-            if (slot.heldItem == null)
+            //There isnt item in the slot - place item
+            if (slot != null && slot.heldItem == null)
             {
                 slot.SetHeldItem(draggedObject);
                 draggedObject.transform.SetParent(slot.transform.parent.parent.GetChild(2));
-                Debug.Log("Item placed in slot");
             }
-            else
+            //There is item in the slot - switch items
+            else if (slot != null && slot.heldItem != null && slot.heldItem.GetComponent<InventoryItem>().stackCurrent == slot.heldItem.GetComponent<InventoryItem>().stackMax
+                || slot != null && slot.heldItem != null && slot.heldItem.GetComponent<InventoryItem>().itemScriptableObject != draggedObject.GetComponent<InventoryItem>().itemScriptableObject)
             {
-                if (lastItemSlot != null)
+                lastItemSlot.GetComponent<InventorySlot>().SetHeldItem(slot.heldItem);
+                slot.heldItem.transform.SetParent(slot.transform.parent.parent.GetChild(2));
+
+                slot.SetHeldItem(draggedObject);
+                draggedObject.transform.SetParent(slot.transform.parent.parent.GetChild(2));
+            }
+
+            //Fill stack
+            else if (slot != null && slot.heldItem != null && slot.heldItem.GetComponent<InventoryItem>().stackCurrent < slot.heldItem.GetComponent<InventoryItem>().stackMax
+                && slot.heldItem.GetComponent<InventoryItem>().itemScriptableObject == draggedObject.GetComponent<InventoryItem>().itemScriptableObject)
+            {
+                InventoryItem slotHeldItem = slot.heldItem.GetComponent<InventoryItem>();
+                InventoryItem draggedItem = draggedObject.GetComponent<InventoryItem>();
+
+                int itemsToFillStack = slotHeldItem.stackMax - slotHeldItem.stackCurrent;
+
+                if (itemsToFillStack >= draggedItem.stackCurrent)
                 {
-                    InventorySlot lastSlot = lastItemSlot.GetComponent<InventorySlot>();
-                    if (lastSlot != null)
-                    {
-                        lastSlot.SetHeldItem(draggedObject);
-                        draggedObject.transform.SetParent(lastSlot.transform.parent.parent.GetChild(2));
-                        Debug.Log("Item returned to last slot");
-                    }
-                    else
-                    {
-                        Debug.LogError("Last item slot does not have an InventorySlot component!");
-                    }
+                    slotHeldItem.stackCurrent += draggedItem.stackCurrent;
+                    Destroy(draggedObject);
                 }
                 else
                 {
-                    Debug.LogError("Last item slot is null!");
+                    slotHeldItem.stackCurrent += itemsToFillStack;
+                    draggedItem.stackCurrent -= itemsToFillStack;
+                    lastItemSlot.GetComponent<InventorySlot>().SetHeldItem(draggedObject);
                 }
             }
+            //Return item to last slot
+            else if (clickedObject.name != "DropItem")
+            {
+                lastItemSlot.GetComponent<InventorySlot>().SetHeldItem(draggedObject);
+                draggedObject.transform.SetParent(slot.transform.parent.parent.GetChild(2));
+            }
+            //Drop item
+            else
+            {
+                Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+                Vector3 position = ray.GetPoint(3);
 
+                GameObject newItem = Instantiate(draggedObject.GetComponent<InventoryItem>().itemScriptableObject.prefab, position, new Quaternion());
+                newItem.GetComponent<itemPickable>().itemScriptableObject = draggedObject.GetComponent<InventoryItem>().itemScriptableObject;
+
+                lastItemSlot.GetComponent<InventorySlot>().heldItem = null;
+                Destroy(draggedObject);
+            }
+
+            HotbarItemChanged();
             draggedObject = null;
         }
-        else
-        {
-            Debug.LogError("Conditions not met for OnPointerUp: draggedObject or eventData.pointerCurrentRaycast.gameObject is null or wrong mouse button");
-        }
     }
+
 
 
     public void ItemPicked(GameObject pickedItem)
@@ -257,12 +262,6 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 
         if (emptySlot != null)
         {
-            // Vérifiez si itemPrefab est assigné
-            if (itemPrefab == null)
-            {
-                Debug.LogError("Item prefab is not assigned!");
-                return;
-            }
 
             // Instancie un nouvel objet et le configure
             GameObject newItem = Instantiate(itemPrefab);
@@ -274,7 +273,8 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
                 emptySlot.GetComponent<InventorySlot>().SetHeldItem(newItem);
                 newItem.transform.localScale = new Vector3(1, 1, 1);
 
-                // Détruit l'objet pickedItem après avoir vérifié
+                newItem.GetComponent<InventoryItem>().stackCurrent = 1;
+            
                 Destroy(pickedItem);
                 Debug.Log("Item placed in inventory slot");
             }

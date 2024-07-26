@@ -15,4 +15,4 @@ MonoBehaviour:
   name: 
   icon: {fileID: 21300026, guid: 09e4c6a7d75923945afe43953ef58ad2, type: 3}
   prefab: {fileID: 500755019436056275, guid: ac40112cd93917b49b1d1230f2ad84af, type: 3}
-  stackMax: 0
+  stackMax: 2

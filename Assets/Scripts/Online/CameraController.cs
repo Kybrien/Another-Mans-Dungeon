@@ -23,7 +23,7 @@ public class CameraController : NetworkBehaviour
     {
         if (!isLocalPlayer) { return; }
 
-        if (SceneManager.GetActiveScene().name == "Game")
+        if (SceneManager.GetActiveScene().name == "OnlineGame")
         {
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;

@@ -38,7 +38,6 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -696,7 +695,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1008308292}
   - component: {fileID: 1008308291}
-  - component: {fileID: 1008308290}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -704,14 +702,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &1008308290
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1008308289}
-  m_Enabled: 1
 --- !u!20 &1008308291
 Camera:
   m_ObjectHideFlags: 0
@@ -1127,7 +1117,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1635770836}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1644297380}
+        m_TargetAssemblyTypeName: LobbyController, Assembly-CSharp
+        m_MethodName: LeaveRoom
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1635770836
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1204,6 +1206,7 @@ MonoBehaviour:
   LocalPlayerController: {fileID: 0}
   StartGameButton: {fileID: 1938394575}
   ReadyButtonText: {fileID: 1919954402}
+  BackButton: {fileID: 1635770835}
 --- !u!4 &1644297381
 Transform:
   m_ObjectHideFlags: 0
@@ -1978,7 +1981,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Game
+          m_StringArgument: OnlineGame
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!1 &2118005992

@@ -50,7 +50,7 @@ public class CombatController : NetworkBehaviour
     }
 
     [Command]
-    private GameObject CmdCreateHitbox(Vector3 size)
+    private void CmdCreateHitbox(Vector3 size)
     {
         GameObject NewHitbox = Instantiate(HitboxPrefab);
         NewHitbox.transform.position = ModelRoot.position + ModelRoot.forward * 3;
@@ -58,8 +58,6 @@ public class CombatController : NetworkBehaviour
         NewHitbox.transform.localScale = size;
         NetworkServer.Spawn(NewHitbox);
         Destroy(NewHitbox, 0.1f);
-
-        return NewHitbox;
     }
 
     [Command]

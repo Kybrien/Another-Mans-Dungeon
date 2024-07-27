@@ -9,11 +9,11 @@ using Mirror;
 using Palmmedia.ReportGenerator.Core.Reporting.Builders;
 using Steamworks;
 
-public class CombatController : MonoBehaviour
+public class CombatController : NetworkBehaviour
 {
     bool isClicking = false;
     [SerializeField] private GameObject HitboxPrefab;
-    private Transform ModelRoot;
+    [SerializeField] private Transform ModelRoot;
     private Animator PlayerAnimator;
     private int comboCount = 0;
     private Coroutine comboCoroutine;
@@ -27,8 +27,7 @@ public class CombatController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        ModelRoot = gameObject.transform.Find("ModelRoot");
-        PlayerAnimator = ModelRoot.transform.Find("Model").GetComponent<Animator>();
+        //PlayerAnimator = ModelRoot.transform.Find("Model").GetComponent<Animator>();
         //SetAnimation(weaponType + "Idle");
     }
 
@@ -119,7 +118,7 @@ public class CombatController : MonoBehaviour
 
     private IEnumerator ComboTick()
     {
-        SetAnimation(weaponType + "Attack" + comboCount.ToString());
+        //SetAnimation(weaponType + "Attack" + comboCount.ToString());
         yield return new WaitForSeconds(1f);
         ResetCombo();
     }

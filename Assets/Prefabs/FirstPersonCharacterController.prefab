@@ -131,8 +131,11 @@ GameObject:
   - component: {fileID: 2702565336661232320}
   - component: {fileID: 3463724553151337725}
   - component: {fileID: 1952947601223086896}
+  - component: {fileID: 7427026361115659796}
   - component: {fileID: 1401897784522932907}
   - component: {fileID: 2941347423189969080}
+  - component: {fileID: -2701821480746764396}
+  - component: {fileID: -892233105971570931}
   m_Layer: 0
   m_Name: FirstPersonCharacterController
   m_TagString: Player
@@ -302,6 +305,23 @@ MonoBehaviour:
   cameraHolder: {fileID: 4246044106806557395}
   lookSpeed: 2
   lookXLimit: 45
+--- !u!114 &7427026361115659796
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1773660460313355093}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fd2bb3128777bc45bbf86e82c1301fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  HitboxPrefab: {fileID: 1169305782704711723, guid: 532df075e9c1a6545a7ac0957e66932f, type: 3}
+  ModelRoot: {fileID: 651341268272789793}
 --- !u!136 &1401897784522932907
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -352,6 +372,72 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!114 &-2701821480746764396
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1773660460313355093}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: e3a98b30a7b078746807e6c7ea723513, type: 3}
+  m_NotificationBehavior: 2
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents:
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: a4cc2e0f-1687-41c2-bfa5-07fc126b5b24
+    m_ActionName: Character/Movement[/Keyboard/z,/Keyboard/s,/Keyboard/a,/Keyboard/d]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7427026361115659796}
+        m_TargetAssemblyTypeName: CombatController, Assembly-CSharp
+        m_MethodName: HandleMouseClick
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 7facf08a-e14b-4911-b59f-f9f88dd94395
+    m_ActionName: Character/MB1[/Mouse/leftButton]
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: Character
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
+--- !u!114 &-892233105971570931
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1773660460313355093}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc654f29862fc2643b948f772ebb9e68, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  color: {r: 0, g: 1, b: 0, a: 1}
+  padding: 2
+  width: 150
+  height: 25
 --- !u!1 &4246044106806557395
 GameObject:
   m_ObjectHideFlags: 0

@@ -8,6 +8,7 @@ using UnityEngine.InputSystem.HID;
 using Mirror;
 using Palmmedia.ReportGenerator.Core.Reporting.Builders;
 using Steamworks;
+using UnityEngine.SceneManagement;
 
 public class CombatController : NetworkBehaviour
 {
@@ -95,6 +96,7 @@ public class CombatController : NetworkBehaviour
 
     public void HandleMouseClick(InputAction.CallbackContext context)
     {
+        if (SceneManager.GetActiveScene().name != "OnlineGame") { return; }
         if (!isLocalPlayer) { return; }
 
         float state = context.action.ReadValue<float>();

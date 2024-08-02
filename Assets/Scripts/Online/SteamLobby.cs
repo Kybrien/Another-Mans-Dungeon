@@ -51,6 +51,7 @@ public class SteamLobby : MonoBehaviour
 
     public void HostLobby()
     {
+        Debug.Log("SteamLobby bonjour");
         SteamMatchmaking.CreateLobby(ELobbyType.k_ELobbyTypePublic, manager.maxConnections);
     }
 

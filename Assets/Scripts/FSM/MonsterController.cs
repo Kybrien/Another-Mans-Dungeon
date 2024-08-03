@@ -14,6 +14,7 @@ public class MonsterController : NetworkBehaviour
     [SyncVar(hook = nameof(UpdateHealthBar))]
     [SerializeField] private float health = 100;
 
+    [SerializeField] private Canvas canvas;
     [SerializeField] private RawImage healthBar;
     [SerializeField] private TextMeshProUGUI healthText;
 
@@ -26,6 +27,7 @@ public class MonsterController : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
+        canvas.transform.LookAt(NetworkClient.localPlayer.gameObject.transform.position);
 
     }
 

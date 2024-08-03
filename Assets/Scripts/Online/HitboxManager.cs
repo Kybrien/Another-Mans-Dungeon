@@ -1,8 +1,9 @@
+using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HitboxManager : MonoBehaviour
+public class HitboxManager : NetworkBehaviour
 {
     private List<GameObject> debounce;
     // Start is called before the first frame update

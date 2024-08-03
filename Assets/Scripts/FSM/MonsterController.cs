@@ -1,12 +1,21 @@
+using Mirror;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class MonsterController : MonoBehaviour
+public class MonsterController : NetworkBehaviour
 {
     [Header("-- Monster Stats --")]
-    [SerializeField] private int maxHealth = 100;
-    [SerializeField] private int health = 100;
+
+    [SyncVar(hook = nameof(UpdateHealthBar))]
+    [SerializeField] private float maxHealth = 100;
+    [SyncVar(hook = nameof(UpdateHealthBar))]
+    [SerializeField] private float health = 100;
+
+    [SerializeField] private RawImage healthBar;
+    [SerializeField] private TextMeshProUGUI healthText;
 
     // Start is called before the first frame update
     void Start()
@@ -20,7 +29,7 @@ public class MonsterController : MonoBehaviour
 
     }
 
-    public int GetHealth()
+    public float GetHealth()
     {
         return health;
     }
@@ -28,5 +37,11 @@ public class MonsterController : MonoBehaviour
     public void TakeDamage(int damage)
     {
         health = Mathf.Max(0, health - damage);
+    }
+
+    void UpdateHealthBar(float oldValue, float newValue)
+    {
+        healthBar.rectTransform.sizeDelta = new Vector2((health / maxHealth) * 5, 1);
+        healthText.text = health.ToString() + " / " + maxHealth.ToString();
     }
 }

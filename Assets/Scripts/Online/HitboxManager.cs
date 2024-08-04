@@ -24,6 +24,11 @@ public class HitboxManager : NetworkBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (isLocalPlayer)
+        {
+            Debug.Log("degats local!");
+        }
+
         Debug.Log("touched");
         if (other.tag == "Enemy")
         {

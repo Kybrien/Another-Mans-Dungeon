@@ -29,23 +29,25 @@ public class HitboxManager : NetworkBehaviour
             Debug.Log("degats local!");
         }
 
-        Debug.Log("touched");
+        if (isServer)
+        {
+            Debug.Log("degats serveur");
+        }
+
         if (other.tag == "Enemy")
         {
             if (debounce.Find((x) => x == other.gameObject)) {
+                Debug.Log(other.gameObject.name + " already in list");
                 return;
             }
 
-            MonsterController monsterHealth = other.GetComponent<MonsterController>();
-
             debounce.Add(other.gameObject);
+
+            MonsterController monsterHealth = other.GetComponent<MonsterController>();
             monsterHealth.TakeDamage(10);
 
             //monsterHealth.LocalUpdateHealthBar();
             Debug.Log("HEALTH: " + monsterHealth.GetHealth());
-        } else
-        {
-            Debug.Log("already in list");
         }
     }
 }

@@ -21,14 +21,16 @@ public class MonsterController : NetworkBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        canvas.transform.LookAt(NetworkClient.localPlayer.gameObject.transform.position);
-
+        Vector3 position = canvas.transform.position;
+        Vector3 target = NetworkClient.localPlayer.gameObject.transform.position;
+        Vector3 inverseHeight = new Vector3(0, (position.y - target.y) * 2, 0);
+        canvas.transform.LookAt(2 * (position + inverseHeight) - target);
     }
 
     public float GetHealth()

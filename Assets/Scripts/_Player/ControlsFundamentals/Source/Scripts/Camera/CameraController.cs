@@ -7,7 +7,7 @@ namespace CMF
 {
 	//This script rotates a gameobject based on user input.
 	//Rotation around the x-axis (vertical) can be clamped/limited by setting 'upperVerticalLimit' and 'lowerVerticalLimit'.
-	public class CameraController : NetworkBehaviour {
+	public class CameraController : MonoBehaviour {
 
 		//Current rotation values (in degrees);
 		float currentXAngle = 0f;

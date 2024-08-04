@@ -5,7 +5,7 @@ using Mirror;
 namespace CMF
 {
 	//This script smoothes the rotation of a gameobject;
-	public class SmoothRotation : NetworkBehaviour {
+	public class SmoothRotation : MonoBehaviour {
 
 		//The target transform, whose rotation values will be copied and smoothed;
 		public Transform target;

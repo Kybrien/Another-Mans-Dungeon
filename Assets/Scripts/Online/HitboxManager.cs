@@ -34,8 +34,9 @@ public class HitboxManager : NetworkBehaviour
             MonsterController monsterHealth = other.GetComponent<MonsterController>();
 
             debounce.Add(other.gameObject);
-            monsterHealth.CmdTakeDamage(10);
+            monsterHealth.TakeDamage(10);
 
+            //monsterHealth.LocalUpdateHealthBar();
             Debug.Log("HEALTH: " + monsterHealth.GetHealth());
         } else
         {

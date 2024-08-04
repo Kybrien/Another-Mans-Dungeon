@@ -38,13 +38,21 @@ public class MonsterController : NetworkBehaviour
         return health;
     }
 
-    [Command]
-    public void CmdTakeDamage(int damage)
+    public void TakeDamage(int damage)
     {
         health = Mathf.Max(0, health - damage);
+        Debug.Log("SERVER HEALTH: " + health.ToString());
     }
 
     void UpdateHealthBar(float oldValue, float newValue)
+    { 
+        Debug.Log("old value:" + newValue.ToString());
+        Debug.Log("new value:" + newValue.ToString());
+        healthBar.rectTransform.sizeDelta = new Vector2((health / maxHealth) * 5, 1);
+        healthText.text = health.ToString() + " / " + maxHealth.ToString();
+    }
+
+    void LocalUpdateHealthBar()
     {
         healthBar.rectTransform.sizeDelta = new Vector2((health / maxHealth) * 5, 1);
         healthText.text = health.ToString() + " / " + maxHealth.ToString();

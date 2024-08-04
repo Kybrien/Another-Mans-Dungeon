@@ -5,16 +5,11 @@ using UnityEngine;
 
 public class HitboxManager : NetworkBehaviour
 {
-    [SyncVar]
-    private List<GameObject> debounce;
+    private SyncList<GameObject> debounce;
     // Start is called before the first frame update
     void Start()
     {
-        debounce = new List<GameObject>();
-        for (int i = 0; i < debounce.Count; i++)
-        {
-            Debug.Log(debounce[i]);
-        }
+        debounce = new SyncList<GameObject>();
     }
 
     // Update is called once per frame
@@ -25,16 +20,6 @@ public class HitboxManager : NetworkBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (isLocalPlayer)
-        {
-            Debug.Log("degats local!");
-        }
-
-        if (isServer)
-        {
-            Debug.Log("degats serveur");
-        }
-
         if (other.tag == "Enemy")
         {
             if (debounce.Find((x) => x == other.gameObject)) {

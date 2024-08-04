@@ -8,13 +8,16 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 {
     [HideInInspector] public bool isStorageOpened;
 
-    [SerializeField] GameObject[] hotbarSlots = new GameObject[4];
-    [SerializeField] GameObject[] slots = new GameObject[20];
-    [SerializeField] GameObject inventoryParent;
-    [SerializeField] GameObject storageParent;
-    [SerializeField] Transform handParent;
-    [SerializeField] GameObject itemPrefab;
-    [SerializeField] Camera cam;
+    [SerializeField] private GameObject[] hotbarSlots = new GameObject[4];
+    [SerializeField] private GameObject[] slots = new GameObject[20];
+    [SerializeField] private GameObject inventoryParent;
+    [SerializeField] private GameObject storageParent;
+    [SerializeField] private Transform handParent;
+    [SerializeField] private GameObject itemPrefab;
+    [SerializeField] private Camera cam;
+
+    public GameObject[] Slots => slots;
+    public GameObject ItemPrefab => itemPrefab;
 
     GameObject draggedObject;
     GameObject lastItemSlot;
@@ -103,12 +106,12 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
             {
                 scale = new Vector3(1.1f, 1.1f, 1.1f);
 
-                if (slot.GetComponent<InventorySlot>().heldItem != null)
+                if (slot.GetComponent<InventorySlot>().HeldItem != null)
                 {
                     for (int i = 0; i < handParent.childCount; i++)
                     {
                         if (handParent.GetChild(i).GetComponent<ItemHand>().itemScriptableObject
-                            == hotbarSlots[selectedHotbarSlot].GetComponent<InventorySlot>().heldItem.GetComponent<InventoryItem>().itemScriptableObject)
+                            == hotbarSlots[selectedHotbarSlot].GetComponent<InventorySlot>().HeldItem.GetComponent<InventoryItem>().itemScriptableObject)
                         {
                             handParent.GetChild(i).gameObject.SetActive(true);
                         }
@@ -132,10 +135,10 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
             InventorySlot slot = clickedObject.GetComponent<InventorySlot>();
 
             //There is item in the slot - pick it up
-            if (slot != null && slot.heldItem != null)
+            if (slot != null && slot.HeldItem != null)
             {
-                draggedObject = slot.heldItem;
-                slot.heldItem = null;
+                draggedObject = slot.HeldItem;
+                slot.HeldItem = null;
                 lastItemSlot = clickedObject;
             }
         }
@@ -146,69 +149,55 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
         if (draggedObject != null && eventData.pointerCurrentRaycast.gameObject != null && eventData.button == PointerEventData.InputButton.Left)
         {
             GameObject clickedObject = eventData.pointerCurrentRaycast.gameObject;
-            InventorySlot slot = clickedObject.GetComponent<InventorySlot>();
+            InventorySlot inventorySlot = clickedObject.GetComponent<InventorySlot>();
+            CraftingSlot craftingSlot = clickedObject.GetComponent<CraftingSlot>();
 
-            //There isnt item in the slot - place item
-            if (slot != null && slot.heldItem == null)
+            // Si on relâche l'item sur un slot de crafting vide
+            if (craftingSlot != null && craftingSlot.IsEmpty())
             {
-                slot.SetHeldItem(draggedObject);
-                draggedObject.transform.SetParent(slot.transform.parent.parent.GetChild(2));
+                craftingSlot.SetHeldItem(draggedObject);
+                draggedObject.transform.SetParent(craftingSlot.transform);
             }
-            //There is item in the slot - switch items
-            else if (slot != null && slot.heldItem != null && slot.heldItem.GetComponent<InventoryItem>().stackCurrent == slot.heldItem.GetComponent<InventoryItem>().stackMax
-                || slot != null && slot.heldItem != null && slot.heldItem.GetComponent<InventoryItem>().itemScriptableObject != draggedObject.GetComponent<InventoryItem>().itemScriptableObject)
+            // Si on relâche l'item sur un slot d'inventaire vide
+            else if (inventorySlot != null && inventorySlot.IsEmpty())
             {
-                lastItemSlot.GetComponent<InventorySlot>().SetHeldItem(slot.heldItem);
-                slot.heldItem.transform.SetParent(slot.transform.parent.parent.GetChild(2));
-
-                slot.SetHeldItem(draggedObject);
-                draggedObject.transform.SetParent(slot.transform.parent.parent.GetChild(2));
+                inventorySlot.SetHeldItem(draggedObject);
+                draggedObject.transform.SetParent(inventorySlot.transform.parent.parent.GetChild(2));
             }
-
-            //Fill stack
-            else if (slot != null && slot.heldItem != null && slot.heldItem.GetComponent<InventoryItem>().stackCurrent < slot.heldItem.GetComponent<InventoryItem>().stackMax
-                && slot.heldItem.GetComponent<InventoryItem>().itemScriptableObject == draggedObject.GetComponent<InventoryItem>().itemScriptableObject)
+            // Si on relâche l'item sur un slot d'inventaire qui contient déjà un item
+            else if (inventorySlot != null && !inventorySlot.IsEmpty())
             {
-                InventoryItem slotHeldItem = slot.heldItem.GetComponent<InventoryItem>();
-                InventoryItem draggedItem = draggedObject.GetComponent<InventoryItem>();
+                lastItemSlot.GetComponent<InventorySlot>().SetHeldItem(inventorySlot.HeldItem);
+                inventorySlot.HeldItem.transform.SetParent(inventorySlot.transform.parent.parent.GetChild(2));
 
-                int itemsToFillStack = slotHeldItem.stackMax - slotHeldItem.stackCurrent;
-
-                if (itemsToFillStack >= draggedItem.stackCurrent)
-                {
-                    slotHeldItem.stackCurrent += draggedItem.stackCurrent;
-                    Destroy(draggedObject);
-                }
-                else
-                {
-                    slotHeldItem.stackCurrent += itemsToFillStack;
-                    draggedItem.stackCurrent -= itemsToFillStack;
-                    lastItemSlot.GetComponent<InventorySlot>().SetHeldItem(draggedObject);
-                }
+                inventorySlot.SetHeldItem(draggedObject);
+                draggedObject.transform.SetParent(inventorySlot.transform.parent.parent.GetChild(2));
             }
-            //Return item to last slot
-            else if (clickedObject.name != "DropItem")
+            // Si on relâche l'item sur un slot de crafting qui contient déjà un item
+            else if (craftingSlot != null && !craftingSlot.IsEmpty())
             {
-                lastItemSlot.GetComponent<InventorySlot>().SetHeldItem(draggedObject);
-                draggedObject.transform.SetParent(slot.transform.parent.parent.GetChild(2));
+                lastItemSlot.GetComponent<InventorySlot>().SetHeldItem(craftingSlot.HeldItem);
+                craftingSlot.HeldItem.transform.SetParent(craftingSlot.transform.parent);
+
+                craftingSlot.SetHeldItem(draggedObject);
+                draggedObject.transform.SetParent(craftingSlot.transform);
             }
-            //Drop item
+            // Si on relâche l'item ailleurs (retourne l'item au dernier slot)
             else
             {
-                Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-                Vector3 position = ray.GetPoint(3);
-
-                GameObject newItem = Instantiate(draggedObject.GetComponent<InventoryItem>().itemScriptableObject.prefab, position, new Quaternion());
-                newItem.GetComponent<itemPickable>().itemScriptableObject = draggedObject.GetComponent<InventoryItem>().itemScriptableObject;
-
-                lastItemSlot.GetComponent<InventorySlot>().heldItem = null;
-                Destroy(draggedObject);
+                lastItemSlot.GetComponent<InventorySlot>().SetHeldItem(draggedObject);
+                draggedObject.transform.SetParent(lastItemSlot.transform.parent.parent.GetChild(2));
             }
 
-            HotbarItemChanged();
+            // Réinitialise le draggedObject
             draggedObject = null;
         }
     }
+
+
+
+
+
 
     public void ItemPicked(GameObject pickedItem)
     {
@@ -218,7 +207,7 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
         {
             InventorySlot slot = slots[i].GetComponent<InventorySlot>();
 
-            if (slot.heldItem == null)
+            if (slot.HeldItem == null)
             {
                 emptySlot = slots[i];
                 break;
@@ -303,9 +292,9 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
         {
             Transform slot = slotsParent.GetChild(i);
 
-            if (slot.gameObject.activeInHierarchy && slot.GetComponent<InventorySlot>().heldItem != null)
+            if (slot.gameObject.activeInHierarchy && slot.GetComponent<InventorySlot>().HeldItem != null)
             {
-                InventoryItem inventoryItem = slot.GetComponent<InventorySlot>().heldItem.GetComponent<InventoryItem>();
+                InventoryItem inventoryItem = slot.GetComponent<InventorySlot>().HeldItem.GetComponent<InventoryItem>();
 
                 storage.items.Add(new StorageItem(inventoryItem.stackCurrent, inventoryItem.itemScriptableObject));
             }
@@ -313,6 +302,16 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
             {
                 storage.items.Add(new StorageItem(0, null));
             }
+        }
+    }
+
+
+    public void OnCraftButtonPressed()
+    {
+        CraftingManager craftingManager = FindObjectOfType<CraftingManager>();
+        if (craftingManager != null)
+        {
+            craftingManager.AttemptCraft();
         }
     }
 }

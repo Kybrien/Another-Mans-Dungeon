@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e894a26a389f154387660d3f8393050, type: 3}
+  m_Name: PopoSoin
+  m_EditorClassIdentifier: 
+  icon: {fileID: 994223573, guid: 132358e9bf26b60458b731bf001e31db, type: 3}
+  prefab: {fileID: 157152, guid: 03eb254be55316240929244bd19caa02, type: 3}

@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class HitboxManager : NetworkBehaviour
 {
+    [SyncVar]
     private List<GameObject> debounce;
     // Start is called before the first frame update
     void Start()

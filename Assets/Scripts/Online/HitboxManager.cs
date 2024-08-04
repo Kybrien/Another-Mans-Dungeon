@@ -5,11 +5,11 @@ using UnityEngine;
 
 public class HitboxManager : NetworkBehaviour
 {
-    private SyncList<GameObject> debounce;
+    private SyncList<GameObject> debounce = new SyncList<GameObject>();
     // Start is called before the first frame update
     void Start()
     {
-        debounce = new SyncList<GameObject>();
+
     }
 
     // Update is called once per frame

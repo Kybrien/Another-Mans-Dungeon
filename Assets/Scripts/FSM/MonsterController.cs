@@ -9,7 +9,7 @@ public class MonsterController : NetworkBehaviour
 {
     [Header("-- Monster Stats --")]
 
-    [SyncVar(hook = nameof(UpdateHealthBar))]
+    [SyncVar]
     [SerializeField] private float maxHealth = 100;
     [SyncVar(hook = nameof(UpdateHealthBar))]
     [SerializeField] private float health = 100;
@@ -46,10 +46,8 @@ public class MonsterController : NetworkBehaviour
 
     void UpdateHealthBar(float oldValue, float newValue)
     { 
-        Debug.Log("old value:" + newValue.ToString());
-        Debug.Log("new value:" + newValue.ToString());
-        healthBar.rectTransform.sizeDelta = new Vector2((health / maxHealth) * 5, 1);
-        healthText.text = health.ToString() + " / " + maxHealth.ToString();
+        healthBar.rectTransform.sizeDelta = new Vector2((newValue / maxHealth) * 5, 1);
+        healthText.text = newValue.ToString() + " / " + maxHealth.ToString();
     }
 
     void LocalUpdateHealthBar()

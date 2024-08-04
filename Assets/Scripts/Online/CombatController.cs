@@ -23,7 +23,7 @@ public class CombatController : NetworkBehaviour
     string weaponType = "Axe";
     float cooldown = 0.3f;
     float currCooldown = 0;
-    bool isRange = false;
+    bool isRange = true;
 
     // Start is called before the first frame update
     void Start()

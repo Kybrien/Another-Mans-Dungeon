@@ -38,7 +38,8 @@ public class MonsterController : NetworkBehaviour
         return health;
     }
 
-    public void TakeDamage(int damage)
+    [Command]
+    public void CmdTakeDamage(int damage)
     {
         health = Mathf.Max(0, health - damage);
     }

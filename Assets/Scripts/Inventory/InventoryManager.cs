@@ -40,7 +40,6 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
         storageParent.SetActive(isStorageOpened);
         inventoryParent.SetActive(isInventoryOpened);
 
-        //Move item
         if (draggedObject != null)
         {
             draggedObject.transform.position = Input.mousePosition;
@@ -189,7 +188,6 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
                 draggedObject.transform.SetParent(lastItemSlot.transform.parent.parent.GetChild(2));
             }
 
-            // Réinitialise le draggedObject
             draggedObject = null;
         }
     }
@@ -235,25 +233,21 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
         Cursor.lockState = CursorLockMode.None;
         isStorageOpened = true;
 
-        //Set all slots to inactive
         for (int i = 0; i < storageParent.transform.GetChild(1).childCount; i++)
         {
             storageParent.transform.GetChild(1).GetChild(i).gameObject.SetActive(false);
         }
 
-        //Set some of the slots to active
         for (int i = 0; i < storage.size; i++)
         {
             storageParent.transform.GetChild(1).GetChild(i).gameObject.SetActive(true);
         }
-        //Set background size and position
         float sizeY = (float)Mathf.CeilToInt(storage.size / 4f) / 4;
         storageParent.transform.GetChild(0).localScale = new Vector2(1, sizeY);
 
         float posY = (1 - sizeY) * 230;
         storageParent.transform.GetChild(0).localPosition = new Vector2(-615, 130 + posY);
 
-        //Destroy all items
         for (int i = 0; i < storageParent.transform.GetChild(2).childCount; i++)
         {
             Destroy(storageParent.transform.GetChild(2).GetChild(i).gameObject);

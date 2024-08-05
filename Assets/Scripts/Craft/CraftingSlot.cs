@@ -4,7 +4,6 @@ public class CraftingSlot : MonoBehaviour
 {
     public GameObject HeldItem;
 
-    // Définir un délégué et un événement pour signaler les changements
     public delegate void SlotChanged();
     public event SlotChanged OnSlotChanged;
 
@@ -16,7 +15,6 @@ public class CraftingSlot : MonoBehaviour
             HeldItem.transform.position = transform.position;
             HeldItem.transform.SetParent(transform);
         }
-        // Déclencher l'événement lorsque le contenu du slot change
         OnSlotChanged?.Invoke();
     }
 
@@ -27,7 +25,7 @@ public class CraftingSlot : MonoBehaviour
             Destroy(HeldItem);
         }
         HeldItem = null;
-        // Déclencher l'événement lorsque le contenu du slot change
+        Debug.Log("CraftingSlot: Cleared");
         OnSlotChanged?.Invoke();
     }
 

@@ -4,16 +4,24 @@ using UnityEngine;
 public class CraftingManager : MonoBehaviour
 {
     [SerializeField] private InventoryManager inventoryManager;
-    [SerializeField] private List<CraftingRecipe> recipes; // Liste des recettes disponibles pour le craft
-    [SerializeField] private List<CraftingSlot> craftingSlots; // Liste des slots de crafting
-    [SerializeField] private GameObject resultSlot; // Slot de résultat
+    [SerializeField] private List<CraftingRecipe> recipes;
+    [SerializeField] private List<CraftingSlot> craftingSlots; 
+    [SerializeField] private GameObject resultSlot;
 
+    private bool resultTaken = false; 
 
     private void Start()
     {
         foreach (CraftingSlot slot in craftingSlots)
         {
             slot.OnSlotChanged += CheckCraftingConditions;
+        }
+
+        var resultSlotComponent = resultSlot.GetComponent<InventorySlot>();
+        if (resultSlotComponent != null)
+        {
+            resultSlotComponent.OnSlotChanged += OnResultSlotChanged;
+            Debug.Log("Attached OnSlotChanged to result slot");
         }
     }
 
@@ -24,7 +32,7 @@ public class CraftingManager : MonoBehaviour
             if (CanCraft(recipe))
             {
                 Craft(recipe);
-                return; // On s'arrête après avoir crafté une recette valide
+                return; 
             }
         }
     }
@@ -59,7 +67,7 @@ public class CraftingManager : MonoBehaviour
 
             if (totalCount < ingredientCount[ingredient])
             {
-                return false; // Pas assez d'ingrédients
+                return false; 
             }
         }
 
@@ -73,18 +81,18 @@ public class CraftingManager : MonoBehaviour
 
     private void Craft(CraftingRecipe recipe)
     {
-        // Utiliser un dictionnaire pour suivre combien d'ingrédients nous avons encore besoin
+      
         Dictionary<ItemSO, int> ingredientsToRemove = new Dictionary<ItemSO, int>();
 
         foreach (ItemSO ingredient in recipe.ingredients)
         {
             if (!ingredientsToRemove.ContainsKey(ingredient))
             {
-                ingredientsToRemove[ingredient] = ingredient.stackMax;
+                ingredientsToRemove[ingredient] = 0;
             }
+            ingredientsToRemove[ingredient]++;
         }
 
-        // Retirer les ingrédients des slots de crafting
         foreach (ItemSO ingredient in ingredientsToRemove.Keys)
         {
             int amountToRemove = ingredientsToRemove[ingredient];
@@ -100,7 +108,7 @@ public class CraftingManager : MonoBehaviour
                         item.stackCurrent -= amountToTake;
                         if (item.stackCurrent <= 0)
                         {
-                            slot.SetHeldItem(null);
+                            slot.ClearSlot();
                         }
 
                         if (amountToRemove <= 0)
@@ -112,7 +120,6 @@ public class CraftingManager : MonoBehaviour
             }
         }
 
-        // Ajouter le résultat au slot de résultat
         GameObject resultItem = Instantiate(inventoryManager.ItemPrefab);
         resultItem.GetComponent<InventoryItem>().itemScriptableObject = recipe.result;
         resultItem.GetComponent<InventoryItem>().stackCurrent = 1;
@@ -125,8 +132,33 @@ public class CraftingManager : MonoBehaviour
                 resultSlotComponent.SetHeldItem(resultItem);
                 resultItem.transform.SetParent(resultSlot.transform);
                 resultItem.transform.localScale = Vector3.one;
+                Debug.Log("Result item set in result slot");
+
+                resultTaken = false; 
             }
         }
     }
 
+    private void OnResultSlotChanged()
+    {
+        var resultSlotComponent = resultSlot.GetComponent<InventorySlot>();
+        if (resultSlotComponent != null)
+        {
+
+            Debug.Log("Result slot changed");
+
+            if (resultSlotComponent.IsEmpty())
+            {
+                if (!resultTaken)
+                {
+                    resultTaken = true;
+                    Debug.Log("Result item taken, clearing crafting slots");
+                    foreach (CraftingSlot slot in craftingSlots)
+                    {
+                        slot.ClearSlot();
+                    }
+                }
+            }
+        }
+    }
 }

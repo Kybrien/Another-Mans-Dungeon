@@ -10,7 +10,7 @@ public class PlayerMovementController : NetworkBehaviour
     public float jumpForce = 200f;
     public GameObject PlayerModel;
     [SerializeField] private Animator animator;
-    private Rigidbody rb;
+    [SerializeField] private Rigidbody rb;
 
     private void Start()
     {
@@ -19,11 +19,10 @@ public class PlayerMovementController : NetworkBehaviour
 
     private void Update()
     {
-        if (SceneManager.GetActiveScene().name == "Game")
+        if (SceneManager.GetActiveScene().name == "OnlineGame")
         {
             if (PlayerModel.activeSelf == false)
             {
-                rb = GetComponent<Rigidbody>();
                 rb.useGravity = true;
                 PlayerModel.SetActive(true);
                 SetSpawnPosition();
@@ -41,7 +40,7 @@ public class PlayerMovementController : NetworkBehaviour
     {
         Physics.SyncTransforms();
         rb.velocity = Vector3.zero;
-        transform.position = new Vector3(Random.Range(-50, 50), 50f, Random.Range(-150, 70));
+        transform.position = NetworkManager.singleton.GetStartPosition().position;
     }
 
     public void Movement()
@@ -63,11 +62,17 @@ public class PlayerMovementController : NetworkBehaviour
 
         if (moveDirection != Vector3.zero)
         {
-            animator.SetBool("IsMoving", true);
+            if (animator)
+            {
+                animator.SetBool("IsMoving", true);
+            }
         }
         else
         {
-            animator.SetBool("IsMoving", false);
+            if (animator)
+            {
+                animator.SetBool("IsMoving", false);
+            }
 
         }
 

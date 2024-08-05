@@ -6,14 +6,14 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.HID;
 using Mirror;
-using Palmmedia.ReportGenerator.Core.Reporting.Builders;
 using Steamworks;
+using UnityEngine.SceneManagement;
 
-public class CombatController : MonoBehaviour
+public class CombatController : NetworkBehaviour
 {
     bool isClicking = false;
     [SerializeField] private GameObject HitboxPrefab;
-    private Transform ModelRoot;
+    [SerializeField] private Transform ModelRoot;
     private Animator PlayerAnimator;
     private int comboCount = 0;
     private Coroutine comboCoroutine;
@@ -27,8 +27,7 @@ public class CombatController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        ModelRoot = gameObject.transform.Find("ModelRoot");
-        PlayerAnimator = ModelRoot.transform.Find("Model").GetComponent<Animator>();
+        //PlayerAnimator = ModelRoot.transform.Find("Model").GetComponent<Animator>();
         //SetAnimation(weaponType + "Idle");
     }
 
@@ -50,15 +49,24 @@ public class CombatController : MonoBehaviour
         PlayerAnimator.SetTrigger(animationName);
     }
 
-    private GameObject CreateHitbox(Vector3 size)
+    [Command]
+    private void CmdCreateHitbox(Vector3 size)
     {
         GameObject NewHitbox = Instantiate(HitboxPrefab);
         NewHitbox.transform.position = ModelRoot.position + ModelRoot.forward * 3;
         NewHitbox.transform.rotation = ModelRoot.rotation;
         NewHitbox.transform.localScale = size;
+        NetworkServer.Spawn(NewHitbox);
         Destroy(NewHitbox, 0.1f);
+    }
 
-        return NewHitbox;
+    [Command]
+    private void CmdDealMonsterDamage(RaycastHit result)
+    {
+        if (result.transform.tag == "Enemy")
+        {
+            result.transform.gameObject.GetComponent<MonsterController>().TakeDamage(10);
+        }
     }
 
     private void SendDebugRaycast()
@@ -87,6 +95,9 @@ public class CombatController : MonoBehaviour
 
     public void HandleMouseClick(InputAction.CallbackContext context)
     {
+        if (SceneManager.GetActiveScene().name != "OnlineGame") { return; }
+        if (!isLocalPlayer) { return; }
+
         float state = context.action.ReadValue<float>();
         if (isClicking && state == 0)
         {
@@ -119,7 +130,7 @@ public class CombatController : MonoBehaviour
 
     private IEnumerator ComboTick()
     {
-        SetAnimation(weaponType + "Attack" + comboCount.ToString());
+        //SetAnimation(weaponType + "Attack" + comboCount.ToString());
         yield return new WaitForSeconds(1f);
         ResetCombo();
     }
@@ -151,14 +162,11 @@ public class CombatController : MonoBehaviour
         {
             RaycastHit result = SendRaycast();
             Debug.Log(result.transform.gameObject.name);
-            if (result.transform.tag == "Enemy")
-            {
-                result.transform.gameObject.GetComponent<MonsterController>().TakeDamage(10);
-            }
+            CmdDealMonsterDamage(result);
         }
         else
         {
-            CreateHitbox(new Vector3(4, 4, 4));
+            CmdCreateHitbox(new Vector3(4, 4, 4));
             currCooldown = cooldown;
         }
 

@@ -27,7 +27,10 @@ public class LobbyController : MonoBehaviour
 
     //Ready
     public Button StartGameButton;
-    public TextMeshProUGUI ReadyButtonText; 
+    public TextMeshProUGUI ReadyButtonText;
+
+    // Leave
+    public Button BackButton;
 
     //Manager
     private CustomNetworkManager manager;
@@ -211,5 +214,10 @@ public class LobbyController : MonoBehaviour
     public void StartGame(string SceneName)
     {
         LocalPlayerController.CanStartGame(SceneName);
+    }
+
+    public void LeaveRoom()
+    {
+        SteamLobby.Instance.LeaveLobby((CSteamID)(CurrentLobbyID));
     }
 }

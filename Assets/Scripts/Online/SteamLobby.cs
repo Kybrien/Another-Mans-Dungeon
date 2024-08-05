@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using Mirror;
 using Steamworks;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class SteamLobby : MonoBehaviour
 {
@@ -33,7 +34,10 @@ public class SteamLobby : MonoBehaviour
     private void Start()
     {
         if (!SteamManager.Initialized) { return; }
-        if (Instance == null) { Instance = this; }
+        if (Instance == null) {
+            Instance = this;
+        }
+
 
         manager = GetComponent<CustomNetworkManager>();
 
@@ -47,6 +51,7 @@ public class SteamLobby : MonoBehaviour
 
     public void HostLobby()
     {
+        Debug.Log("SteamLobby bonjour");
         SteamMatchmaking.CreateLobby(ELobbyType.k_ELobbyTypePublic, manager.maxConnections);
     }
 
@@ -87,6 +92,15 @@ public class SteamLobby : MonoBehaviour
     public void JoinLobby(CSteamID lobbyID)
     {
         SteamMatchmaking.JoinLobby(lobbyID);
+    }
+
+    public void LeaveLobby(CSteamID lobbyID)
+    {
+        Debug.Log(lobbyID.ToString());
+        SteamMatchmaking.LeaveLobby(lobbyID);
+
+        manager.StopHost();
+        CurrentLobbyID = 0;
     }
 
     public void GetLobbiesList()

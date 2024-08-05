@@ -1,7 +1,7 @@
 fileFormatVersion: 2
 guid: 8756aebf14ebaa548a380eaffed6c41e
 ModelImporter:
-  serializedVersion: 20200
+  serializedVersion: 22200
   internalIDToNameTable: []
   externalObjects: {}
   materials:
@@ -14,6 +14,7 @@ ModelImporter:
     bakeSimulation: 0
     resampleCurves: 1
     optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
     motionNodeName: 
     rigImportErrors: 
     rigImportWarnings: 
@@ -39,10 +40,12 @@ ModelImporter:
     addColliders: 0
     useSRGBMaterialColor: 1
     sortHierarchyByName: 1
+    importPhysicalCameras: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
     importLights: 1
+    nodeNameCollisionStrategy: 0
     fileIdsGeneration: 2
     swapUVChannels: 0
     generateSecondaryUV: 0
@@ -54,6 +57,7 @@ ModelImporter:
     skinWeightsMode: 0
     maxBonesPerVertex: 4
     minBoneWeight: 0.001
+    optimizeBones: 1
     meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
@@ -64,6 +68,7 @@ ModelImporter:
     secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
     useFileScale: 1
+    strictVertexDataChecks: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
@@ -77,17 +82,12 @@ ModelImporter:
   - c442610ca6b3723459cd4ee871032df9
   - 05b811de42265d64c85a2db593049b28
   - 5ff6e124e844f344482d8fc739f9a394
-  - ccbac21cd1971244492dbdfbce3ebb11
   - 97663053b804eca40a856fd8e8f07d9c
-  - b870293ad2ddd9d478a5bbdb53226fd2
   - 1f794a3747617c541a8477e751eda991
   - 895f1a3bb7304c54a8647cd3fe248bac
   - 2767a6913f1b12948a43bc2bfc4660ce
   - 2e78b3e6598793e4f89b869975276891
   - ff7448e4fbc10014e9ce2996f21f5af2
-  - e4d808447d3046c44b9b22c475acb957
-  - e3b6bf52a0f0d7149b91a9ed9c3bb283
-  - 5c35d5c9bed415c4fa5695a85f1c67d4
   importAnimation: 1
   humanDescription:
     serializedVersion: 3
@@ -111,6 +111,8 @@ ModelImporter:
   humanoidOversampling: 1
   avatarSetup: 1
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  importBlendShapeDeformPercent: 0
+  remapMaterialsIfMaterialImportModeIsNone: 1
   additionalBone: 0
   userData: 
   assetBundleName: 

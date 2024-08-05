@@ -1,7 +1,7 @@
 fileFormatVersion: 2
 guid: 15abb5313d13de94fa26bf3baad86f82
 ModelImporter:
-  serializedVersion: 20200
+  serializedVersion: 22200
   internalIDToNameTable: []
   externalObjects: {}
   materials:
@@ -14,6 +14,7 @@ ModelImporter:
     bakeSimulation: 0
     resampleCurves: 1
     optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
     motionNodeName: 
     rigImportErrors: 
     rigImportWarnings: 
@@ -39,10 +40,12 @@ ModelImporter:
     addColliders: 0
     useSRGBMaterialColor: 1
     sortHierarchyByName: 1
+    importPhysicalCameras: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
     importLights: 1
+    nodeNameCollisionStrategy: 0
     fileIdsGeneration: 2
     swapUVChannels: 0
     generateSecondaryUV: 0
@@ -54,6 +57,7 @@ ModelImporter:
     skinWeightsMode: 0
     maxBonesPerVertex: 4
     minBoneWeight: 0.001
+    optimizeBones: 1
     meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
@@ -64,6 +68,7 @@ ModelImporter:
     secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
     useFileScale: 1
+    strictVertexDataChecks: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
@@ -76,20 +81,15 @@ ModelImporter:
   - 3dee577a7d3fdec43a236934646d0435
   - e595a989c97b88b4683e800ef3699ae8
   - 4e27104d39869f74cb31af9374ca01c3
-  - 050219fd2ce030247a8d31581942cc4d
-  - 901e1b3a6eae57f4fbbc29355e6c8062
-  - 4d304cc9e3e05ec419338f790b454807
-  - aacca48613ea9c14e9dc5aedfcfad5bb
-  - 7a34e221a6de84948b096a4f8bccd6a1
+  - aea11ea6f8b2a4846ae80e714bdb6f50
+  - 1be19a5ebc0c07e4bb889fe9b40e33de
+  - 542c49f545c4fa94aa14e74c7ecbaf3d
   - 3466f7adfefe1fe47bc07ded5752d085
   - c2e065404eaf43c4388c6aac6915bd93
   - 6f6af78b1f8bb77479f13bae83d305fd
   - 54403fe555fe127488cbcedaa2886040
   - f133f41e2e47f9f4f9b945748961c53b
   - 29f818d143009414985e203c7c12a4a0
-  - 6b6675dec4896c84b824e297486edaa4
-  - 122efa0a61a9eab40b6d31b81fc8d7e1
-  - 80b97185ee8ca474f8a3cc0d752159d5
   importAnimation: 1
   humanDescription:
     serializedVersion: 3
@@ -113,6 +113,8 @@ ModelImporter:
   humanoidOversampling: 1
   avatarSetup: 1
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  importBlendShapeDeformPercent: 0
+  remapMaterialsIfMaterialImportModeIsNone: 1
   additionalBone: 0
   userData: 
   assetBundleName: 

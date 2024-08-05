@@ -1,7 +1,7 @@
 fileFormatVersion: 2
 guid: 7f3aa32e8e9e9d849a107c1d5f4446a5
 ModelImporter:
-  serializedVersion: 20200
+  serializedVersion: 22200
   internalIDToNameTable: []
   externalObjects: {}
   materials:
@@ -14,6 +14,7 @@ ModelImporter:
     bakeSimulation: 0
     resampleCurves: 1
     optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
     motionNodeName: 
     rigImportErrors: 
     rigImportWarnings: 
@@ -39,10 +40,12 @@ ModelImporter:
     addColliders: 0
     useSRGBMaterialColor: 1
     sortHierarchyByName: 1
+    importPhysicalCameras: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
     importLights: 1
+    nodeNameCollisionStrategy: 0
     fileIdsGeneration: 2
     swapUVChannels: 0
     generateSecondaryUV: 0
@@ -54,6 +57,7 @@ ModelImporter:
     skinWeightsMode: 0
     maxBonesPerVertex: 4
     minBoneWeight: 0.001
+    optimizeBones: 1
     meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
@@ -64,6 +68,7 @@ ModelImporter:
     secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
     useFileScale: 1
+    strictVertexDataChecks: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
@@ -73,20 +78,14 @@ ModelImporter:
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
   referencedClips:
-  - 9aa0bcd51009ae84c8e7bde087dab108
   - 61fd14b97ab773345a5569fcf494f250
   - 0516598b06c37f84d9699cbec0857d84
   - 80ab45521ce77c0438956e6d4dbdfb55
   - 917163550cfaf0a4d9e5cd258a388438
-  - 505470814e65fab4cb9cac001e463ba6
   - c718e69c9eeadbe4abe3081ef0b7a0b3
   - f0126536e42861b48b7e08db808d75f4
-  - c272a928965109f409bbfcfaef7dbc36
   - d234d4ae2817b3c45b43b1339cc7cd77
   - 0267f3c7a01d23a4caed4d45b95a1429
-  - b4a579e9f98186d4ea164e60e0e114a4
-  - 252589aa24f8ab9418872850042f3004
-  - 698493df7b2d8fc4aa857206e24ce549
   importAnimation: 1
   humanDescription:
     serializedVersion: 3
@@ -110,6 +109,8 @@ ModelImporter:
   humanoidOversampling: 1
   avatarSetup: 1
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  importBlendShapeDeformPercent: 0
+  remapMaterialsIfMaterialImportModeIsNone: 1
   additionalBone: 0
   userData: 
   assetBundleName: 

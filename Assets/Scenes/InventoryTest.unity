@@ -11136,7 +11136,7 @@ GameObject:
   - component: {fileID: 1635825903}
   - component: {fileID: 1635825907}
   m_Layer: 0
-  m_Name: Craft
+  m_Name: CraftingTable
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -61,6 +61,7 @@ public class RoundManager : NetworkBehaviour
     [ClientRpc]
     void RpcSwitchMap(string mapName)
     {
+        Debug.Log("woking");
         if (isLocalPlayer)
         {
             Debug.Log(mapName + " map spawned in local!");

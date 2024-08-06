@@ -27,6 +27,7 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
     bool isInventoryOpened;
 
     int selectedHotbarSlot = 0;
+
     void Start()
     {
         HotbarItemChanged();
@@ -92,39 +93,74 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 
     private void HotbarItemChanged()
     {
-        for (int i = 0; i < handParent.childCount; i++)
+        // Désactivez tous les enfants de handParent
+        foreach (Transform child in handParent)
         {
-            handParent.GetChild(i).gameObject.SetActive(false);
+            Destroy(child.gameObject);
         }
 
-        foreach (GameObject slot in hotbarSlots)
+        // Sélectionnez le slot actif de la hotbar
+        InventorySlot selectedSlot = hotbarSlots[selectedHotbarSlot].GetComponent<InventorySlot>();
+        if (selectedSlot != null && selectedSlot.HeldItem != null)
         {
-            Vector3 scale;
-
-            if (slot == hotbarSlots[selectedHotbarSlot])
+            InventoryItem heldItem = selectedSlot.HeldItem.GetComponent<InventoryItem>();
+            if (heldItem != null)
             {
-                scale = new Vector3(1.1f, 1.1f, 1.1f);
-
-                if (slot.GetComponent<InventorySlot>().HeldItem != null)
-                {
-                    for (int i = 0; i < handParent.childCount; i++)
-                    {
-                        if (handParent.GetChild(i).GetComponent<ItemHand>().itemScriptableObject
-                            == hotbarSlots[selectedHotbarSlot].GetComponent<InventorySlot>().HeldItem.GetComponent<InventoryItem>().itemScriptableObject)
-                        {
-                            handParent.GetChild(i).gameObject.SetActive(true);
-                        }
-                    }
-                }
+                InstantiateItemInHand(heldItem);
             }
             else
             {
-                scale = new Vector3(0.9f, 0.9f, 0.9f);
+                Debug.LogWarning("L'item détenu n'a pas de composant InventoryItem.");
             }
+        }
+        else
+        {
+            Debug.LogWarning("Le slot sélectionné n'a pas d'item ou est nul.");
+        }
 
-            slot.transform.localScale = scale;
+        // Mettre à jour la mise à l'échelle des slots de la hotbar
+        for (int i = 0; i < hotbarSlots.Length; i++)
+        {
+            Vector3 scale = i == selectedHotbarSlot ? new Vector3(1.1f, 1.1f, 1.1f) : new Vector3(0.9f, 0.9f, 0.9f);
+            hotbarSlots[i].transform.localScale = scale;
         }
     }
+
+
+
+    private void InstantiateItemInHand(InventoryItem item)
+    {
+        // Créez une instance du prefab en tant qu'enfant de handParent
+        GameObject itemInHand = Instantiate(itemPrefab, handParent);
+        InventoryItem handItemComponent = itemInHand.GetComponent<InventoryItem>();
+
+        // Configurez les propriétés du nouvel item
+        handItemComponent.itemScriptableObject = item.itemScriptableObject;
+        handItemComponent.stackCurrent = item.stackCurrent;
+
+        // Ajustez la position, la rotation et l'échelle de l'item
+        itemInHand.transform.localPosition = Vector3.zero; // Position relative à handParent
+        itemInHand.transform.localRotation = Quaternion.identity; // Rotation relative à handParent
+        itemInHand.transform.localScale = Vector3.one; // Échelle relative à handParent
+
+        // Assurez-vous que l'item est actif
+        itemInHand.SetActive(true);
+
+        // Vérifiez les composants du prefab
+        if (itemInHand.GetComponent<Renderer>() == null)
+        {
+            Debug.LogError("Le prefab n'a pas de composant Renderer !");
+        }
+        else
+        {
+            Debug.Log("Le prefab a un composant Renderer.");
+        }
+
+        // Affichez les détails sur la position et l'état
+        Debug.Log("Item instancié dans la main: " + itemInHand.name);
+        Debug.Log("Position de l'item: " + itemInHand.transform.position);
+    }
+
 
     public void OnPointerDown(PointerEventData eventData)
     {
@@ -133,7 +169,7 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
             GameObject clickedObject = eventData.pointerCurrentRaycast.gameObject;
             InventorySlot slot = clickedObject.GetComponent<InventorySlot>();
 
-            //There is item in the slot - pick it up
+            // Il y a un item dans le slot - on le prend
             if (slot != null && slot.HeldItem != null)
             {
                 draggedObject = slot.HeldItem;
@@ -166,19 +202,19 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
             // Si on relâche l'item sur un slot d'inventaire qui contient déjà un item
             else if (inventorySlot != null && !inventorySlot.IsEmpty())
             {
-                lastItemSlot.GetComponent<InventorySlot>().SetHeldItem(inventorySlot.HeldItem);
-                inventorySlot.HeldItem.transform.SetParent(inventorySlot.transform.parent.parent.GetChild(2));
-
+                GameObject tempItem = inventorySlot.HeldItem;
                 inventorySlot.SetHeldItem(draggedObject);
+                lastItemSlot.GetComponent<InventorySlot>().SetHeldItem(tempItem);
+                tempItem.transform.SetParent(lastItemSlot.transform.parent.parent.GetChild(2));
                 draggedObject.transform.SetParent(inventorySlot.transform.parent.parent.GetChild(2));
             }
             // Si on relâche l'item sur un slot de crafting qui contient déjà un item
             else if (craftingSlot != null && !craftingSlot.IsEmpty())
             {
-                lastItemSlot.GetComponent<InventorySlot>().SetHeldItem(craftingSlot.HeldItem);
-                craftingSlot.HeldItem.transform.SetParent(craftingSlot.transform.parent);
-
+                GameObject tempItem = craftingSlot.HeldItem;
                 craftingSlot.SetHeldItem(draggedObject);
+                lastItemSlot.GetComponent<InventorySlot>().SetHeldItem(tempItem);
+                tempItem.transform.SetParent(lastItemSlot.transform.parent.parent.GetChild(2));
                 draggedObject.transform.SetParent(craftingSlot.transform);
             }
             // Si on relâche l'item ailleurs (retourne l'item au dernier slot)
@@ -191,11 +227,6 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
             draggedObject = null;
         }
     }
-
-
-
-
-
 
     public void ItemPicked(GameObject pickedItem)
     {
@@ -299,7 +330,6 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
         }
     }
 
-
     public void OnCraftButtonPressed()
     {
         CraftingManager craftingManager = FindObjectOfType<CraftingManager>();
@@ -309,4 +339,3 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
         }
     }
 }
-

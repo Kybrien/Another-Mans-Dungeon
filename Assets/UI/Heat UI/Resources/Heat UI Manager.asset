@@ -23,9 +23,9 @@ MonoBehaviour:
   accentColor: {r: 1, g: 0.6862745, b: 0, a: 1}
   accentColorInvert: {r: 0.09803922, g: 0.13725491, b: 0.1764706, a: 1}
   primaryColor: {r: 1, g: 1, b: 1, a: 1}
-  secondaryColor: {r: 0.09803922, g: 0.13725491, b: 0.1764706, a: 1}
+  secondaryColor: {r: 0.098039225, g: 0.13725491, b: 0.1764706, a: 1}
   negativeColor: {r: 1, g: 0.29411766, b: 0.29411766, a: 1}
-  backgroundColor: {r: 0.09803922, g: 0.13725491, b: 0.1764706, a: 1}
+  backgroundColor: {r: 0.098039225, g: 0.13725491, b: 0.1764706, a: 1}
   fontLight: {fileID: 11400000, guid: 561b17b1e2e773d4dbdf4095f3b05cca, type: 2}
   fontRegular: {fileID: 11400000, guid: 8e8f97682e668e94cb30d2e6b8e13d84, type: 2}
   fontMedium: {fileID: 11400000, guid: 3c499bda0f839fa40ae8c42951d5779d, type: 2}
@@ -35,10 +35,10 @@ MonoBehaviour:
   enableLocalization: 0
   localizationSettings: {fileID: 11400000, guid: 2cbd73cf0fc79bf4ab2e27e18b1ba7c8, type: 2}
   currentLanguage: {fileID: 11400000, guid: 8d3376ccffec1fb4eb27e25b3629b305, type: 2}
-  brandLogo: {fileID: 21300000, guid: 78ca0ac98a59e2d49a61da6d805033a7, type: 3}
-  gameLogo: {fileID: 21300000, guid: db29e29da505c4348be353a9303e4de2, type: 3}
+  brandLogo: {fileID: 21300000, guid: 332448355a86de84c8fc581e6a79a5fe, type: 3}
+  gameLogo: {fileID: 21300000, guid: 2402dbb5d4ededb4a85a14dc0c21f163, type: 3}
   enableSplashScreen: 1
   showSplashScreenOnce: 1
   pakType: 0
-  pakText: Press {Any Key} To Start
+  pakText: Les donjons vous ouvrent leurs portes...
   pakLocalizationText: PAK_Part1 {PAK_Key} PAK_Part2

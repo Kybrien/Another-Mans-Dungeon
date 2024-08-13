@@ -63,6 +63,7 @@ public class RoundManager : NetworkBehaviour
         return chosenMap;
     }
 
+    [Server]
     IEnumerator HandleRounds()
     {
         yield return new WaitForSeconds(10);
@@ -104,7 +105,7 @@ public class RoundManager : NetworkBehaviour
                     NewMap.transform.SetParent(mapFolder);
                     NewMap.transform.position = mapFolder.transform.position;
 
-                    NetworkServer.Spawn(NewMap, conn);
+                    NetworkServer.Spawn(NewMap);
 
                     if (NewMap.transform.Find("SpawnLocation"))
                     {

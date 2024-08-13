@@ -554,7 +554,7 @@ MonoBehaviour:
   player: {fileID: 0}
   aiPath: {fileID: 1768413388750911406}
   animator: {fileID: 8257339671777269801}
-  rb: {fileID: 3284354685195897939}
+  rb: {fileID: 0}
   initialChaseRadius: 14
   attackDistance: 3.2
   CanRush: 0

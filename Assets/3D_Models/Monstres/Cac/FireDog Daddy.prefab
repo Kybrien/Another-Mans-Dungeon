@@ -1721,7 +1721,7 @@ MonoBehaviour:
   player: {fileID: 0}
   aiPath: {fileID: 7440298342735599986}
   animator: {fileID: 8981445928431136429}
-  rb: {fileID: 4750307537027749981}
+  rb: {fileID: 0}
   initialChaseRadius: 13
   attackDistance: 3.7
   CanRush: 0
@@ -1840,7 +1840,7 @@ CapsuleCollider:
   m_Radius: 0.62
   m_Height: 1.84
   m_Direction: 1
-  m_Center: {x: 0, y: 0.87, z: 0}
+  m_Center: {x: 0, y: 0.99, z: 0}
 --- !u!54 &4750307537027749981
 Rigidbody:
   m_ObjectHideFlags: 0

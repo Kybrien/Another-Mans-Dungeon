@@ -33,8 +33,12 @@ public class MobSpawner : MonoBehaviour
             Vector2 spawnPosition = Random.insideUnitCircle * spawnRadius;
             Vector3 spawnLocation = new Vector3(spawnPosition.x, 0, spawnPosition.y) + transform.position;
 
+            // Générer une rotation aléatoire
+            float randomYRotation = Random.Range(0f, 360f);
+            Quaternion spawnRotation = Quaternion.Euler(0, randomYRotation, 0);
+
             // Instancier le monstre à la position générée
-            GameObject spawnedMonster = Instantiate(monsterPrefab, spawnLocation, Quaternion.identity);
+            GameObject spawnedMonster = Instantiate(monsterPrefab, spawnLocation, spawnRotation);
 
             // Définir une taille aléatoire entre 0.8 et 1.2
             float randomScale = Random.Range(0.8f, 1.2f);

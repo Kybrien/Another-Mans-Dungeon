@@ -34,7 +34,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Exposure: 0.85
+    - _Exposure: 0.82
     m_Colors: []
   m_BuildTextureStacks: []
 --- !u!114 &7408070079070313205

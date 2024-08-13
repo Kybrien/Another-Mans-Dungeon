@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
+using TMPro;
 using UnityEngine;
 
 public class RoundManager : NetworkBehaviour
@@ -25,7 +26,7 @@ public class RoundManager : NetworkBehaviour
 
     [SerializeField] private List<MapData> maps;
 
-    [SerializeField] private int mapDistance = 10000;
+    [SerializeField] private int mapSpacing = 10000;
 
     [Header("GAME PROGRESSION (DO NOT TOUCH)")]
 
@@ -66,10 +67,10 @@ public class RoundManager : NetworkBehaviour
     {
         yield return new WaitForSeconds(10);
 
-        for (int i = 1; i <= NetworkManager.singleton.numPlayers; i++)
+        foreach (KeyValuePair<int, NetworkConnectionToClient> entry in NetworkServer.connections)
         {
-            GameObject newFolder = new GameObject("Map" + i.ToString());
-            newFolder.transform.position = new Vector3(0, 0, i * mapDistance);
+            GameObject newFolder = new GameObject("Map" + entry.Key.ToString());
+            newFolder.transform.position = new Vector3(0, 0, entry.Key * mapSpacing + mapSpacing);
         }
 
         while (currentRound < rounds)
@@ -77,6 +78,7 @@ public class RoundManager : NetworkBehaviour
             if (secondsLeft > 0)
             {
                 secondsLeft -= 1;
+                RpcUpdateStatus();
                 Debug.Log("timer " + secondsLeft.ToString());
             } else
             {
@@ -86,14 +88,40 @@ public class RoundManager : NetworkBehaviour
                 MapData chosenMap = SelectRandomMap();
                 Debug.Log(chosenMap.name);
 
-                Debug.Log("rpc sent");
+                foreach (KeyValuePair<int, NetworkConnectionToClient> entry in NetworkServer.connections)
+                {
+                    NetworkConnectionToClient conn = entry.Value;
+                    GameObject player = conn.identity.gameObject;
 
-                GameObject NewMap = Instantiate(chosenMap.gameObject);
-                NewMap.transform.position = new Vector3(0, 0, 0);
+                    Transform mapFolder = GameObject.Find("Map" + entry.Key.ToString()).transform;
 
-                NetworkServer.Spawn(NewMap);
+                    foreach (Transform child in mapFolder)
+                    {
+                        GameObject.Destroy(child.gameObject);
+                    }
 
-                RpcSwitchMap(NewMap);
+                    GameObject NewMap = Instantiate(chosenMap.gameObject);
+                    NewMap.transform.SetParent(mapFolder);
+                    NewMap.transform.position = mapFolder.transform.position;
+
+                    NetworkServer.Spawn(NewMap, conn);
+
+                    if (NewMap.transform.Find("SpawnLocation"))
+                    {
+                        player.transform.position = NewMap.transform.Find("SpawnLocation").transform.position;
+                    } else
+                    {
+                        Debug.LogWarning("No SpawnLocation found!");
+                        player.transform.position = NewMap.transform.position;
+                    }
+
+                    PlayerMovementController plrData = player.GetComponent<PlayerMovementController>();
+                    plrData.SetHealth(plrData.GetMaxHealth());
+                }
+
+                Debug.Log("Round " + currentRound.ToString() + " started");
+
+                RpcUpdateStatus();
             }
 
             yield return new WaitForSeconds(1);
@@ -101,22 +129,8 @@ public class RoundManager : NetworkBehaviour
     }
 
     [ClientRpc]
-    void RpcSwitchMap(GameObject map)
+    public void RpcUpdateStatus()
     {
-        Transform mapFolder = GameObject.Find("Map" + NetworkClient.localPlayer.netId.ToString()).transform;
-
-        foreach (Transform child in mapFolder)
-        {
-            GameObject.Destroy(child.gameObject);
-        }
-
-        Debug.Log("Round " + currentRound.ToString() + " started");
-
-        map.transform.SetParent(mapFolder);
-        map.transform.position = Vector3.zero;
-
-        /*        GameObject NewMap = Instantiate(map.gameObject);
-                NewMap.transform.position = new Vector3(0, 0, 0);
-                NewMap.transform.SetParent(mapFolder);*/
+        NetworkClient.localPlayer.GetComponent<PlayerMovementController>().UpdateStatus(currentRound, secondsLeft);
     }
 }

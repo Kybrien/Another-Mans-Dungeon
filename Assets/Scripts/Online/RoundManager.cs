@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Security.Cryptography;
 using TMPro;
 using UnityEngine;
@@ -72,6 +73,9 @@ public class RoundManager : NetworkBehaviour
         {
             GameObject newFolder = new GameObject("Map" + entry.Key.ToString());
             newFolder.transform.position = new Vector3(0, 0, entry.Key * mapSpacing + mapSpacing);
+            newFolder.AddComponent<NetworkIdentity>();
+
+            NetworkServer.Spawn(newFolder);
         }
 
         while (currentRound < rounds)

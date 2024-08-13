@@ -72,10 +72,15 @@ public class RoundManager : NetworkBehaviour
         foreach (KeyValuePair<int, NetworkConnectionToClient> entry in NetworkServer.connections)
         {
             GameObject newFolder = Instantiate(mapFolderPrefab);
-            newFolder.name = "Map" + entry.Key.ToString();
             newFolder.transform.position = new Vector3(0, 0, entry.Key * mapSpacing + mapSpacing);
 
             NetworkServer.Spawn(newFolder);
+
+            MapFolderController mapFolderScript = newFolder.GetComponent<MapFolderController>();
+            if (mapFolderScript != null)
+            {
+                mapFolderScript.RpcSetName("Map" + entry.Key.ToString());
+            }
         }
 
         while (currentRound < rounds)

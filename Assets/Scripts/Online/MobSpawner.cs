@@ -1,8 +1,10 @@
+using Mirror;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
 
-public class MobSpawner : MonoBehaviour
+public class MobSpawner : NetworkBehaviour
 {
     [Header("Spawner Settings")]
     public List<GameObject> monsterPrefabs; // Liste de prefabs de monstres
@@ -43,6 +45,8 @@ public class MobSpawner : MonoBehaviour
             // Définir une taille aléatoire entre 0.8 et 1.2
             float randomScale = Random.Range(0.8f, 1.2f);
             spawnedMonster.transform.localScale = new Vector3(randomScale, randomScale, randomScale);
+
+            NetworkServer.Spawn(spawnedMonster);
 
             // Incrémenter le compteur de monstres actuels
             currentMonsterCount++;

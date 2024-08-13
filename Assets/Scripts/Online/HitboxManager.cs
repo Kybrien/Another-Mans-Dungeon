@@ -1,18 +1,15 @@
+using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HitboxManager : MonoBehaviour
+public class HitboxManager : NetworkBehaviour
 {
-    private List<GameObject> debounce;
+    private SyncList<GameObject> debounce = new SyncList<GameObject>();
     // Start is called before the first frame update
     void Start()
     {
-        debounce = new List<GameObject>();
-        for (int i = 0; i < debounce.Count; i++)
-        {
-            Debug.Log(debounce[i]);
-        }
+
     }
 
     // Update is called once per frame
@@ -23,22 +20,20 @@ public class HitboxManager : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("touched");
         if (other.tag == "Enemy")
         {
             if (debounce.Find((x) => x == other.gameObject)) {
+                Debug.Log(other.gameObject.name + " already in list");
                 return;
             }
 
-            MonsterController monsterHealth = other.GetComponent<MonsterController>();
-
             debounce.Add(other.gameObject);
+
+            MonsterController monsterHealth = other.GetComponent<MonsterController>();
             monsterHealth.TakeDamage(10);
 
+            //monsterHealth.LocalUpdateHealthBar();
             Debug.Log("HEALTH: " + monsterHealth.GetHealth());
-        } else
-        {
-            Debug.Log("already in list");
         }
     }
 }

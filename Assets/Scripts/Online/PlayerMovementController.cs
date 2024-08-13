@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Mirror;
+using UnityEngine.UI;
+using TMPro;
 
 public class PlayerMovementController : NetworkBehaviour
 {
@@ -11,6 +13,18 @@ public class PlayerMovementController : NetworkBehaviour
     public GameObject PlayerModel;
     [SerializeField] private Animator animator;
     [SerializeField] private Rigidbody rb;
+
+    [SerializeField] private RawImage healthBar;
+    [SerializeField] private TextMeshProUGUI healthText;
+
+    [SerializeField] private TextMeshProUGUI roundText;
+    [SerializeField] private TextMeshProUGUI timerText;
+
+    [SyncVar(hook = nameof(UpdateHealthBar))]
+    [SerializeField] private float health = 100;
+
+    [SyncVar]
+    [SerializeField] private float maxHealth = 100;
 
     private void Start()
     {
@@ -40,7 +54,7 @@ public class PlayerMovementController : NetworkBehaviour
     {
         Physics.SyncTransforms();
         rb.velocity = Vector3.zero;
-        transform.position = NetworkManager.singleton.GetStartPosition().position;
+        //transform.position = NetworkManager.singleton.GetStartPosition().position;
     }
 
     public void Movement()
@@ -80,5 +94,31 @@ public class PlayerMovementController : NetworkBehaviour
         {
             transform.position = new Vector3(transform.position.x, 50, transform.position.z);
         }
+    }
+
+    void UpdateHealthBar(float oldValue, float newValue)
+    {
+        healthBar.rectTransform.sizeDelta = new Vector2((newValue / maxHealth) * 250, 10);
+        healthText.text = newValue.ToString() + " / " + maxHealth.ToString();
+    }
+
+    public void UpdateStatus(int round, int timer)
+    {
+        int minutes = Mathf.FloorToInt(timer / 60);
+        int seconds = Mathf.FloorToInt(timer % 60);
+
+        timerText.text = "Time Left - " + string.Format("{0:00}:{1:00}", minutes, seconds);
+        roundText.text = "Round " + round.ToString();
+    }
+
+    [Server]
+    public void SetHealth(float newHealth)
+    {
+        health = Mathf.Max(newHealth, maxHealth);
+    }
+
+    public float GetMaxHealth()
+    {
+        return maxHealth;
     }
 }

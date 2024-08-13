@@ -61,11 +61,11 @@ public class CombatController : NetworkBehaviour
     }
 
     [Command]
-    private void CmdDealMonsterDamage(RaycastHit result)
+    private void CmdDealMonsterDamage(GameObject enemy)
     {
-        if (result.transform.tag == "Enemy")
+        if (enemy.tag == "Enemy")
         {
-            result.transform.gameObject.GetComponent<MonsterController>().TakeDamage(10);
+            enemy.GetComponent<MonsterController>().TakeDamage(10);
         }
     }
 
@@ -137,6 +137,8 @@ public class CombatController : NetworkBehaviour
 
     private void HandleCombo()
     {
+        if (!isLocalPlayer) { return; }
+
         if (comboCount >= 4)
         {
             return;
@@ -161,8 +163,7 @@ public class CombatController : NetworkBehaviour
         if (isRange)
         {
             RaycastHit result = SendRaycast();
-            Debug.Log(result.transform.gameObject.name);
-            CmdDealMonsterDamage(result);
+            CmdDealMonsterDamage(result.transform.gameObject);
         }
         else
         {

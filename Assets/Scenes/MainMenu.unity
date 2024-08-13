@@ -711,7 +711,7 @@ MonoBehaviour:
   autoCreatePlayer: 1
   playerSpawnMethod: 0
   spawnPrefabs:
-  - {fileID: 1773660460313355093, guid: fce4083b9d4066c4a85d7c0827a1f48c, type: 3}
+  - {fileID: 1773660460313355093, guid: 75e97007566f47a4db4ddbcced4e6875, type: 3}
   - {fileID: 1169305782704711723, guid: 532df075e9c1a6545a7ac0957e66932f, type: 3}
   - {fileID: 0}
   exceptionsDisconnect: 1
@@ -729,7 +729,7 @@ MonoBehaviour:
   evaluationMethod: 0
   evaluationInterval: 3
   timeInterpolationGui: 0
-  GamePlayerPrefab: {fileID: 2702565336661232320, guid: fce4083b9d4066c4a85d7c0827a1f48c, type: 3}
+  GamePlayerPrefab: {fileID: 2702565336661232320, guid: 75e97007566f47a4db4ddbcced4e6875, type: 3}
 --- !u!4 &605741564
 Transform:
   m_ObjectHideFlags: 0

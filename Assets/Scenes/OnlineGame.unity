@@ -712,7 +712,7 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  test: {fileID: 5581006800462885925, guid: 430790e40ceb4c64abf7fcc9a9fe797f, type: 3}
+  mapFolderPrefab: {fileID: 0}
   rounds: 5
   maxRoundTimer: 30
   maps:

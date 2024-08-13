@@ -17,7 +17,7 @@ public class RoundManager : NetworkBehaviour
         public GameObject gameObject;
     }
 
-    [SerializeField] private GameObject test;
+    [SerializeField] private GameObject mapFolderPrefab;
 
     [Header("GAME SETTINGS")]
 
@@ -71,9 +71,8 @@ public class RoundManager : NetworkBehaviour
 
         foreach (KeyValuePair<int, NetworkConnectionToClient> entry in NetworkServer.connections)
         {
-            GameObject newFolder = new GameObject("Map" + entry.Key.ToString());
+            GameObject newFolder = Instantiate(mapFolderPrefab);
             newFolder.transform.position = new Vector3(0, 0, entry.Key * mapSpacing + mapSpacing);
-            newFolder.AddComponent<NetworkIdentity>();
 
             NetworkServer.Spawn(newFolder);
         }

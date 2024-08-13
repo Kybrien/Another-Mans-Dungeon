@@ -72,6 +72,7 @@ public class RoundManager : NetworkBehaviour
         foreach (KeyValuePair<int, NetworkConnectionToClient> entry in NetworkServer.connections)
         {
             GameObject newFolder = Instantiate(mapFolderPrefab);
+            newFolder.name = "Map" + entry.Key.ToString();
             newFolder.transform.position = new Vector3(0, 0, entry.Key * mapSpacing + mapSpacing);
 
             NetworkServer.Spawn(newFolder);

@@ -40,6 +40,8 @@ public class RoundManager : NetworkBehaviour
     [SyncVar]
     private int secondsLeft = 0;
 
+    public readonly SyncDictionary<int, GameObject> playerMapFolders = new SyncDictionary<int, GameObject>();
+
     // Start is called before the first frame update
     void Start()
     {
@@ -67,21 +69,36 @@ public class RoundManager : NetworkBehaviour
     [Server]
     IEnumerator HandleRounds()
     {
-        yield return new WaitForSeconds(10);
+        for (int i = 10; i > 5; i--)
+        {
+            secondsLeft = i;
+            RpcUpdateStatus();
+            yield return new WaitForSeconds(1);
+        }
 
         foreach (KeyValuePair<int, NetworkConnectionToClient> entry in NetworkServer.connections)
         {
+            NetworkConnectionToClient conn = entry.Value;
+
             GameObject newFolder = Instantiate(mapFolderPrefab);
             newFolder.transform.position = new Vector3(0, 0, entry.Key * mapSpacing + mapSpacing);
+            //newFolder.name = "Map" + entry.Key.ToString();
 
-            NetworkServer.Spawn(newFolder);
+            NetworkServer.Spawn(newFolder, conn);
 
-            MapFolderController mapFolderScript = newFolder.GetComponent<MapFolderController>();
-            if (mapFolderScript != null)
-            {
-                mapFolderScript.RpcSetName("Map" + entry.Key.ToString());
-            }
+            playerMapFolders.Add(entry.Key, newFolder);
+
+            //RpcSetMapName(newFolder, "Map" + entry.Key.ToString());
         }
+
+        for (int i = 5; i >= 1; i--)
+        {
+            secondsLeft = i;
+            RpcUpdateStatus();
+            yield return new WaitForSeconds(1);
+        }
+
+        yield return new WaitForSeconds(3);
 
         while (currentRound < rounds)
         {
@@ -103,7 +120,8 @@ public class RoundManager : NetworkBehaviour
                     NetworkConnectionToClient conn = entry.Value;
                     GameObject player = conn.identity.gameObject;
 
-                    Transform mapFolder = GameObject.Find("Map" + entry.Key.ToString()).transform;
+                    //Transform mapFolder = GameObject.Find("Map" + entry.Key.ToString()).transform;
+                    Transform mapFolder = playerMapFolders[entry.Key].transform;
 
                     foreach (Transform child in mapFolder)
                     {
@@ -142,5 +160,11 @@ public class RoundManager : NetworkBehaviour
     public void RpcUpdateStatus()
     {
         NetworkClient.localPlayer.GetComponent<PlayerMovementController>().UpdateStatus(currentRound, secondsLeft);
+    }
+
+    [ClientRpc]
+    public void RpcSetMapName(GameObject map, string newName)
+    {
+        map.name = newName;
     }
 }

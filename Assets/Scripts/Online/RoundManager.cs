@@ -172,14 +172,20 @@ public class RoundManager : NetworkBehaviour
     [TargetRpc]
     public void RpcTeleportToSpawn(NetworkConnectionToClient target, GameObject map)
     {
+        if (map == null)
+        {
+            Debug.LogError("Map is null, cannot teleport!");
+            return;
+        }
+
         if (map.transform.Find("SpawnLocation"))
         {
-            target.identity.transform.position = map.transform.Find("SpawnLocation").transform.position;
+            NetworkClient.localPlayer.transform.position = map.transform.Find("SpawnLocation").transform.position;
         }
         else
         {
             Debug.LogWarning("No SpawnLocation found!");
-            target.identity.transform.position = map.transform.position;
+            NetworkClient.localPlayer.transform.position = map.transform.position;
         }
     }
-   }
+}

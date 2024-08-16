@@ -8,9 +8,8 @@ using TMPro;
 
 public class PlayerMovementController : NetworkBehaviour
 {
-    public float Speed = 10f;
-    public float jumpForce = 200f;
-    public GameObject PlayerModel;
+    [SerializeField] private GameObject PlayerModel;
+    [SerializeField] private GameObject UICamera;
     [SerializeField] private Animator animator;
     [SerializeField] private Rigidbody rb;
 
@@ -19,6 +18,11 @@ public class PlayerMovementController : NetworkBehaviour
 
     [SerializeField] private TextMeshProUGUI roundText;
     [SerializeField] private TextMeshProUGUI timerText;
+
+    [Tooltip("Player Values")]
+
+    [SerializeField] private float Speed = 10f;
+    [SerializeField] private float jumpForce = 200f;
 
     [SyncVar(hook = nameof(UpdateHealthBar))]
     [SerializeField] private float health = 100;
@@ -38,7 +42,9 @@ public class PlayerMovementController : NetworkBehaviour
             if (PlayerModel.activeSelf == false)
             {
                 rb.useGravity = true;
+                rb.constraints = RigidbodyConstraints.FreezeRotation;
                 PlayerModel.SetActive(true);
+                UICamera.SetActive(true);
                 SetSpawnPosition();
                 Debug.Log(gameObject.name + " Position is: " + gameObject.transform.position);
             }
@@ -54,7 +60,7 @@ public class PlayerMovementController : NetworkBehaviour
     {
         Physics.SyncTransforms();
         rb.velocity = Vector3.zero;
-        //transform.position = NetworkManager.singleton.GetStartPosition().position;
+        transform.position = NetworkManager.singleton.GetStartPosition().position;
     }
 
     public void Movement()
@@ -108,7 +114,7 @@ public class PlayerMovementController : NetworkBehaviour
         int seconds = Mathf.FloorToInt(timer % 60);
 
         timerText.text = "Time Left - " + string.Format("{0:00}:{1:00}", minutes, seconds);
-        roundText.text = "Round " + round.ToString();
+        roundText.text = (round == 0 ? "Intermission" : "Round " + round.ToString());
     }
 
     [Server]

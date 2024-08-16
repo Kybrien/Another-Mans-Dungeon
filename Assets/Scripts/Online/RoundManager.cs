@@ -128,11 +128,13 @@ public class RoundManager : NetworkBehaviour
                         GameObject.Destroy(child.gameObject);
                     }
 
-                    GameObject NewMap = Instantiate(chosenMap.gameObject);
-                    NewMap.transform.SetParent(mapFolder);
+                    GameObject NewMap = Instantiate(chosenMap.gameObject, mapFolder);
+                    //NewMap.transform.SetParent(mapFolder);
                     NewMap.transform.position = mapFolder.transform.position;
 
                     NetworkServer.Spawn(NewMap);
+
+                    //RpcSetMapParent(NewMap, mapFolder);
 
                     if (NewMap.transform.Find("SpawnLocation"))
                     {
@@ -166,5 +168,11 @@ public class RoundManager : NetworkBehaviour
     public void RpcSetMapName(GameObject map, string newName)
     {
         map.name = newName;
+    }
+
+    [ClientRpc]
+    public void RpcSetMapParent(GameObject map, Transform parent)
+    {
+        map.transform.parent = parent;
     }
 }

@@ -135,6 +135,7 @@ public class RoundManager : NetworkBehaviour
                     NetworkServer.Spawn(NewMap);
 
                     RpcSwitchMap(NewMap, mapFolder);
+                    RpcTeleportToSpawn(conn, NewMap);
 
                     PlayerMovementController plrData = player.GetComponent<PlayerMovementController>();
                     plrData.SetHealth(plrData.GetMaxHealth());
@@ -166,17 +167,19 @@ public class RoundManager : NetworkBehaviour
     {
         map.transform.parent = parent;
         map.transform.position = parent.transform.position;
+    }
 
-        GameObject player = NetworkClient.localPlayer.gameObject;
-
+    [TargetRpc]
+    public void RpcTeleportToSpawn(NetworkConnectionToClient target, GameObject map)
+    {
         if (map.transform.Find("SpawnLocation"))
         {
-            player.transform.position = map.transform.Find("SpawnLocation").transform.position;
+            target.identity.transform.position = map.transform.Find("SpawnLocation").transform.position;
         }
         else
         {
             Debug.LogWarning("No SpawnLocation found!");
-            player.transform.position = map.transform.position;
+            target.identity.transform.position = map.transform.position;
         }
     }
-}
+   }

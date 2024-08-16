@@ -134,7 +134,7 @@ public class RoundManager : NetworkBehaviour
 
                     NetworkServer.Spawn(NewMap);
 
-                    //RpcSetMapParent(NewMap, mapFolder);
+                    RpcSetMapParent(NewMap, mapFolder);
 
                     if (NewMap.transform.Find("SpawnLocation"))
                     {

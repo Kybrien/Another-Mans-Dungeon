@@ -174,6 +174,6 @@ public class RoundManager : NetworkBehaviour
     public void RpcSetMapParent(GameObject map, Transform parent)
     {
         map.transform.parent = parent;
-        map.transform.position = Vector3.zero;
+        map.transform.position = parent.transform.position;
     }
 }

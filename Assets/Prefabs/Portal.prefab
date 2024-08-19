@@ -4871,7 +4871,9 @@ GameObject:
   m_Component:
   - component: {fileID: 2047440211336914410}
   - component: {fileID: 9113806174772940530}
+  - component: {fileID: -7439053783805335069}
   - component: {fileID: 2044694564653349260}
+  - component: {fileID: -2132210597793207393}
   m_Layer: 0
   m_Name: Portal
   m_TagString: Untagged
@@ -9708,6 +9710,18 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
+--- !u!114 &-7439053783805335069
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5738097765232594670}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c8bac30d0e4bd345ac148f7f8824018, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!199 &2044694564653349260
 ParticleSystemRenderer:
   serializedVersion: 6
@@ -9783,6 +9797,27 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!65 &-2132210597793207393
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5738097765232594670}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5855186048388502139
 GameObject:
   m_ObjectHideFlags: 0

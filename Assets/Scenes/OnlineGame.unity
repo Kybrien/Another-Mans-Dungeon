@@ -714,10 +714,35 @@ MonoBehaviour:
   syncInterval: 0
   mapFolderPrefab: {fileID: 5224360806248735563, guid: 19f8ef81b4b1cb646801cbd93117774c, type: 3}
   rounds: 5
-  maxRoundTimer: 30
+  maxRoundTimer: 90
   maps:
-  - name: Landscape
-    gameObject: {fileID: 5581006800462885925, guid: 430790e40ceb4c64abf7fcc9a9fe797f, type: 3}
+  - name: Dungeon
+    gameObject: {fileID: 5709445912041704132, guid: ca0d4545742abf44ab0b66053bc0ac3e, type: 3}
+  - name: Thermal Desert
+    gameObject: {fileID: 5361448047971008462, guid: 4ba038c0a666dc948854cc152fb51236, type: 3}
+  - name: Volcanic Desert
+    gameObject: {fileID: 3519783018567834192, guid: e96e899227ec49549ad09a87b738dfb9, type: 3}
+  - name: Empire
+    gameObject: {fileID: 1439638497436560342, guid: e13fd549b916b644bbb837a609cf5a3c, type: 3}
+  - name: Forge Desert
+    gameObject: {fileID: 3657315419121974795, guid: 99099fd422841fa44aa05e8ad418d767, type: 3}
+  - name: Forge Throne
+    gameObject: {fileID: 3748879619402691418, guid: 3ae4dacbc1d5e994faaef39ae11c8c0e, type: 3}
+  - name: Forge Volcano
+    gameObject: {fileID: 1893003033622229383, guid: c8b393c4a2aa51447a078acb4d2a7eb7, type: 3}
+  - name: Kingdom Castle
+    gameObject: {fileID: 6168190874869176927, guid: 1333cfda134115442880f6ba4197129d, type: 3}
+  - name: Kingdom Garden
+    gameObject: {fileID: 489492133537072200, guid: 5066c74e4450b884f899e3c32f05eed7, type: 3}
+  - name: Sci-Fi
+    gameObject: {fileID: 5027728525023613308, guid: 0fded1686edaafb4bbdba43284ed1399, type: 3}
+  maps1v1:
+  - name: Carnaval - 1v1
+    gameObject: {fileID: 1437113553834014631, guid: ed01fe886a5126e4babbe04769307d3c, type: 3}
+  - name: Forge - 1v1
+    gameObject: {fileID: 841393270213623500, guid: d95f4f4e5b394ce49aa2811a0402f481, type: 3}
+  - name: Hell - 1v1
+    gameObject: {fileID: 1558923400518302628, guid: 194959dacc403c44e95a0f194514faa5, type: 3}
   mapSpacing: 10000
 --- !u!114 &1036970427
 MonoBehaviour:

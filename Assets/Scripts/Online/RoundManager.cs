@@ -27,6 +27,8 @@ public class RoundManager : NetworkBehaviour
 
     [SerializeField] private List<MapData> maps;
 
+    [SerializeField] private List<MapData> maps1v1;
+
     [SerializeField] private int mapSpacing = 10000;
 
     [Header("GAME PROGRESSION (DO NOT TOUCH)")]
@@ -40,6 +42,9 @@ public class RoundManager : NetworkBehaviour
     [SyncVar]
     private int secondsLeft = 0;
 
+    [SyncVar]
+    private int playerThroughPortal = 0;
+
     public readonly SyncDictionary<int, GameObject> playerMapFolders = new SyncDictionary<int, GameObject>();
 
     // Start is called before the first frame update
@@ -50,19 +55,24 @@ public class RoundManager : NetworkBehaviour
 
     public override void OnStartServer()
     {
-        Debug.Log("Start!");
         StartCoroutine(HandleRounds());
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     MapData SelectRandomMap()
     {
         MapData chosenMap = maps[UnityEngine.Random.Range(0, maps.Count)];
+        return chosenMap;
+    }
+
+    MapData SelectRandom1v1Map()
+    {
+        MapData chosenMap = maps1v1[UnityEngine.Random.Range(0, maps1v1.Count)];
         return chosenMap;
     }
 
@@ -98,7 +108,7 @@ public class RoundManager : NetworkBehaviour
             yield return new WaitForSeconds(1);
         }
 
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(1);
 
         while (currentRound < rounds)
         {
@@ -106,47 +116,121 @@ public class RoundManager : NetworkBehaviour
             {
                 secondsLeft -= 1;
                 RpcUpdateStatus();
-                Debug.Log("timer " + secondsLeft.ToString());
-            } else
+            }
+            else
             {
                 currentRound += 1;
                 secondsLeft = maxRoundTimer;
 
-                MapData chosenMap = SelectRandomMap();
-                Debug.Log(chosenMap.name);
+                playerThroughPortal = 0;
 
-                foreach (KeyValuePair<int, NetworkConnectionToClient> entry in NetworkServer.connections)
+                if (currentRound == 3 || currentRound == 5)
                 {
-                    NetworkConnectionToClient conn = entry.Value;
-                    GameObject player = conn.identity.gameObject;
+                    MapData chosenMap = SelectRandom1v1Map();
+                    RpcStartLoadingScreen(true, chosenMap.name);
 
-                    //Transform mapFolder = GameObject.Find("Map" + entry.Key.ToString()).transform;
-                    Transform mapFolder = playerMapFolders[entry.Key].transform;
+                    Debug.Log("1V1 START");
 
-                    foreach (Transform child in mapFolder)
-                    {
-                        GameObject.Destroy(child.gameObject);
-                    }
+                    yield return new WaitForSeconds(0.1f);
 
-                    GameObject NewMap = Instantiate(chosenMap.gameObject, mapFolder);
-                    //NewMap.transform.SetParent(mapFolder);
-                    NewMap.transform.position = mapFolder.transform.position;
-
+                    GameObject NewMap = Instantiate(chosenMap.gameObject);
                     NetworkServer.Spawn(NewMap);
 
-                    RpcSwitchMap(NewMap, mapFolder);
-                    RpcTeleportToSpawn(conn, NewMap);
+                    foreach (KeyValuePair<int, NetworkConnectionToClient> entry in NetworkServer.connections)
+                    {
+                        NetworkConnectionToClient conn = entry.Value;
+                        GameObject player = conn.identity.gameObject;
 
-                    PlayerMovementController plrData = player.GetComponent<PlayerMovementController>();
-                    plrData.SetHealth(plrData.GetMaxHealth());
+                        PlayerMovementController plrData = player.GetComponent<PlayerMovementController>();
+                        plrData.SetHealth(plrData.GetMaxHealth());
+
+                        player.transform.position = NewMap.transform.Find("Portal_Player" + (entry.Key % 2).ToString()).position;
+                    }
+                }
+                else {
+                    MapData chosenMap = SelectRandomMap();
+                    RpcStartLoadingScreen(true, chosenMap.name);
+
+                    yield return new WaitForSeconds(0.1f);
+
+                    foreach (KeyValuePair<int, NetworkConnectionToClient> entry in NetworkServer.connections)
+                    {
+                        NetworkConnectionToClient conn = entry.Value;
+                        GameObject player = conn.identity.gameObject;
+
+                        //Transform mapFolder = GameObject.Find("Map" + entry.Key.ToString()).transform;
+                        Transform mapFolder = playerMapFolders[entry.Key].transform;
+
+                        foreach (Transform child in mapFolder)
+                        {
+                            NetworkServer.Destroy(child.gameObject);
+                            //GameObject.Destroy(child.gameObject);
+                        }
+
+                        GameObject NewMap = Instantiate(chosenMap.gameObject, mapFolder);
+                        //NewMap.transform.SetParent(mapFolder);
+                        NewMap.transform.position = mapFolder.transform.position;
+
+                        NetworkServer.Spawn(NewMap);
+
+                        RpcSwitchMap(NewMap, mapFolder);
+                        RpcTeleportToSpawn(conn, NewMap);
+
+                        PlayerMovementController plrData = player.GetComponent<PlayerMovementController>();
+                        plrData.SetHealth(plrData.GetMaxHealth());
+                    }
                 }
 
-                Debug.Log("Round " + currentRound.ToString() + " started");
-
+                RpcStartLoadingScreen(false, "");
                 RpcUpdateStatus();
+
+                playerThroughPortal = 0;
             }
 
             yield return new WaitForSeconds(1);
+        }
+    }
+
+    private void TeleportToPortal(Transform player, GameObject map)
+    {
+        Transform PortalStart = map.transform.Find("PortalStart");
+        if (PortalStart)
+        {
+            player.position = PortalStart.transform.position;
+        }
+        else
+        {
+            Debug.LogWarning("No SpawnLocation found!");
+            player.position = map.transform.position;
+        }
+    }
+
+    [Command(requiresAuthority = false)]
+    public void CmdInvadeWorld(GameObject player)
+    {
+        playerThroughPortal += 1;
+
+        Debug.Log(playerThroughPortal);
+        Debug.Log(NetworkManager.singleton.numPlayers);
+
+        if (playerThroughPortal == NetworkManager.singleton.numPlayers)
+        {
+            secondsLeft = 0;
+        }
+        else
+        {
+            int playerIdentity = (int)player.GetComponent<NetworkIdentity>().netId;
+
+            foreach (KeyValuePair<int, NetworkConnectionToClient> entry in NetworkServer.connections)
+            {
+                if (playerIdentity != entry.Key)
+                {
+                    TeleportToPortal(NetworkClient.localPlayer.transform, playerMapFolders[entry.Key]);
+                    RpcInvadeWorld(entry.Value);
+
+                    break;
+                }
+            }
         }
     }
 
@@ -166,7 +250,7 @@ public class RoundManager : NetworkBehaviour
     public void RpcSwitchMap(GameObject map, Transform parent)
     {
         map.transform.parent = parent;
-        map.transform.position = parent.transform.position;
+        map.transform.position = new Vector3(map.transform.position.x, map.transform.position.y, parent.transform.position.z);
     }
 
     [TargetRpc]
@@ -178,14 +262,26 @@ public class RoundManager : NetworkBehaviour
             return;
         }
 
-        if (map.transform.Find("SpawnLocation"))
+        TeleportToPortal(NetworkClient.localPlayer.transform, map);
+    }
+
+    [ClientRpc]
+    public void RpcStartLoadingScreen(bool load, string mapName)
+    {
+        PlayerLoadingScreen playerLoadingScreen = NetworkClient.localPlayer.GetComponent<PlayerLoadingScreen>();
+        if (load)
         {
-            NetworkClient.localPlayer.transform.position = map.transform.Find("SpawnLocation").transform.position;
+            StartCoroutine(playerLoadingScreen.Load(mapName));
         }
         else
         {
-            Debug.LogWarning("No SpawnLocation found!");
-            NetworkClient.localPlayer.transform.position = map.transform.position;
+            playerLoadingScreen.Complete();
         }
+    }
+
+    [TargetRpc]
+    public void RpcInvadeWorld(NetworkConnectionToClient target)
+    {
+        Debug.Log("Your world is invaded !");
     }
 }

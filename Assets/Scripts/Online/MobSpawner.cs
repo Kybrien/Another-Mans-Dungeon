@@ -15,7 +15,7 @@ public class MobSpawner : NetworkBehaviour
     private int currentMonsterCount = 0; // Nombre actuel de monstres
 
     // Start is called before the first frame update
-    void Start()
+    public override void OnStartServer()
     {
         StartCoroutine(SpawnMonsters());
     }
@@ -40,7 +40,7 @@ public class MobSpawner : NetworkBehaviour
             Quaternion spawnRotation = Quaternion.Euler(0, randomYRotation, 0);
 
             // Instancier le monstre à la position générée
-            GameObject spawnedMonster = Instantiate(monsterPrefab, spawnLocation, spawnRotation);
+            GameObject spawnedMonster = Instantiate(monsterPrefab, spawnLocation, spawnRotation, transform.parent.parent);
 
             // Définir une taille aléatoire entre 0.8 et 1.2
             float randomScale = Random.Range(0.8f, 1.2f);
@@ -48,8 +48,21 @@ public class MobSpawner : NetworkBehaviour
 
             NetworkServer.Spawn(spawnedMonster);
 
+            SetMonsterParentRpc(spawnedMonster);
+
             // Incrémenter le compteur de monstres actuels
             currentMonsterCount++;
         }
+    }
+
+    [ClientRpc]
+    void SetMonsterParentRpc(GameObject monster)
+    {
+        if (monster == null)
+        {
+            return;
+        }
+
+        monster.transform.SetParent(transform.parent.parent);
     }
 }

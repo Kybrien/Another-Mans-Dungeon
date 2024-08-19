@@ -2669,6 +2669,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8349463575777644212}
+  - component: {fileID: 1252041894195557167}
   m_Layer: 0
   m_Name: MapForgeDesert
   m_TagString: Untagged
@@ -2696,6 +2697,23 @@ Transform:
   - {fileID: 1285881525162692317}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1252041894195557167
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3657315419121974795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  _assetId: 1797522894
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0
 --- !u!1 &3945438941482892187
 GameObject:
   m_ObjectHideFlags: 0
@@ -5697,6 +5715,10 @@ PrefabInstance:
       propertyPath: monsterPrefabs.Array.data[4]
       value: 
       objectReference: {fileID: 7456669905464233693, guid: c44c7b21831d38d41be8921656df17a4, type: 3}
+    - target: {fileID: 4135243542052504008, guid: 4332cd53ff29cda43ad3d3e34e50de0c, type: 3}
+      propertyPath: _assetId
+      value: 1797522894
+      objectReference: {fileID: 0}
     - target: {fileID: 7899749188618789624, guid: 4332cd53ff29cda43ad3d3e34e50de0c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 38.47
@@ -6339,6 +6361,10 @@ PrefabInstance:
       propertyPath: monsterPrefabs.Array.data[3]
       value: 
       objectReference: {fileID: 7456669905464233693, guid: c44c7b21831d38d41be8921656df17a4, type: 3}
+    - target: {fileID: 4135243542052504008, guid: 4332cd53ff29cda43ad3d3e34e50de0c, type: 3}
+      propertyPath: _assetId
+      value: 1797522894
+      objectReference: {fileID: 0}
     - target: {fileID: 7899749188618789624, guid: 4332cd53ff29cda43ad3d3e34e50de0c, type: 3}
       propertyPath: m_LocalPosition.x
       value: -44.52
@@ -21963,6 +21989,10 @@ PrefabInstance:
       propertyPath: monsterPrefabs.Array.data[3]
       value: 
       objectReference: {fileID: 7456669905464233693, guid: c44c7b21831d38d41be8921656df17a4, type: 3}
+    - target: {fileID: 4135243542052504008, guid: 4332cd53ff29cda43ad3d3e34e50de0c, type: 3}
+      propertyPath: _assetId
+      value: 1797522894
+      objectReference: {fileID: 0}
     - target: {fileID: 7899749188618789624, guid: 4332cd53ff29cda43ad3d3e34e50de0c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 105.94
@@ -22375,6 +22405,10 @@ PrefabInstance:
       propertyPath: monsterPrefabs.Array.data[3]
       value: 
       objectReference: {fileID: 7456669905464233693, guid: c44c7b21831d38d41be8921656df17a4, type: 3}
+    - target: {fileID: 4135243542052504008, guid: 4332cd53ff29cda43ad3d3e34e50de0c, type: 3}
+      propertyPath: _assetId
+      value: 1797522894
+      objectReference: {fileID: 0}
     - target: {fileID: 7899749188618789624, guid: 4332cd53ff29cda43ad3d3e34e50de0c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 77.54
@@ -50882,6 +50916,10 @@ PrefabInstance:
       propertyPath: monsterPrefabs.Array.data[3]
       value: 
       objectReference: {fileID: 7456669905464233693, guid: c44c7b21831d38d41be8921656df17a4, type: 3}
+    - target: {fileID: 4135243542052504008, guid: 4332cd53ff29cda43ad3d3e34e50de0c, type: 3}
+      propertyPath: _assetId
+      value: 1797522894
+      objectReference: {fileID: 0}
     - target: {fileID: 7899749188618789624, guid: 4332cd53ff29cda43ad3d3e34e50de0c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 95.92
@@ -68766,6 +68804,10 @@ PrefabInstance:
       propertyPath: monsterPrefabs.Array.data[3]
       value: 
       objectReference: {fileID: 7456669905464233693, guid: c44c7b21831d38d41be8921656df17a4, type: 3}
+    - target: {fileID: 4135243542052504008, guid: 4332cd53ff29cda43ad3d3e34e50de0c, type: 3}
+      propertyPath: _assetId
+      value: 1797522894
+      objectReference: {fileID: 0}
     - target: {fileID: 7899749188618789624, guid: 4332cd53ff29cda43ad3d3e34e50de0c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 48.24
@@ -69062,6 +69104,10 @@ PrefabInstance:
       propertyPath: monsterPrefabs.Array.data[3]
       value: 
       objectReference: {fileID: 7456669905464233693, guid: c44c7b21831d38d41be8921656df17a4, type: 3}
+    - target: {fileID: 4135243542052504008, guid: 4332cd53ff29cda43ad3d3e34e50de0c, type: 3}
+      propertyPath: _assetId
+      value: 1797522894
+      objectReference: {fileID: 0}
     - target: {fileID: 7899749188618789624, guid: 4332cd53ff29cda43ad3d3e34e50de0c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 116.28
@@ -77230,6 +77276,10 @@ PrefabInstance:
       propertyPath: monsterPrefabs.Array.data[3]
       value: 
       objectReference: {fileID: 7456669905464233693, guid: c44c7b21831d38d41be8921656df17a4, type: 3}
+    - target: {fileID: 4135243542052504008, guid: 4332cd53ff29cda43ad3d3e34e50de0c, type: 3}
+      propertyPath: _assetId
+      value: 1797522894
+      objectReference: {fileID: 0}
     - target: {fileID: 7899749188618789624, guid: 4332cd53ff29cda43ad3d3e34e50de0c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 8.16
@@ -86474,6 +86524,10 @@ PrefabInstance:
       propertyPath: monsterPrefabs.Array.data[3]
       value: 
       objectReference: {fileID: 3531043334622406217, guid: f3e9a52afa13722419a4bdcee3940cd3, type: 3}
+    - target: {fileID: 4135243542052504008, guid: 4332cd53ff29cda43ad3d3e34e50de0c, type: 3}
+      propertyPath: _assetId
+      value: 1797522894
+      objectReference: {fileID: 0}
     - target: {fileID: 7899749188618789624, guid: 4332cd53ff29cda43ad3d3e34e50de0c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 134.67
@@ -87968,6 +88022,10 @@ PrefabInstance:
       propertyPath: monsterPrefabs.Array.data[3]
       value: 
       objectReference: {fileID: 7456669905464233693, guid: c44c7b21831d38d41be8921656df17a4, type: 3}
+    - target: {fileID: 4135243542052504008, guid: 4332cd53ff29cda43ad3d3e34e50de0c, type: 3}
+      propertyPath: _assetId
+      value: 1797522894
+      objectReference: {fileID: 0}
     - target: {fileID: 7899749188618789624, guid: 4332cd53ff29cda43ad3d3e34e50de0c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

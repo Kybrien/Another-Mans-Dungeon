@@ -96,7 +96,7 @@ public class PlayerMovementController : NetworkBehaviour
 
         }
 
-        if (transform.position.y < -50)
+        if (transform.position.y < -5000)
         {
             transform.position = new Vector3(transform.position.x, 50, transform.position.z);
         }

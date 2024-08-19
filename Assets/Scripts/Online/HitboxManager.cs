@@ -33,7 +33,6 @@ public class HitboxManager : NetworkBehaviour
             monsterHealth.TakeDamage(10);
 
             //monsterHealth.LocalUpdateHealthBar();
-            Debug.Log("HEALTH: " + monsterHealth.GetHealth());
         }
     }
 }

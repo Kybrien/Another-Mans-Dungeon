@@ -96,6 +96,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d00f59e0c9ba1543b1528b05a7e6ffa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   monsterPrefabs:
   - {fileID: 2611149553095981223, guid: add7e67fb68b0d54a9d9893bd0356223, type: 3}
   - {fileID: 3925056490110922654, guid: eb44c0459dbc5ac4a8df592ecacbead3, type: 3}

@@ -45,6 +45,9 @@ public class RoundManager : NetworkBehaviour
     [SyncVar]
     private int playerThroughPortal = 0;
 
+    [SyncVar]
+    private int playersAlive = 0;
+
     public readonly SyncDictionary<int, GameObject> playerMapFolders = new SyncDictionary<int, GameObject>();
 
     // Start is called before the first frame update
@@ -110,21 +113,28 @@ public class RoundManager : NetworkBehaviour
 
         yield return new WaitForSeconds(1);
 
-        while (currentRound < rounds)
+        while (currentRound <= rounds)
         {
             if (secondsLeft > 0)
             {
-                secondsLeft -= 1;
+                if (((currentRound == 3 || currentRound == 5) && NetworkManager.singleton.numPlayers > 1 && playersAlive == 1) || playersAlive == 0)
+                {
+                    secondsLeft = 0;
+                }
+                else
+                {
+                    secondsLeft -= 1;
+                }
                 RpcUpdateStatus();
             }
             else
             {
                 currentRound += 1;
+                playerThroughPortal = 0;
+                playersAlive = 0;
                 secondsLeft = maxRoundTimer;
 
-                playerThroughPortal = 0;
-
-                if (currentRound == 3 || currentRound == 5)
+                if ((currentRound == 3 || currentRound == 5) && NetworkManager.singleton.numPlayers > 1)
                 {
                     MapData chosenMap = SelectRandom1v1Map();
                     RpcStartLoadingScreen(true, chosenMap.name);
@@ -145,6 +155,8 @@ public class RoundManager : NetworkBehaviour
                         plrData.SetHealth(plrData.GetMaxHealth());
 
                         player.transform.position = NewMap.transform.Find("Portal_Player" + (entry.Key % 2).ToString()).position;
+
+                        playersAlive += 1;
                     }
                 }
                 else {
@@ -178,6 +190,8 @@ public class RoundManager : NetworkBehaviour
 
                         PlayerMovementController plrData = player.GetComponent<PlayerMovementController>();
                         plrData.SetHealth(plrData.GetMaxHealth());
+
+                        playersAlive += 1;
                     }
                 }
 
@@ -189,6 +203,9 @@ public class RoundManager : NetworkBehaviour
 
             yield return new WaitForSeconds(1);
         }
+
+        currentRound = -2;
+        RpcUpdateStatus();
     }
 
     private void TeleportToPortal(Transform player, GameObject map)
@@ -283,5 +300,11 @@ public class RoundManager : NetworkBehaviour
     public void RpcInvadeWorld(NetworkConnectionToClient target)
     {
         Debug.Log("Your world is invaded !");
+    }
+
+    [Command]
+    public void CmdPlayerDeath()
+    {
+        playersAlive -= 1;
     }
 }

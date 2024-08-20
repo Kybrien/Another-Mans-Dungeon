@@ -8,6 +8,8 @@ using TMPro;
 
 public class PlayerMovementController : NetworkBehaviour
 {
+    private RoundManager roundManager;
+
     [SerializeField] private GameObject PlayerModel;
     [SerializeField] private GameObject UICamera;
     [SerializeField] private Animator animator;
@@ -28,6 +30,9 @@ public class PlayerMovementController : NetworkBehaviour
     [SerializeField] private float health = 100;
 
     [SyncVar]
+    [SerializeField] private bool isDead = false;
+
+    [SyncVar]
     [SerializeField] private float maxHealth = 100;
 
     private void Start()
@@ -41,6 +46,8 @@ public class PlayerMovementController : NetworkBehaviour
         {
             if (PlayerModel.activeSelf == false)
             {
+                roundManager = GameObject.Find("RoundManager").GetComponent<RoundManager>();
+
                 rb.useGravity = true;
                 rb.constraints = RigidbodyConstraints.FreezeRotation;
                 PlayerModel.SetActive(true);
@@ -106,6 +113,11 @@ public class PlayerMovementController : NetworkBehaviour
     {
         healthBar.rectTransform.sizeDelta = new Vector2((newValue / maxHealth) * 250, 10);
         healthText.text = newValue.ToString() + " / " + maxHealth.ToString();
+
+        if (newValue <= 0 && isDead == false) {
+            isDead = true;
+            roundManager.CmdPlayerDeath();
+        }
     }
 
     public void UpdateStatus(int round, int timer)
@@ -121,7 +133,11 @@ public class PlayerMovementController : NetworkBehaviour
     public void SetHealth(float newHealth)
     {
         health = Mathf.Max(newHealth, maxHealth);
-    }
+        if (health > 0)
+        {
+            isDead = false;
+        }
+    } 
 
     public float GetMaxHealth()
     {

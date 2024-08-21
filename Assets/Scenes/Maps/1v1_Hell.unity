@@ -138,6 +138,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Portal_Player2
       objectReference: {fileID: 0}
+    - target: {fileID: 6171488702731118726, guid: 194959dacc403c44e95a0f194514faa5, type: 3}
+      propertyPath: sceneId
+      value: 669993333
+      objectReference: {fileID: 0}
     - target: {fileID: 6618562648152305615, guid: 194959dacc403c44e95a0f194514faa5, type: 3}
       propertyPath: m_Name
       value: Portal_Player1

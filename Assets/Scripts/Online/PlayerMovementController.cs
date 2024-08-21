@@ -12,7 +12,6 @@ public class PlayerMovementController : NetworkBehaviour
 
     [SerializeField] private GameObject PlayerModel;
     [SerializeField] private GameObject UICamera;
-    [SerializeField] private Animator animator;
     [SerializeField] private Rigidbody rb;
 
     [SerializeField] private RawImage healthBar;
@@ -20,6 +19,8 @@ public class PlayerMovementController : NetworkBehaviour
 
     [SerializeField] private TextMeshProUGUI roundText;
     [SerializeField] private TextMeshProUGUI timerText;
+
+    [SerializeField] private Animator _animator;
 
     [Tooltip("Player Values")]
 
@@ -80,28 +81,14 @@ public class PlayerMovementController : NetworkBehaviour
 
         Vector3 moveDirection = (forward  * zDirection) + (right * xDirection);
 
+        _animator.SetFloat("Forward",zDirection);
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
             rb.AddForce(Vector3.up * jumpForce);
         }
 
         transform.position += moveDirection * Speed * Time.deltaTime;
-
-        if (moveDirection != Vector3.zero)
-        {
-            if (animator)
-            {
-                animator.SetBool("IsMoving", true);
-            }
-        }
-        else
-        {
-            if (animator)
-            {
-                animator.SetBool("IsMoving", false);
-            }
-
-        }
 
         if (transform.position.y < -5000)
         {

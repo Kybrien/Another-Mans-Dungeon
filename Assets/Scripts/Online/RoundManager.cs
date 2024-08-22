@@ -154,6 +154,7 @@ public class RoundManager : NetworkBehaviour
                         PlayerMovementController plrData = player.GetComponent<PlayerMovementController>();
                         plrData.SetHealth(plrData.GetMaxHealth());
 
+                        Debug.Log("Player id: " + conn.identity.netId.ToString() + ". portal name = " + "Portal_Player" + (1 + entry.Key % 2).ToString());
                         player.transform.position = NewMap.transform.Find("Portal_Player" + (1 + entry.Key % 2).ToString()).position;
 
                         playersAlive += 1;
@@ -241,6 +242,7 @@ public class RoundManager : NetworkBehaviour
     [Command(requiresAuthority = false)]
     public void CmdInvadeWorld(GameObject player)
     {
+        Debug.Log("received portal request on server");
         playerThroughPortal += 1;
 
         Debug.Log(playerThroughPortal);

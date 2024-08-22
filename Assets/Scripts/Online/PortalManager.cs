@@ -7,6 +7,9 @@ public class PortalManager : NetworkBehaviour
 {
     private RoundManager roundManager;
 
+    [SyncVar]
+    private bool canEnter = true;
+
     // Start is called before the first frame update
     public override void OnStartClient()
     {
@@ -25,7 +28,8 @@ public class PortalManager : NetworkBehaviour
         {
             NetworkIdentity plrIdentity = other.GetComponent<NetworkIdentity>();
 
-            if (plrIdentity) {
+            if (plrIdentity && canEnter) {
+                canEnter = false;
                 roundManager.CmdInvadeWorld(other.gameObject);
             }
         }

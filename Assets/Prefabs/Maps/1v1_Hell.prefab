@@ -6892,7 +6892,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5738097765232594670, guid: 7f0b94de37b97fa44a0e3dd1efd98838, type: 3}
       propertyPath: m_Name
-      value: PortalPlayer2
+      value: PortalPlayer0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

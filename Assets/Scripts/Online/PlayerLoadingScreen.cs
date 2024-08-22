@@ -21,14 +21,12 @@ public class PlayerLoadingScreen : NetworkBehaviour
 
     public IEnumerator Load(string mapName)
     {
-        Debug.Log("Loading screen visible");
         loadingScreen.SetActive(true);
         yield return null;
     }
 
     public void Complete()
     {
-        Debug.Log("Loading screen complete");
         loadingScreen.SetActive(false);
     }
 }

@@ -66,6 +66,9 @@ public class CombatController : NetworkBehaviour
         if (enemy.tag == "Enemy")
         {
             enemy.GetComponent<MonsterController>().TakeDamage(10);
+        } else if (enemy.tag == "Player")
+        {
+            enemy.GetComponent<PlayerMovementController>().TakeDamage(10);
         }
     }
 

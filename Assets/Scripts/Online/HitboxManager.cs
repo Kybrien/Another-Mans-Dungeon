@@ -20,7 +20,7 @@ public class HitboxManager : NetworkBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Enemy")
+        if (other.tag == "Enemy" || other.tag == "Player")
         {
             if (debounce.Find((x) => x == other.gameObject)) {
                 Debug.Log(other.gameObject.name + " already in list");
@@ -29,8 +29,15 @@ public class HitboxManager : NetworkBehaviour
 
             debounce.Add(other.gameObject);
 
-            MonsterController monsterHealth = other.GetComponent<MonsterController>();
-            monsterHealth.TakeDamage(10);
+            if (other.tag == "Enemy")
+            {
+                MonsterController monsterHealth = other.GetComponent<MonsterController>();
+                monsterHealth.TakeDamage(10);
+            } else if (other.tag == "Player")
+            {
+                PlayerMovementController playerHealth = other.GetComponent<PlayerMovementController>();
+                playerHealth.TakeDamage(10);
+            }
 
             //monsterHealth.LocalUpdateHealthBar();
         }

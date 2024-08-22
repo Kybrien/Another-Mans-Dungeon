@@ -127,7 +127,7 @@ public class RoundManager : NetworkBehaviour
                 }
                 RpcUpdateStatus();
             }
-            else
+            else if (currentRound <= rounds)
             {
                 currentRound += 1;
                 playerThroughPortal = 0;
@@ -206,6 +206,8 @@ public class RoundManager : NetworkBehaviour
 
         currentRound = -2;
         RpcUpdateStatus();
+
+        EndGameAndReturnToLobby();
     }
 
     private void TeleportToPortal(Transform player, GameObject map)
@@ -220,6 +222,20 @@ public class RoundManager : NetworkBehaviour
             Debug.LogWarning("No SpawnLocation found!");
             player.position = map.transform.position;
         }
+    }
+
+    public void EndGameAndReturnToLobby()
+    {
+        if (NetworkServer.active && NetworkClient.isConnected)
+        {
+            NetworkManager.singleton.StopHost();
+        }
+        else if (NetworkClient.isConnected)
+        {
+            NetworkManager.singleton.StopClient();
+        }
+
+        NetworkManager.singleton.ServerChangeScene("LobbyScene");
     }
 
     [Command(requiresAuthority = false)]

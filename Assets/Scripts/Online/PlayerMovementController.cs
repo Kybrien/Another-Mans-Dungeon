@@ -49,6 +49,11 @@ public class PlayerMovementController : NetworkBehaviour
             {
                 roundManager = GameObject.Find("RoundManager").GetComponent<RoundManager>();
 
+                if (!isLocalPlayer)
+                {
+                    PlayerModel.transform.Find("Model" + (NetworkClient.localPlayer.netId % 2).ToString()).gameObject.SetActive(true);
+                }
+
                 rb.useGravity = true;
                 rb.constraints = RigidbodyConstraints.FreezeRotation;
                 PlayerModel.SetActive(true);
@@ -95,6 +100,11 @@ public class PlayerMovementController : NetworkBehaviour
         {
             transform.position = new Vector3(transform.position.x, 50, transform.position.z);
         }
+    }
+
+    public void TakeDamage(float value)
+    {
+        health = Mathf.Max(health - value, 0);
     }
 
     void UpdateHealthBar(float oldValue, float newValue)

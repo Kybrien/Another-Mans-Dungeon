@@ -3,13 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using Mirror;
 
-public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     [HideInInspector] public bool isStorageOpened;
 
+    [SyncVar]
     [SerializeField] private GameObject[] hotbarSlots = new GameObject[4];
+
+    [SyncVar]
     [SerializeField] private GameObject[] slots = new GameObject[20];
+
     [SerializeField] private GameObject inventoryParent;
     [SerializeField] private GameObject storageParent;
     [SerializeField] private Transform handParent;
@@ -35,6 +40,8 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 
     void Update()
     {
+        if (!isLocalPlayer) return;
+
         CheckForHotbarInput();
 
         storageParent.SetActive(isStorageOpened);
@@ -215,7 +222,7 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
         if (emptySlot != null)
         {
             GameObject newItem = Instantiate(itemPrefab);
-            newItem.GetComponent<InventoryItem>().itemScriptableObject = pickedItem.GetComponent<itemPickable>().itemScriptableObject;
+            newItem.GetComponent<InventoryItem>().itemScriptableObject = pickedItem.GetComponent<ItemPickable>().itemScriptableObject;
             newItem.transform.SetParent(emptySlot.transform.parent.parent.GetChild(2));
             newItem.GetComponent<InventoryItem>().stackCurrent = 1;
 

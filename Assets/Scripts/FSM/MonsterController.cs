@@ -13,6 +13,8 @@ public class MonsterController : NetworkBehaviour
     [SerializeField] private float maxHealth = 100;
     [SyncVar(hook = nameof(UpdateHealthBar))]
     [SerializeField] private float health = 100;
+    [SyncVar]
+    private bool isDead = false;
 
     [SerializeField] private Canvas canvas;
     [SerializeField] private RawImage healthBar;
@@ -38,6 +40,13 @@ public class MonsterController : NetworkBehaviour
     public void TakeDamage(int damage)
     {
         health = Mathf.Max(0, health - damage);
+
+        if (isDead == false && health == 0)
+        {
+            isDead = true;
+            OnDeath();
+            NetworkServer.UnSpawn(gameObject);
+        }
     }
 
     void UpdateHealthBar(float oldValue, float newValue)
@@ -50,5 +59,10 @@ public class MonsterController : NetworkBehaviour
     {
         healthBar.rectTransform.sizeDelta = new Vector2((health / maxHealth) * 5, 1);
         healthText.text = health.ToString() + " / " + maxHealth.ToString();
+    }
+
+    void OnDeath()
+    {
+
     }
 }

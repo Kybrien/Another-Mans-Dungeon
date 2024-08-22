@@ -288,6 +288,8 @@ GameObject:
   - component: {fileID: 1952947601223086896}
   - component: {fileID: 7427026361115659796}
   - component: {fileID: 4090609396020732146}
+  - component: {fileID: 1678002241038192017}
+  - component: {fileID: 8531204116667934170}
   - component: {fileID: 1401897784522932907}
   - component: {fileID: 2941347423189969080}
   - component: {fileID: -2701821480746764396}
@@ -503,6 +505,70 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   loadingScreen: {fileID: 8136003140113108827}
+--- !u!114 &1678002241038192017
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1773660460313355093}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a845dab1bc332ba47b40219e77ddc958, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  cam: {fileID: 6132741685321221390}
+  inventoryManager: {fileID: 8531204116667934170}
+--- !u!114 &8531204116667934170
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1773660460313355093}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e9766933fc2dc040a9c823b79fb2c3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  isStorageOpened: 0
+  hotbarSlots:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  slots:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  inventoryParent: {fileID: 0}
+  storageParent: {fileID: 0}
+  handParent: {fileID: 0}
+  itemPrefab: {fileID: 0}
+  cam: {fileID: 6132741685321221390}
 --- !u!136 &1401897784522932907
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1823,7 +1889,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1834939514502625358, guid: 21f14e10a2d6daa40b883b67ba9c6845, type: 3}
       propertyPath: m_Name
-      value: Player02_Model
+      value: Model2
       objectReference: {fileID: 0}
     - target: {fileID: 1834939514502625358, guid: 21f14e10a2d6daa40b883b67ba9c6845, type: 3}
       propertyPath: m_IsActive
@@ -2450,7 +2516,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 997473656538893036, guid: ec7630215a1c7e14c86278d322ff4d7d, type: 3}
       propertyPath: m_Name
-      value: Player01_Model
+      value: Model1
+      objectReference: {fileID: 0}
+    - target: {fileID: 997473656538893036, guid: ec7630215a1c7e14c86278d322ff4d7d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2999135628047775427, guid: ec7630215a1c7e14c86278d322ff4d7d, type: 3}
       propertyPath: m_Controller

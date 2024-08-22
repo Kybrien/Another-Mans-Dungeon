@@ -206,5 +206,5 @@ MonoBehaviour:
   name: Lux Chest
   size: 1
   items: []
-  itemsToSpawn: {fileID: 0}
+  itemsToSpawn: {fileID: 11400000, guid: f9b9f8024d9b59d44a7831d8c9f91b97, type: 2}
   spawnItems: 0

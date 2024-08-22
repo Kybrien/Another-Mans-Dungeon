@@ -82,6 +82,7 @@ public class PlayerMovementController : NetworkBehaviour
         Vector3 moveDirection = (forward  * zDirection) + (right * xDirection);
 
         _animator.SetFloat("Forward",zDirection);
+        _animator.SetFloat("Sided", xDirection);
 
         if (Input.GetKeyDown(KeyCode.Space))
         {

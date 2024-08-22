@@ -1,7 +1,7 @@
 fileFormatVersion: 2
 guid: 5a0559ef416cdcc449118faa95e73b4c
 ModelImporter:
-  serializedVersion: 20200
+  serializedVersion: 22200
   internalIDToNameTable: []
   externalObjects: {}
   materials:
@@ -14,6 +14,7 @@ ModelImporter:
     bakeSimulation: 0
     resampleCurves: 1
     optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
     motionNodeName: 
     rigImportErrors: 
     rigImportWarnings: 
@@ -39,10 +40,12 @@ ModelImporter:
     addColliders: 0
     useSRGBMaterialColor: 1
     sortHierarchyByName: 1
+    importPhysicalCameras: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
     importLights: 1
+    nodeNameCollisionStrategy: 0
     fileIdsGeneration: 2
     swapUVChannels: 0
     generateSecondaryUV: 0
@@ -54,6 +57,7 @@ ModelImporter:
     skinWeightsMode: 0
     maxBonesPerVertex: 4
     minBoneWeight: 0.001
+    optimizeBones: 1
     meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
@@ -64,6 +68,7 @@ ModelImporter:
     secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
     useFileScale: 1
+    strictVertexDataChecks: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
@@ -76,19 +81,14 @@ ModelImporter:
   - 61ea1e246ba4a524f9dc636792b6f9d3
   - 0ff1f9ab4c9e82648b38a70914f9f0bc
   - c2b4fd431828c7b4ba68c6f927e8d9e1
-  - 710aeb57a7aee45419a4d9902ae9fd7b
   - 3cfc8a18cba1d7e418211d895da2996e
   - 748071edf9044174fba201b043abe659
-  - cae9abdb78ce0f6449347e1eab2fd901
   - f79b67f49616ba548ab5d262a6536500
   - 4ccae0eca842dfb4685d80afea680e95
   - 691f215fa87c26543828d92bc2e8ca93
   - ec7e5d1f9313b414d8a924a601b9f9c8
   - 556dcedb2ff64b0478432a6d3ac5bb8c
   - 3640b5648b8349448b2ad7dedb5edf28
-  - 29ce40d137792f54e971baa86b2459c3
-  - 821873cdaf2b2a94985b641cc15b9ba6
-  - 3d1a0c17b6ab2bd4b95ddf1166f21c44
   importAnimation: 1
   humanDescription:
     serializedVersion: 3
@@ -112,6 +112,8 @@ ModelImporter:
   humanoidOversampling: 1
   avatarSetup: 1
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  importBlendShapeDeformPercent: 0
+  remapMaterialsIfMaterialImportModeIsNone: 1
   additionalBone: 0
   userData: 
   assetBundleName: 

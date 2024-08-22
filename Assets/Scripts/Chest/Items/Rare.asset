@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: Rare
   m_EditorClassIdentifier: 
   itemsToSpawn:
-  - {fileID: 0}
+  - {fileID: 11400000, guid: 063df5438ecdc5d4fa8ff990550ad765, type: 2}
+  - {fileID: 11400000, guid: 358454d842575ce41b5c373d59e33b79, type: 2}
+  - {fileID: 11400000, guid: 3094f842d03201848a1c4ce3f50e19b3, type: 2}
   minCount: 0
   maxCount: 0

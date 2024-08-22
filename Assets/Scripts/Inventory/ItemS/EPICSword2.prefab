@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &134092
+--- !u!1 &1488845110304526
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,65 +8,55 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-<<<<<<<< Updated upstream:Assets/3D_Models/Map/CyberCity/Prefabs/Weapons/SM_Wep_Sword_04.prefab
-  - component: {fileID: 988780524275926121}
-  - component: {fileID: 4185815687023135692}
-  - component: {fileID: 2158339647239192326}
-  - component: {fileID: 365775142}
-========
-  - component: {fileID: 469862}
-  - component: {fileID: 3315164}
-  - component: {fileID: 2360784}
-  - component: {fileID: 64481665549646672}
-  - component: {fileID: 3463967033510074913}
-  - component: {fileID: 843253566704197140}
-  - component: {fileID: -1429118455016136981}
->>>>>>>> Stashed changes:Assets/3D_Models/Map/CyberCity/Prefabs/Weapons/LEGAxe1.prefab
+  - component: {fileID: 4280715772856136}
+  - component: {fileID: 33031303988460842}
+  - component: {fileID: 23504429589269734}
+  - component: {fileID: 64856826312762122}
+  - component: {fileID: 5487508983099838319}
+  - component: {fileID: 2510981768295828095}
+  - component: {fileID: 6198580985901588284}
   m_Layer: 0
-  m_Name: LEGAxe1
+  m_Name: EPICSword2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &469862
+--- !u!4 &4280715772856136
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-<<<<<<<< Updated upstream:Assets/3D_Models/Map/CyberCity/Prefabs/Weapons/SM_Wep_Sword_04.prefab
-  m_GameObject: {fileID: 500755019436056275}
-========
-  m_GameObject: {fileID: 134092}
+  m_GameObject: {fileID: 1488845110304526}
   serializedVersion: 2
->>>>>>>> Stashed changes:Assets/3D_Models/Map/CyberCity/Prefabs/Weapons/LEGAxe1.prefab
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &3315164
+--- !u!33 &33031303988460842
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 134092}
-  m_Mesh: {fileID: 4300000, guid: 6c44893ba5fb08d4987058507802856f, type: 3}
---- !u!23 &2360784
+  m_GameObject: {fileID: 1488845110304526}
+  m_Mesh: {fileID: 4300000, guid: 44bfd54a9771fd74391c8768f7924b33, type: 3}
+--- !u!23 &23504429589269734
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 134092}
+  m_GameObject: {fileID: 1488845110304526}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -75,7 +65,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 42b64fdb315e3054ea757d8d1c4bcfa7, type: 2}
+  - {fileID: 2100000, guid: 2a12d3fc0532ba64e972160db18dfd99, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -87,7 +77,7 @@ MeshRenderer:
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_StitchLightmapSeams: 0
+  m_StitchLightmapSeams: 1
   m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
@@ -97,30 +87,35 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &64481665549646672
+--- !u!64 &64856826312762122
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 134092}
+  m_GameObject: {fileID: 1488845110304526}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 4
+  serializedVersion: 5
   m_Convex: 1
   m_CookingOptions: 30
-<<<<<<<< Updated upstream:Assets/3D_Models/Map/CyberCity/Prefabs/Weapons/SM_Wep_Sword_04.prefab
-  m_Mesh: {fileID: 5882499597095219249, guid: c19bdd44d45937c44ba0703722b5f2a4, type: 2}
-========
-  m_Mesh: {fileID: 43073952845712458, guid: 05666246a42c9b3429c7d9b2931bd8a2, type: 2}
---- !u!54 &3463967033510074913
+  m_Mesh: {fileID: 43901902252364100, guid: 68859ac353b67bf4b8938ed6e74e7d06, type: 2}
+--- !u!54 &5487508983099838319
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 134092}
+  m_GameObject: {fileID: 1488845110304526}
   serializedVersion: 4
   m_Mass: 1
   m_Drag: 0
@@ -141,13 +136,13 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!65 &843253566704197140
+--- !u!65 &2510981768295828095
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 134092}
+  m_GameObject: {fileID: 1488845110304526}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -160,19 +155,18 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.13116407, y: 1.3289435, z: 0.6008189}
-  m_Center: {x: -0.00000023841858, y: 0.31518516, z: -0.00000035762787}
---- !u!114 &-1429118455016136981
+  m_Size: {x: 0.08165156, y: 0.74285805, z: 0.18824108}
+  m_Center: {x: -0.0000000037252903, y: 0.26330334, z: 0}
+--- !u!114 &6198580985901588284
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 134092}
+  m_GameObject: {fileID: 1488845110304526}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d5362aecd2335c2499acdf7a14081e6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemScriptableObject: {fileID: 11400000, guid: 687ddad2340c18f4184c7d599449daa8, type: 2}
->>>>>>>> Stashed changes:Assets/3D_Models/Map/CyberCity/Prefabs/Weapons/LEGAxe1.prefab
+  itemScriptableObject: {fileID: 11400000, guid: 263db5346ae182e43a85d68a72ac1b76, type: 2}

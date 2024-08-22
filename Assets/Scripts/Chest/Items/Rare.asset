@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 973e465b9b3620948a321207e410c7c6, type: 3}
+  m_Name: Rare
+  m_EditorClassIdentifier: 
+  itemsToSpawn:
+  - {fileID: 11400000, guid: 063df5438ecdc5d4fa8ff990550ad765, type: 2}
+  - {fileID: 11400000, guid: 358454d842575ce41b5c373d59e33b79, type: 2}
+  - {fileID: 11400000, guid: 3094f842d03201848a1c4ce3f50e19b3, type: 2}
+  minCount: 0
+  maxCount: 0

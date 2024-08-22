@@ -446,7 +446,7 @@ MonoBehaviour:
   healthText: {fileID: 4723049056846141810}
   roundText: {fileID: 9082751069920806269}
   timerText: {fileID: 9024487513135527206}
-  _animator: {fileID: 7243988452519535108}
+  _animator: {fileID: 0}
   Speed: 10
   jumpForce: 200
   health: 0
@@ -3121,11 +3121,6 @@ Transform:
 --- !u!4 &7092929122341132015 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3420454901671428648, guid: ec7630215a1c7e14c86278d322ff4d7d, type: 3}
-  m_PrefabInstance: {fileID: 5555402245886186695}
-  m_PrefabAsset: {fileID: 0}
---- !u!95 &7243988452519535108 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 2999135628047775427, guid: ec7630215a1c7e14c86278d322ff4d7d, type: 3}
   m_PrefabInstance: {fileID: 5555402245886186695}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &7475040823274022267 stripped

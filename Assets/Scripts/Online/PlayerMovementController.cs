@@ -49,7 +49,7 @@ public class PlayerMovementController : NetworkBehaviour
             {
                 roundManager = GameObject.Find("RoundManager").GetComponent<RoundManager>();
 
-                GameObject SelectedModel = PlayerModel.transform.Find("Model" + (NetworkClient.localPlayer.netId % 1).ToString()).gameObject;
+                GameObject SelectedModel = PlayerModel.transform.Find("Model" + (1 + NetworkClient.localPlayer.netId % 2).ToString()).gameObject;
                 _animator = SelectedModel.GetComponent<Animator>();
                 if (!isLocalPlayer)
                 {

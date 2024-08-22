@@ -154,7 +154,7 @@ public class RoundManager : NetworkBehaviour
                         PlayerMovementController plrData = player.GetComponent<PlayerMovementController>();
                         plrData.SetHealth(plrData.GetMaxHealth());
 
-                        player.transform.position = NewMap.transform.Find("Portal_Player" + (entry.Key % 2).ToString()).position;
+                        player.transform.position = NewMap.transform.Find("Portal_Player" + (1 + entry.Key % 2).ToString()).position;
 
                         playersAlive += 1;
                     }

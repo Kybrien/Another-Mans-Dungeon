@@ -51,7 +51,7 @@ public class PlayerMovementController : NetworkBehaviour
 
                 if (!isLocalPlayer)
                 {
-                    PlayerModel.transform.Find("Model" + (NetworkClient.localPlayer.netId % 2).ToString()).gameObject.SetActive(true);
+                    //PlayerModel.transform.Find("Model" + (NetworkClient.localPlayer.netId % 2).ToString()).gameObject.SetActive(true);
                 }
 
                 rb.useGravity = true;

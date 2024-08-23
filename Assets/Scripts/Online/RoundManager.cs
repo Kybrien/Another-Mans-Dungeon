@@ -189,7 +189,7 @@ public class RoundManager : NetworkBehaviour
 
                         GameObject NewMap = Instantiate(chosenMap.gameObject, mapFolder);
                         //NewMap.transform.SetParent(mapFolder);
-                        NewMap.transform.position = mapFolder.transform.position;
+                        //NewMap.transform.position = mapFolder.transform.position;
 
                         NetworkServer.Spawn(NewMap);
 
@@ -291,8 +291,16 @@ public class RoundManager : NetworkBehaviour
     [ClientRpc]
     public void RpcSwitchMap(GameObject map, Transform parent)
     {
+        AstarPath astarPath = map.transform.Find("Astar").GetComponent<AstarPath>();
+        Pathfinding.GridGraph graph = astarPath.data.gridGraph;
+        Vector3 offset = parent.transform.position - map.transform.position;
+        Vector3 center = graph.center;
+
         map.transform.parent = parent;
-        map.transform.position = new Vector3(map.transform.position.x, map.transform.position.y, parent.transform.position.z);
+        //map.transform.position += new Vector3(0, 0, parent.transform.position.z);
+
+        graph.center += new Vector3(0, 0, parent.transform.position.z);
+        AstarPath.active.Scan(graph);
     }
 
     [TargetRpc]

@@ -504,6 +504,27 @@ MonoBehaviour:
   syncInterval: 0
   loadingScreen: {fileID: 8136003140113108827}
   loadingImage: {fileID: 9059309617038175532}
+  mapImages:
+  - Name: Dungeon
+    Texture: {fileID: 2800000, guid: 1781ea4cdd6616f48a3365a6ad67ba14, type: 3}
+  - Name: Thermal Desert
+    Texture: {fileID: 2800000, guid: 481694d94ef163c489d2fb9ee012e922, type: 3}
+  - Name: Volcanic Desert
+    Texture: {fileID: 2800000, guid: 8bbf2ae1720746f49b4d735fa72b0869, type: 3}
+  - Name: Empire
+    Texture: {fileID: 2800000, guid: 5b039bf3733de944db6b5629b8ac4bac, type: 3}
+  - Name: Forge Desert
+    Texture: {fileID: 2800000, guid: a316e7b9197815344b4ae1411add7eb2, type: 3}
+  - Name: Forge Throne
+    Texture: {fileID: 2800000, guid: afbf82903aa2e074ebe9e530e816f6d2, type: 3}
+  - Name: Forge Volcano
+    Texture: {fileID: 2800000, guid: 9078496cd22ed534aaa35ff647aeccb4, type: 3}
+  - Name: Kingdom Castle
+    Texture: {fileID: 2800000, guid: ab3c26329d3df464c9ecd6869eece168, type: 3}
+  - Name: Kingdom Garden
+    Texture: {fileID: 2800000, guid: 509674ddf41caec429657addb7fbebc5, type: 3}
+  - Name: Sci-Fi
+    Texture: {fileID: 2800000, guid: 5d1af5a61792aed438c3ff5e507522c5, type: 3}
 --- !u!136 &1401897784522932907
 CapsuleCollider:
   m_ObjectHideFlags: 0

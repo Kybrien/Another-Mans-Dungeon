@@ -50,9 +50,10 @@ public class CombatController : NetworkBehaviour
     }
 
     [Command]
-    private void CmdCreateHitbox(Vector3 size)
+    private void CmdCreateHitbox(NetworkIdentity playerIdentity, Vector3 size)
     {
         GameObject NewHitbox = Instantiate(HitboxPrefab);
+        NewHitbox.GetComponent<HitboxManager>().plrIdentity = playerIdentity;
         NewHitbox.transform.position = ModelRoot.position + ModelRoot.forward * 3;
         NewHitbox.transform.rotation = ModelRoot.rotation;
         NewHitbox.transform.localScale = size;
@@ -170,7 +171,7 @@ public class CombatController : NetworkBehaviour
         }
         else
         {
-            CmdCreateHitbox(new Vector3(4, 4, 4));
+            CmdCreateHitbox(NetworkClient.localPlayer, new Vector3(4, 4, 4));
             currCooldown = cooldown;
         }
 

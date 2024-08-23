@@ -3,18 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 using UnityEngine.UI;
+using System;
 
+[Serializable]
 public struct MapImage
 {
     public string Name;
-    public RawImage RawImage;
+    public Texture Texture;
 }
 
 public class PlayerLoadingScreen : NetworkBehaviour
 {
     [SerializeField] private GameObject loadingScreen;
     [SerializeField] private RawImage loadingImage;
-    [SerializeField] private MapImage mapImages;
+    [SerializeField] private List<MapImage> mapImages = new List<MapImage>();
 
     // Start is called before the first frame update
     void Start()
@@ -28,8 +30,22 @@ public class PlayerLoadingScreen : NetworkBehaviour
         
     }
 
+    Texture FindMapImage(string mapName)
+    {
+        foreach (MapImage mapImage in mapImages)
+        {
+            if (mapImage.Name == mapName)
+            {
+                return mapImage.Texture;
+            }
+        }
+
+        return loadingImage.texture;
+    }
+
     public IEnumerator Load(string mapName)
     {
+        loadingImage.texture = FindMapImage(mapName);
         loadingScreen.SetActive(true);
         yield return null;
     }

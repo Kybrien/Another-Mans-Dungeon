@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class HitboxManager : NetworkBehaviour
 {
+    public NetworkIdentity plrIdentity;
     private SyncList<GameObject> debounce = new SyncList<GameObject>();
     // Start is called before the first frame update
     void Start()
@@ -20,7 +21,7 @@ public class HitboxManager : NetworkBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Enemy" || other.tag == "Player")
+        if (other.tag == "Enemy" || (other.tag == "Player" && other.GetComponent<NetworkIdentity>().netId != plrIdentity.netId))
         {
             if (debounce.Find((x) => x == other.gameObject)) {
                 Debug.Log(other.gameObject.name + " already in list");

@@ -7,6 +7,7 @@ using System.Dynamic;
 using System.Security.Cryptography;
 using TMPro;
 using UnityEngine;
+using static RootMotion.FinalIK.GenericPoser;
 
 public class RoundManager : NetworkBehaviour
 {
@@ -115,7 +116,7 @@ public class RoundManager : NetworkBehaviour
 
         while (currentRound <= rounds)
         {
-            if (secondsLeft > 0)
+            if (secondsLeft > 0 && playersAlive > 0)
             {
                 if (((currentRound == 3 || currentRound == 5) && NetworkManager.singleton.numPlayers > 1 && playersAlive == 1) || playersAlive == 0)
                 {
@@ -127,9 +128,12 @@ public class RoundManager : NetworkBehaviour
                 }
                 RpcUpdateStatus();
             }
-            else if (currentRound <= rounds)
+            else
             {
                 currentRound += 1;
+
+                if (currentRound > rounds) break;
+
                 playerThroughPortal = 0;
                 playersAlive = 0;
                 secondsLeft = maxRoundTimer;
@@ -154,8 +158,11 @@ public class RoundManager : NetworkBehaviour
                         PlayerMovementController plrData = player.GetComponent<PlayerMovementController>();
                         plrData.SetHealth(plrData.GetMaxHealth());
 
-                        Debug.Log("Player id: " + conn.identity.netId.ToString() + ". portal name = " + "Portal_Player" + (1 + entry.Key % 2).ToString());
-                        player.transform.position = NewMap.transform.Find("Portal_Player" + (1 + entry.Key % 2).ToString()).position;
+                        string portalName = "Portal_Player" + (1 + entry.Key % 2).ToString();
+                        Debug.Log("Player id: " + conn.identity.netId.ToString() + ". portal name = " + portalName);
+                        //player.transform.position = NewMap.transform.Find(portalName).position;
+
+                        TeleportToPortal(NetworkClient.localPlayer.transform, NewMap, portalName);
 
                         playersAlive += 1;
                     }
@@ -211,9 +218,9 @@ public class RoundManager : NetworkBehaviour
         EndGameAndReturnToLobby();
     }
 
-    private void TeleportToPortal(Transform player, GameObject map)
+    private void TeleportToPortal(Transform player, GameObject map, string name)
     {
-        Transform PortalStart = map.transform.Find("PortalStart");
+        Transform PortalStart = map.transform.Find(name);
         if (PortalStart)
         {
             player.position = PortalStart.transform.position;
@@ -240,7 +247,7 @@ public class RoundManager : NetworkBehaviour
     }
 
     [Command(requiresAuthority = false)]
-    public void CmdInvadeWorld(GameObject player)
+    public void CmdInvadeWorld(GameObject portal, GameObject player)
     {
         Debug.Log("received portal request on server");
         playerThroughPortal += 1;
@@ -260,7 +267,7 @@ public class RoundManager : NetworkBehaviour
             {
                 if (playerIdentity != entry.Key)
                 {
-                    TeleportToPortal(NetworkClient.localPlayer.transform, playerMapFolders[entry.Key]);
+                    TeleportToPortal(NetworkClient.localPlayer.transform, playerMapFolders[entry.Key], "PortalStart");
                     RpcInvadeWorld(entry.Value);
 
                     break;
@@ -297,7 +304,7 @@ public class RoundManager : NetworkBehaviour
             return;
         }
 
-        TeleportToPortal(NetworkClient.localPlayer.transform, map);
+        TeleportToPortal(NetworkClient.localPlayer.transform, map, "PortalStart");
     }
 
     [ClientRpc]
@@ -323,6 +330,7 @@ public class RoundManager : NetworkBehaviour
     [Command]
     public void CmdPlayerDeath()
     {
+        Debug.Log("playr died");
         playersAlive -= 1;
     }
 }

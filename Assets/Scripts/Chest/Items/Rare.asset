@@ -16,5 +16,12 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 063df5438ecdc5d4fa8ff990550ad765, type: 2}
   - {fileID: 11400000, guid: 358454d842575ce41b5c373d59e33b79, type: 2}
   - {fileID: 11400000, guid: 3094f842d03201848a1c4ce3f50e19b3, type: 2}
-  minCount: 0
-  maxCount: 0
+  - {fileID: 11400000, guid: 682ef9500c3e443489d57dad668eb573, type: 2}
+  - {fileID: 11400000, guid: a5218cc801a27c74f8fca6110cc29911, type: 2}
+  - {fileID: 11400000, guid: 77ff37ed95c86f94d8dbd5c63d981c23, type: 2}
+  - {fileID: 11400000, guid: e06cff90613bcc244a413c02a816dc1f, type: 2}
+  - {fileID: 11400000, guid: 766c8220a6a484e4288ba3edb6ac48a8, type: 2}
+  - {fileID: 11400000, guid: 93789832f65cb114f992546c7a84de45, type: 2}
+  - {fileID: 11400000, guid: ee223993f8ddd9544b97c40e2e359964, type: 2}
+  minCount: 1
+  maxCount: 1

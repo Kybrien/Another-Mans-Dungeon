@@ -1,5 +1,6 @@
 using Mirror;
 using Newtonsoft.Json.Linq;
+using Pathfinding;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -112,7 +113,7 @@ public class RoundManager : NetworkBehaviour
             yield return new WaitForSeconds(1);
         }
 
-        yield return new WaitForSeconds(10);
+        yield return new WaitForSeconds(1);
 
         while (currentRound <= rounds)
         {
@@ -303,7 +304,11 @@ public class RoundManager : NetworkBehaviour
         }
 
         graph.center += new Vector3(0, 0, parent.transform.position.z);
-        AstarPath.active.Scan(graph);
+
+        AstarPath.active.AddWorkItem(new AstarWorkItem(ctx =>
+        {
+            AstarPath.active.Scan(graph);
+        }));
     }
 
     [TargetRpc]

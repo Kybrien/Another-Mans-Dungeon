@@ -8,7 +8,7 @@ using TMPro;
 
 public class PlayerMovementController : NetworkBehaviour
 {
-    private RoundManager roundManager;
+    [SerializeField] private RoundManager roundManager;
 
     [SerializeField] private GameObject PlayerModel;
     [SerializeField] private GameObject UICamera;
@@ -47,10 +47,14 @@ public class PlayerMovementController : NetworkBehaviour
         {
             if (PlayerModel.activeSelf == false)
             {
-                roundManager = GameObject.Find("RoundManager").GetComponent<RoundManager>();
+                if (!isLocalPlayer)
+                {
+                    roundManager = GameObject.Find("RoundManager").GetComponent<RoundManager>();
+                }
 
                 GameObject SelectedModel = PlayerModel.transform.Find("Model" + (1 + NetworkClient.localPlayer.netId % 2).ToString()).gameObject;
                 _animator = SelectedModel.GetComponent<Animator>();
+
                 if (!isLocalPlayer)
                 {
                     Debug.Log("other player");

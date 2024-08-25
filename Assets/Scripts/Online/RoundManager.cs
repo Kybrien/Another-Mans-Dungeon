@@ -191,7 +191,7 @@ public class RoundManager : NetworkBehaviour
                         //NewMap.transform.SetParent(mapFolder);
                         //NewMap.transform.position = mapFolder.transform.position;
 
-                        NetworkServer.Spawn(NewMap, conn);
+                        NetworkServer.Spawn(NewMap);
 
                         RpcSwitchMap(NewMap, mapFolder);
                         RpcTeleportToSpawn(conn, NewMap);
@@ -300,7 +300,7 @@ public class RoundManager : NetworkBehaviour
         //map.transform.position += new Vector3(0, 0, parent.transform.position.z);
 
         graph.center += new Vector3(0, 0, parent.transform.position.z);
-        AstarPath.active.Scan(graph);
+        //AstarPath.active.Scan(graph);
     }
 
     [TargetRpc]

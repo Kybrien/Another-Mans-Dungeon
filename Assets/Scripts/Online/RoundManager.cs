@@ -207,7 +207,7 @@ public class RoundManager : NetworkBehaviour
 
                         GameObject NewMap = Instantiate(chosenMap.gameObject, mapFolder);
                         //NewMap.transform.SetParent(mapFolder);
-                        //NewMap.transform.position = mapFolder.transform.position;
+                        NewMap.transform.position = mapFolder.transform.position;
 
                         NetworkServer.Spawn(NewMap);
 

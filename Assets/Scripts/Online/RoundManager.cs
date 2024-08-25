@@ -300,15 +300,6 @@ public class RoundManager : NetworkBehaviour
         if (isClient && !isServer)
         {
             map.transform.position += offset;
-
-            foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Enemy"))
-            {
-                if (obj.transform.parent == map)
-                {
-                    obj.transform.position += offset;
-                    Debug.Log(obj.name + " moved.");
-                }
-            }
         }
 
         graph.center += offset;

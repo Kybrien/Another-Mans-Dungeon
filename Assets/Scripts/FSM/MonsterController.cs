@@ -53,6 +53,8 @@ public class MonsterController : NetworkBehaviour
     { 
         healthBar.rectTransform.sizeDelta = new Vector2((newValue / maxHealth) * 5, 1);
         healthText.text = newValue.ToString() + " / " + maxHealth.ToString();
+
+        Debug.Log("health updated");
     }
 
     void LocalUpdateHealthBar()

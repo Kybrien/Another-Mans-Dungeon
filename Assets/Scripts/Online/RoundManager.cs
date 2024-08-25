@@ -302,7 +302,7 @@ public class RoundManager : NetworkBehaviour
         {
             map.transform.position += new Vector3(0, 0, parent.transform.position.z);
 
-            MonsterController[] monsterControllers = FindObjectsOfType<MonsterController>();
+            MonsterController[] monsterControllers = map.GetComponentsInChildren<MonsterController>();
 
             foreach (MonsterController mC in monsterControllers)
             {

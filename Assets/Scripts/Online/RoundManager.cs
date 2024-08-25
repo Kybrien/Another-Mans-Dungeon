@@ -112,7 +112,7 @@ public class RoundManager : NetworkBehaviour
             yield return new WaitForSeconds(1);
         }
 
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(10);
 
         while (currentRound <= rounds)
         {

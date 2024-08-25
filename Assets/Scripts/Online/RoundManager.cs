@@ -301,6 +301,14 @@ public class RoundManager : NetworkBehaviour
         if (isClient && !isServer)
         {
             map.transform.position += new Vector3(0, 0, parent.transform.position.z);
+
+            MonsterController[] monsterControllers = FindObjectsOfType<MonsterController>();
+
+            foreach (MonsterController mC in monsterControllers)
+            {
+                mC.transform.position += new Vector3(0, 0, parent.transform.position.z);
+                Debug.Log(mC.name + " moved.");
+            }
         }
 
         graph.center += new Vector3(0, 0, parent.transform.position.z);

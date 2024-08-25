@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     [HideInInspector] public bool isStorageOpened;
-
+    [SerializeField] private Transform weaponHoldPoint;
     [SerializeField] private GameObject[] hotbarSlots = new GameObject[4];
     [SerializeField] private GameObject[] slots = new GameObject[20];
     [SerializeField] private GameObject inventoryParent;
@@ -15,7 +15,7 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
     [SerializeField] private Transform handParent;
     [SerializeField] private GameObject itemPrefab;
     [SerializeField] private Camera cam;
-
+    private GameObject currentWeapon;
     public GameObject[] Slots => slots;
     public GameObject ItemPrefab => itemPrefab;
 
@@ -103,14 +103,14 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
         InventorySlot selectedSlot = hotbarSlots[selectedHotbarSlot].GetComponent<InventorySlot>();
         if (selectedSlot != null && selectedSlot.HeldItem != null)
         {
-            InventoryItem heldItem = selectedSlot.HeldItem.GetComponent<InventoryItem>();
+            GameObject heldItem = selectedSlot.HeldItem; // Récupère le GameObject de l'item
             if (heldItem != null)
             {
-                InstantiateItemInHand(heldItem);
+                InstantiateItemInHand(heldItem); // Passe le GameObject
             }
             else
             {
-                Debug.LogWarning("L'item détenu n'a pas de composant InventoryItem.");
+                Debug.LogWarning("L'item détenu est nul.");
             }
         }
         else
@@ -126,43 +126,41 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
         }
     }
 
-
-
-    private void InstantiateItemInHand(InventoryItem item)
+    private void SetHotbarSlot(int slotIndex)
     {
-        // Créez une instance du prefab en tant qu'enfant de handParent
-        GameObject itemInHand = Instantiate(itemPrefab, handParent);
-        InventoryItem handItemComponent = itemInHand.GetComponent<InventoryItem>();
-
-        // Configurez les propriétés du nouvel item
-        handItemComponent.itemScriptableObject = item.itemScriptableObject;
-        handItemComponent.stackCurrent = item.stackCurrent;
-
-        // Ajustez la position, la rotation et l'échelle de l'item
-        itemInHand.transform.localPosition = Vector3.zero; // Position relative à handParent
-        itemInHand.transform.localRotation = Quaternion.identity; // Rotation relative à handParent
-        itemInHand.transform.localScale = Vector3.one; // Échelle relative à handParent
-
-        // Assurez-vous que l'item est actif
-        itemInHand.SetActive(true);
-
-        // Vérifiez les composants du prefab
-        if (itemInHand.GetComponent<Renderer>() == null)
+        if (currentWeapon != null)
         {
-            Debug.LogError("Le prefab n'a pas de composant Renderer !");
-        }
-        else
-        {
-            Debug.Log("Le prefab a un composant Renderer.");
+            Destroy(currentWeapon); // Désactiver l'arme actuelle
         }
 
-        // Affichez les détails sur la position et l'état
-        Debug.Log("Item instancié dans la main: " + itemInHand.name);
-        Debug.Log("Position de l'item: " + itemInHand.transform.position);
+        GameObject selectedSlot = hotbarSlots[slotIndex];
+        InventorySlot inventorySlot = selectedSlot.GetComponent<InventorySlot>();
+
+        if (inventorySlot != null && inventorySlot.HeldItem != null)
+        {
+            InstantiateItemInHand(inventorySlot.HeldItem);
+        }
     }
 
 
-    public void OnPointerDown(PointerEventData eventData)
+    private void InstantiateItemInHand(GameObject item)
+    {
+        // Assurez-vous que l'item est une arme et est configuré avec un Renderer
+        if (item.GetComponent<Renderer>() == null)
+        {
+            Debug.LogError("Item instancié dans la main n'a pas de Renderer.");
+            return;
+        }
+
+        currentWeapon = Instantiate(item, weaponHoldPoint.position, weaponHoldPoint.rotation);
+        currentWeapon.transform.SetParent(weaponHoldPoint);
+        currentWeapon.transform.localScale = Vector3.one;
+        currentWeapon.SetActive(true); // Assurez-vous que l'arme est activée
+    }
+
+
+
+public void OnPointerDown(PointerEventData eventData)
     {
         if (eventData.button == PointerEventData.InputButton.Left)
         {
@@ -220,10 +218,17 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
             // Si on relâche l'item ailleurs (retourne l'item au dernier slot)
             else
             {
-                lastItemSlot.GetComponent<InventorySlot>().SetHeldItem(draggedObject);
-                draggedObject.transform.SetParent(lastItemSlot.transform.parent.parent.GetChild(2));
+                Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+                Vector3 position = ray.GetPoint(3);
+
+                GameObject newItem = Instantiate(draggedObject.GetComponent<InventoryItem>().itemScriptableObject.prefab, position, new Quaternion());
+                newItem.GetComponent<itemPickable>().itemScriptableObject = draggedObject.GetComponent<InventoryItem>().itemScriptableObject;
+
+                lastItemSlot.GetComponent<InventorySlot>().HeldItem = null;
+                Destroy(draggedObject);
             }
 
+            HotbarItemChanged();
             draggedObject = null;
         }
     }

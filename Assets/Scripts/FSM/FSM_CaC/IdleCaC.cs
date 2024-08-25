@@ -8,7 +8,7 @@ public class IdleCaCState : StateCaC
 
     public override void EnterState()
     {
-        Debug.Log("Monster in Idle STATE");
+        //Debug.Log("Monster in Idle STATE");
         // Logique d'initialisation de l'état Idle
     }
     public override void Update()

@@ -37,7 +37,7 @@ public class AttackState : StateCaC
         {
             // Générer un nombre aléatoire entre 1 et 3
             int random = Random.Range(1, 4);
-            Debug.Log("Random Attack Chosen: " + random);
+            //Debug.Log("Random Attack Chosen: " + random);
 
             if (random == 1)
             {

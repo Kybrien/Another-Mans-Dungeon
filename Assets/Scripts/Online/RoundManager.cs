@@ -283,10 +283,12 @@ public class RoundManager : NetworkBehaviour
 
             foreach (KeyValuePair<int, NetworkConnectionToClient> entry in NetworkServer.connections)
             {
-                if ((int)playerIdentity.netId != entry.Key)
+                NetworkConnectionToClient conn = entry.Value;
+
+                if (playerIdentity.netId != conn.identity.netId)
                 {
-                    TeleportToPortal(player.transform, playerMapFolders[entry.Key], "PortalStart");
-                    RpcInvadeWorld(entry.Value);
+                    RpcTeleportToSpawn(playerIdentity.connectionToClient, playerMapFolders[(int)conn.identity.netId], "PortalStart");
+                    RpcInvadeWorld(conn);
 
                     break;
                 }

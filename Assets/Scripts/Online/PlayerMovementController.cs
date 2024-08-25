@@ -45,13 +45,16 @@ public class PlayerMovementController : NetworkBehaviour
     {
         if (SceneManager.GetActiveScene().name == "OnlineGame")
         {
-            if (PlayerModel.activeSelf == false)
+            if (roundManager == null)
             {
-                if (!isLocalPlayer)
+                GameObject roundManagerGO = GameObject.Find("RoundManager");
+                if (roundManagerGO != null)
                 {
                     roundManager = GameObject.Find("RoundManager").GetComponent<RoundManager>();
                 }
-
+            }
+            if (PlayerModel.activeSelf == false)
+            {
                 GameObject SelectedModel = PlayerModel.transform.Find("Model" + (1 + NetworkClient.localPlayer.netId % 2).ToString()).gameObject;
                 _animator = SelectedModel.GetComponent<Animator>();
 
@@ -143,6 +146,7 @@ public class PlayerMovementController : NetworkBehaviour
         if (health > 0)
         {
             isDead = false;
+            Debug.Log("healed");
         }
     } 
 

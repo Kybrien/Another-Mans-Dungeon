@@ -11,7 +11,7 @@ public class AttackState : StateCaC
 
     public override void EnterState()
     {
-        Debug.Log("Monster in Attack STATE");
+        //Debug.Log("Monster in Attack STATE");
         PerformAttack(); // Initialiser la première attaque
     }
 

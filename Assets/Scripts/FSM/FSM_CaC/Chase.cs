@@ -31,7 +31,7 @@ public class ChaseState : StateCaC
         }
         else
         {
-            Debug.Log("Monster in Chase STATE");
+            //Debug.Log("Monster in Chase STATE");
             aiPath.canMove = true;
         }
         

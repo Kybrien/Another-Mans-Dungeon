@@ -50,6 +50,8 @@ public class RoundManager : NetworkBehaviour
     [SyncVar]
     private int playersAlive = 0;
 
+    private GameObject current1v1map;
+
     public readonly SyncDictionary<int, GameObject> playerMapFolders = new SyncDictionary<int, GameObject>();
 
     // Start is called before the first frame update
@@ -139,6 +141,12 @@ public class RoundManager : NetworkBehaviour
                 playersAlive = 0;
                 secondsLeft = maxRoundTimer;
 
+                if (current1v1map != null)
+                {
+                    NetworkServer.UnSpawn(current1v1map);
+                    current1v1map = null;
+                }
+
                 if ((currentRound == 3 || currentRound == 5) && NetworkManager.singleton.numPlayers > 1)
                 {
                     MapData chosenMap = SelectRandom1v1Map();
@@ -150,6 +158,8 @@ public class RoundManager : NetworkBehaviour
 
                     GameObject NewMap = Instantiate(chosenMap.gameObject);
                     NetworkServer.Spawn(NewMap);
+
+                    current1v1map = NewMap;
 
                     foreach (KeyValuePair<int, NetworkConnectionToClient> entry in NetworkServer.connections)
                     {

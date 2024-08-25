@@ -294,13 +294,12 @@ public class RoundManager : NetworkBehaviour
     {
         AstarPath astarPath = map.transform.Find("Astar").GetComponent<AstarPath>();
         Pathfinding.GridGraph graph = astarPath.data.gridGraph;
-        Vector3 offset = parent.transform.position - map.transform.position;
-        Vector3 center = graph.center;
+        Vector3 offset = new Vector3(0, 0, parent.transform.position.z);
 
         map.transform.parent = parent;
         if (isClient && !isServer)
         {
-            map.transform.position += new Vector3(0, 0, parent.transform.position.z);
+            map.transform.position += offset;
 
             foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Enemy"))
             {
@@ -312,7 +311,7 @@ public class RoundManager : NetworkBehaviour
             }
         }
 
-        graph.center += new Vector3(0, 0, parent.transform.position.z);
+        graph.center += offset;
 
         AstarPath.active.AddWorkItem(new AstarWorkItem(ctx =>
         {

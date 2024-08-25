@@ -48,7 +48,7 @@ public class MobSpawner : NetworkBehaviour
 
             NetworkServer.Spawn(spawnedMonster);
 
-            SetMonsterParentRpc(spawnedMonster);
+            //SetMonsterParentRpc(spawnedMonster);
 
             // Incrémenter le compteur de monstres actuels
             currentMonsterCount++;

@@ -113,13 +113,13 @@ public class PlayerMovementController : NetworkBehaviour
     void UpdateHealthBar(float oldValue, float newValue)
     {
         Debug.Log("Health changed: " + newValue.ToString());
-        healthBar.rectTransform.sizeDelta = new Vector2((newValue / maxHealth) * 250, 10);
+        healthBar.rectTransform.sizeDelta = new Vector2((newValue / maxHealth) * 400, healthBar.rectTransform.sizeDelta.y);
         healthText.text = newValue.ToString() + " / " + maxHealth.ToString();
 
         if (newValue <= 0 && isDead == false) {
             Debug.Log("Dead");
             isDead = true;
-            roundManager.CmdPlayerDeath();
+            roundManager.PlayerDied();
         }
     }
 

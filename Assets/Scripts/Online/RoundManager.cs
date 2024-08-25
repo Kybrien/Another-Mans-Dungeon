@@ -335,10 +335,13 @@ public class RoundManager : NetworkBehaviour
         Debug.Log("Your world is invaded !");
     }
 
-    [Command]
-    public void CmdPlayerDeath()
+    [Server]
+    public void PlayerDied()
     {
-        Debug.Log("playr died");
-        playersAlive -= 1;
+        if (isServer)
+        {
+            playersAlive -= 1;
+            Debug.Log("server died");
+        }
     }
 }

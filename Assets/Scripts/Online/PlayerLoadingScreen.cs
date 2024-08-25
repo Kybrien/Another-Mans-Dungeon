@@ -4,6 +4,7 @@ using UnityEngine;
 using Mirror;
 using UnityEngine.UI;
 using System;
+using TMPro;
 
 [Serializable]
 public struct MapImage
@@ -17,6 +18,7 @@ public class PlayerLoadingScreen : NetworkBehaviour
     [SerializeField] private GameObject loadingScreen;
     [SerializeField] private RawImage loadingImage;
     [SerializeField] private List<MapImage> mapImages = new List<MapImage>();
+    [SerializeField] private TextMeshProUGUI mapText;
 
     // Start is called before the first frame update
     void Start()
@@ -39,6 +41,8 @@ public class PlayerLoadingScreen : NetworkBehaviour
                 return mapImage.Texture;
             }
         }
+
+        mapText.text = mapName;
 
         return loadingImage.texture;
     }

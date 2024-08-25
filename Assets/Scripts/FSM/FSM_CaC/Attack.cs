@@ -32,7 +32,8 @@ public class AttackState : StateCaC
 
     private IEnumerator AttackRoutine()
     {
-        while (Vector3.Distance(monsterController.transform.position, GameObject.FindGameObjectWithTag("Player").transform.position) <= attackDistance)
+        GameObject Player = GameObject.FindGameObjectWithTag("Player");
+        while (Vector3.Distance(monsterController.transform.position, Player.transform.position) <= attackDistance)
         {
             // Générer un nombre aléatoire entre 1 et 3
             int random = Random.Range(1, 4);
@@ -51,7 +52,9 @@ public class AttackState : StateCaC
                 SetAnimationTrigger("isAttacking3");
             }
 
-            Debug.Log("Performing attack: " + random);
+            //Debug.Log("Performing attack: " + random);
+
+            Player.GetComponent<PlayerMovementController>().TakeDamage(5);
 
             // Attendre l'intervalle avant de permettre une nouvelle attaque
             yield return new WaitForSeconds(attackInterval);

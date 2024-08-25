@@ -103,7 +103,7 @@ public class RoundManager : NetworkBehaviour
 
             NetworkServer.Spawn(newFolder, conn);
 
-            playerMapFolders.Add(entry.Key, newFolder);
+            playerMapFolders.Add((int)conn.identity.netId, newFolder);
 
             //RpcSetMapName(newFolder, "Map" + entry.Key.ToString());
         }

@@ -297,7 +297,10 @@ public class RoundManager : NetworkBehaviour
         Vector3 center = graph.center;
 
         map.transform.parent = parent;
-        //map.transform.position += new Vector3(0, 0, parent.transform.position.z);
+        if (isClient && !isServer)
+        {
+            map.transform.position += new Vector3(0, 0, parent.transform.position.z);
+        }
 
         graph.center += new Vector3(0, 0, parent.transform.position.z);
         //AstarPath.active.Scan(graph);

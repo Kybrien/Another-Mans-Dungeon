@@ -303,7 +303,7 @@ public class RoundManager : NetworkBehaviour
         }
 
         graph.center += new Vector3(0, 0, parent.transform.position.z);
-        //AstarPath.active.Scan(graph);
+        AstarPath.active.Scan(graph);
     }
 
     [TargetRpc]

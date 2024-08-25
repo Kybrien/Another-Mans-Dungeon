@@ -302,12 +302,13 @@ public class RoundManager : NetworkBehaviour
         {
             map.transform.position += new Vector3(0, 0, parent.transform.position.z);
 
-            MonsterController[] monsterControllers = map.GetComponentsInChildren<MonsterController>();
-
-            foreach (MonsterController mC in monsterControllers)
+            foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Enemy"))
             {
-                mC.transform.position += new Vector3(0, 0, parent.transform.position.z);
-                Debug.Log(mC.name + " moved.");
+                if (obj.transform.parent == map)
+                {
+                    obj.transform.position += offset;
+                    Debug.Log(obj.name + " moved.");
+                }
             }
         }
 

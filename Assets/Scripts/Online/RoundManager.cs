@@ -339,6 +339,8 @@ public class RoundManager : NetworkBehaviour
             return;
         }
 
+        Debug.Log("teleporting to " + map.name + " with portal name: " + portalName);
+
         TeleportToPortal(NetworkClient.localPlayer.transform, map, portalName);
     }
 

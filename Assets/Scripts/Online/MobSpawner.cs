@@ -23,7 +23,7 @@ public class MobSpawner : NetworkBehaviour
     // Coroutine pour gérer le spawn des monstres avec un délai
     IEnumerator SpawnMonsters()
     {
-        yield return new WaitForSeconds(spawnDelay);
+        yield return new WaitForSeconds(10);
 
 
         while (currentMonsterCount < maxMonsters)

@@ -98,7 +98,7 @@ public class RoundManager : NetworkBehaviour
             NetworkConnectionToClient conn = entry.Value;
 
             GameObject newFolder = Instantiate(mapFolderPrefab);
-            newFolder.transform.position = new Vector3(0, 0, entry.Key * mapSpacing + mapSpacing);
+            newFolder.transform.position = new Vector3(0, 0, conn.identity.netId * mapSpacing + mapSpacing);
             //newFolder.name = "Map" + entry.Key.ToString();
 
             NetworkServer.Spawn(newFolder, conn);
@@ -166,7 +166,7 @@ public class RoundManager : NetworkBehaviour
                         NetworkConnectionToClient conn = entry.Value;
                         GameObject player = conn.identity.gameObject;
 
-                        Transform mapFolder = playerMapFolders[entry.Key].transform;
+                        Transform mapFolder = playerMapFolders[(int)conn.identity.netId].transform;
 
                         foreach (Transform child in mapFolder)
                         {
@@ -176,7 +176,7 @@ public class RoundManager : NetworkBehaviour
                         PlayerMovementController plrData = player.GetComponent<PlayerMovementController>();
                         plrData.SetHealth(plrData.GetMaxHealth());
 
-                        string portalName = "Portal_Player" + (1 + entry.Key % 2).ToString();
+                        string portalName = "Portal_Player" + (1 + (int)conn.identity.netId % 2).ToString();
                         Debug.Log("Player id: " + conn.identity.netId.ToString() + ". portal name = " + portalName);
                         //player.transform.position = NewMap.transform.Find(portalName).position;
 
@@ -197,7 +197,7 @@ public class RoundManager : NetworkBehaviour
                         GameObject player = conn.identity.gameObject;
 
                         //Transform mapFolder = GameObject.Find("Map" + entry.Key.ToString()).transform;
-                        Transform mapFolder = playerMapFolders[entry.Key].transform;
+                        Transform mapFolder = playerMapFolders[(int)conn.identity.netId].transform;
 
                         foreach (Transform child in mapFolder)
                         {

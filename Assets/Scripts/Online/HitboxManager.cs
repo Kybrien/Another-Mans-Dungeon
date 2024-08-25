@@ -28,7 +28,7 @@ public class HitboxManager : NetworkBehaviour
                 return;
             }
 
-            debounce.Add(other.gameObject);
+            AddToDebounceCmd(other.gameObject);
 
             if (other.tag == "Enemy")
             {
@@ -42,5 +42,11 @@ public class HitboxManager : NetworkBehaviour
 
             //monsterHealth.LocalUpdateHealthBar();
         }
+    }
+
+    [Command]
+    void AddToDebounceCmd(GameObject target)
+    {
+        debounce.Add(target);
     }
 }

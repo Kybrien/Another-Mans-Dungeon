@@ -28,6 +28,7 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 
     int selectedHotbarSlot = 0;
 
+
     void Start()
     {
         HotbarItemChanged();
@@ -103,28 +104,18 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
         InventorySlot selectedSlot = hotbarSlots[selectedHotbarSlot].GetComponent<InventorySlot>();
         if (selectedSlot != null && selectedSlot.HeldItem != null)
         {
-            GameObject heldItem = selectedSlot.HeldItem; // Récupère le GameObject de l'item
-            if (heldItem != null)
-            {
-                InstantiateItemInHand(heldItem); // Passe le GameObject
-            }
-            else
-            {
-                Debug.LogWarning("L'item détenu est nul.");
-            }
-        }
-        else
-        {
-            Debug.LogWarning("Le slot sélectionné n'a pas d'item ou est nul.");
+            ItemSO itemData = selectedSlot.HeldItem.GetComponent<InventoryItem>().itemScriptableObject;
+            InstantiateItemInHand(itemData); // Passez l'ItemSO ici
         }
 
-        // Mettre à jour la mise à l'échelle des slots de la hotbar
+        // Mise à jour de l'échelle des slots de la hotbar
         for (int i = 0; i < hotbarSlots.Length; i++)
         {
             Vector3 scale = i == selectedHotbarSlot ? new Vector3(1.1f, 1.1f, 1.1f) : new Vector3(0.9f, 0.9f, 0.9f);
             hotbarSlots[i].transform.localScale = scale;
         }
     }
+
 
     private void SetHotbarSlot(int slotIndex)
     {
@@ -138,29 +129,44 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 
         if (inventorySlot != null && inventorySlot.HeldItem != null)
         {
-            InstantiateItemInHand(inventorySlot.HeldItem);
+            // Récupérer l'ItemSO à partir de HeldItem
+            ItemSO itemData = inventorySlot.HeldItem.GetComponent<InventoryItem>().itemScriptableObject;
+            InstantiateItemInHand(itemData);
         }
     }
 
 
-    private void InstantiateItemInHand(GameObject item)
+    private void InstantiateItemInHand(ItemSO itemData)
     {
-        // Assurez-vous que l'item est une arme et est configuré avec un Renderer
-        if (item.GetComponent<Renderer>() == null)
+        if (itemData == null || itemData.prefab == null)
         {
-            Debug.LogError("Item instancié dans la main n'a pas de Renderer.");
+            Debug.LogError("L'item ou son prefab est nul.");
             return;
         }
 
-        currentWeapon = Instantiate(item, weaponHoldPoint.position, weaponHoldPoint.rotation);
-        currentWeapon.transform.SetParent(weaponHoldPoint);
+        // Détruire l'arme actuelle si elle existe
+        if (currentWeapon != null)
+        {
+            Destroy(currentWeapon);
+        }
+
+        // Instancier le prefab associé à l'item
+        currentWeapon = Instantiate(itemData.prefab, handParent.position, handParent.rotation);
+        currentWeapon.transform.SetParent(handParent);
         currentWeapon.transform.localScale = Vector3.one;
-        currentWeapon.SetActive(true); // Assurez-vous que l'arme est activée
+        currentWeapon.SetActive(true);
+
+        // Passer le Rigidbody en mode cinématique
+        Rigidbody rb = currentWeapon.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.isKinematic = true;
+        }
     }
 
 
 
-public void OnPointerDown(PointerEventData eventData)
+    public void OnPointerDown(PointerEventData eventData)
     {
         if (eventData.button == PointerEventData.InputButton.Left)
         {

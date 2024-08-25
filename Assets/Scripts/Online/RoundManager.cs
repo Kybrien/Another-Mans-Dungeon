@@ -269,13 +269,13 @@ public class RoundManager : NetworkBehaviour
         }
         else
         {
-            int playerIdentity = (int)player.GetComponent<NetworkIdentity>().netId;
+            NetworkIdentity playerIdentity = player.GetComponent<NetworkIdentity>();
 
             foreach (KeyValuePair<int, NetworkConnectionToClient> entry in NetworkServer.connections)
             {
-                if (playerIdentity != entry.Key)
+                if ((int)playerIdentity.netId != entry.Key)
                 {
-                    TeleportToPortal(NetworkClient.localPlayer.transform, playerMapFolders[entry.Key], "PortalStart");
+                    TeleportToPortal(player.transform, playerMapFolders[entry.Key], "PortalStart");
                     RpcInvadeWorld(entry.Value);
 
                     break;
@@ -356,6 +356,7 @@ public class RoundManager : NetworkBehaviour
         {
             playersAlive -= 1;
             Debug.Log("server died");
+            Debug.Log("There are " + playersAlive.ToString() + " players remaining.");
         }
     }
 }

@@ -287,8 +287,8 @@ public class RoundManager : NetworkBehaviour
 
                 if (playerIdentity.netId != conn.identity.netId)
                 {
-                    Debug.Log("teleporting player " + playerIdentity.netId.ToString() + " to map from id: " + conn.identity.netId.ToString());
-                    Debug.Log(playerMapFolders[(int)conn.identity.netId].name + "; " + playerMapFolders[(int)conn.identity.netId].transform.GetChild(0).gameObject.name);
+                    Debug.Log("Teleporting player " + playerIdentity.netId.ToString() + " to map id: " + conn.identity.netId.ToString());
+
                     RpcTeleportToSpawn(playerIdentity.connectionToClient, playerMapFolders[(int)conn.identity.netId].transform.GetChild(0).gameObject, "PortalStart");
                     RpcInvadeWorld(conn);
 

@@ -67,7 +67,7 @@ public class MobSpawner : NetworkBehaviour
 
         if (isClient && !isServer)
         {
-            monster.transform.position += monster.transform.parent.parent.position;
+            //monster.transform.position += monster.transform.parent.parent.position;
         }
     }
 }

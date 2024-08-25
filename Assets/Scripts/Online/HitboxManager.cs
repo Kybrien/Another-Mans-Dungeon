@@ -21,7 +21,7 @@ public class HitboxManager : NetworkBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Enemy" || (other.tag == "Player" && other.GetComponent<NetworkIdentity>().netId != plrIdentity.netId))
+        if (other && (other.tag == "Enemy" || (other.tag == "Player" && other.GetComponent<NetworkIdentity>().netId != plrIdentity.netId)))
         {
             if (debounce.Find((x) => x == other.gameObject)) {
                 Debug.Log(other.gameObject.name + " already in list");
@@ -47,6 +47,7 @@ public class HitboxManager : NetworkBehaviour
     [Command]
     void AddToDebounceCmd(GameObject target)
     {
+        Debug.Log("addztatzat");
         debounce.Add(target);
     }
 }

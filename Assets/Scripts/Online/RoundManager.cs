@@ -156,6 +156,13 @@ public class RoundManager : NetworkBehaviour
                         NetworkConnectionToClient conn = entry.Value;
                         GameObject player = conn.identity.gameObject;
 
+                        Transform mapFolder = playerMapFolders[entry.Key].transform;
+
+                        foreach (Transform child in mapFolder)
+                        {
+                            NetworkServer.Destroy(child.gameObject);
+                        }
+
                         PlayerMovementController plrData = player.GetComponent<PlayerMovementController>();
                         plrData.SetHealth(plrData.GetMaxHealth());
 
@@ -163,7 +170,7 @@ public class RoundManager : NetworkBehaviour
                         Debug.Log("Player id: " + conn.identity.netId.ToString() + ". portal name = " + portalName);
                         //player.transform.position = NewMap.transform.Find(portalName).position;
 
-                        TeleportToPortal(NetworkClient.localPlayer.transform, NewMap, portalName);
+                        RpcTeleportToSpawn(conn, NewMap, portalName);
 
                         playersAlive += 1;
                     }
@@ -195,7 +202,7 @@ public class RoundManager : NetworkBehaviour
                         NetworkServer.Spawn(NewMap);
 
                         RpcSwitchMap(NewMap, mapFolder);
-                        RpcTeleportToSpawn(conn, NewMap);
+                        RpcTeleportToSpawn(conn, NewMap, "PortalStart");
 
                         PlayerMovementController plrData = player.GetComponent<PlayerMovementController>();
                         plrData.SetHealth(plrData.GetMaxHealth());
@@ -311,7 +318,7 @@ public class RoundManager : NetworkBehaviour
     }
 
     [TargetRpc]
-    public void RpcTeleportToSpawn(NetworkConnectionToClient target, GameObject map)
+    public void RpcTeleportToSpawn(NetworkConnectionToClient target, GameObject map, string portalName)
     {
         if (map == null)
         {
@@ -319,7 +326,7 @@ public class RoundManager : NetworkBehaviour
             return;
         }
 
-        TeleportToPortal(NetworkClient.localPlayer.transform, map, "PortalStart");
+        TeleportToPortal(NetworkClient.localPlayer.transform, map, portalName);
     }
 
     [ClientRpc]

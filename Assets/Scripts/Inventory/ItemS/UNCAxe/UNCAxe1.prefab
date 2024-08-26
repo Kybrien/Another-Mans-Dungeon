@@ -9,13 +9,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3176825188543343338}
+  - component: {fileID: 6598244511031891747}
   - component: {fileID: 1997771087461262671}
   - component: {fileID: 4349761946535088517}
   - component: {fileID: 4328315655223375849}
   - component: {fileID: -4093302555303675315}
   - component: {fileID: 8798571314797262161}
   - component: {fileID: -910555676110687799}
-  - component: {fileID: 6598244511031891747}
   m_Layer: 0
   m_Name: UNCAxe1
   m_TagString: Untagged
@@ -38,6 +38,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6598244511031891747
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2836573981829754960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  _assetId: 462460830
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0
 --- !u!33 &1997771087461262671
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -171,20 +188,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemScriptableObject: {fileID: 11400000, guid: 980eeb2c05be7274fa20dca54c0ba8e5, type: 2}
---- !u!114 &6598244511031891747
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2836573981829754960}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 0
-  _assetId: 462460830
-  serverOnly: 0
-  visibility: 0
-  hasSpawned: 0

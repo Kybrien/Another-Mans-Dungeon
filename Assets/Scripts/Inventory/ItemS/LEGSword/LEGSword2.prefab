@@ -9,13 +9,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4632422161026528}
+  - component: {fileID: -2827567951794442910}
   - component: {fileID: 33097781053683720}
   - component: {fileID: 23873737586531716}
   - component: {fileID: 64732202460050762}
   - component: {fileID: 2065330058741626750}
   - component: {fileID: 7950693424091140403}
   - component: {fileID: 1352571224835161590}
-  - component: {fileID: -2827567951794442910}
   m_Layer: 0
   m_Name: LEGSword2
   m_TagString: Untagged
@@ -38,6 +38,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-2827567951794442910
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1597027068878224}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  _assetId: 786927380
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0
 --- !u!33 &33097781053683720
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -171,20 +188,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemScriptableObject: {fileID: 11400000, guid: 4d5db6fe9fec48a4e8620dcc7edfe10c, type: 2}
---- !u!114 &-2827567951794442910
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1597027068878224}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 0
-  _assetId: 786927380
-  serverOnly: 0
-  visibility: 0
-  hasSpawned: 0

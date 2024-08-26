@@ -9,13 +9,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4280715772856136}
+  - component: {fileID: 5170253902532257725}
   - component: {fileID: 33031303988460842}
   - component: {fileID: 23504429589269734}
   - component: {fileID: 64856826312762122}
   - component: {fileID: 5487508983099838319}
   - component: {fileID: 2510981768295828095}
   - component: {fileID: 6198580985901588284}
-  - component: {fileID: 5170253902532257725}
   m_Layer: 0
   m_Name: EPICSword2
   m_TagString: Untagged
@@ -38,6 +38,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5170253902532257725
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1488845110304526}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  _assetId: 2898849374
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0
 --- !u!33 &33031303988460842
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -171,20 +188,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemScriptableObject: {fileID: 11400000, guid: 263db5346ae182e43a85d68a72ac1b76, type: 2}
---- !u!114 &5170253902532257725
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1488845110304526}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 0
-  _assetId: 2898849374
-  serverOnly: 0
-  visibility: 0
-  hasSpawned: 0

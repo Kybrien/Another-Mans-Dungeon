@@ -37,8 +37,11 @@ public class MonsterController : NetworkBehaviour
         return health;
     }
 
+    [Server]
     public void TakeDamage(int damage)
     {
+        if (!isServer) return;
+
         health = Mathf.Max(0, health - damage);
 
         if (isDead == false && health == 0)

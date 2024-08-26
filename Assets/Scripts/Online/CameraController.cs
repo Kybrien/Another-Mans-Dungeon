@@ -25,8 +25,8 @@ public class CameraController : NetworkBehaviour
 
         if (SceneManager.GetActiveScene().name == "OnlineGame")
         {
-            Cursor.visible = false;
-            Cursor.lockState = CursorLockMode.Locked;
+            //Cursor.visible = false;
+            //Cursor.lockState = CursorLockMode.Locked;
 
             //cameraHolder.transform.position = transform.position;
             rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;

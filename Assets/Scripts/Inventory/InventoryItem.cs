@@ -15,12 +15,16 @@ public class InventoryItem : MonoBehaviour
 
     private void Start()
     {
+        if (itemScriptableObject == null) return;
         stackMax = itemScriptableObject.stackMax;
     }
 
     void Update()
     {
-        iconImage.sprite = itemScriptableObject.icon;
+        if (itemScriptableObject != null)
+        {
+            iconImage.sprite = itemScriptableObject.icon;
+        }
 
         if (stackMax > 1)
         {

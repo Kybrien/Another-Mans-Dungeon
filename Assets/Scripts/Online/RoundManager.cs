@@ -7,8 +7,10 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Security.Cryptography;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using static RootMotion.FinalIK.GenericPoser;
+using static RootMotion.FinalIK.RagdollUtility;
 
 public class RoundManager : NetworkBehaviour
 {
@@ -20,6 +22,8 @@ public class RoundManager : NetworkBehaviour
     }
 
     [SerializeField] private GameObject mapFolderPrefab;
+
+    [SerializeField] private AstarPath astarPath;
 
     [Header("GAME SETTINGS")]
 
@@ -86,12 +90,14 @@ public class RoundManager : NetworkBehaviour
     [Server]
     IEnumerator HandleRounds()
     {
-        for (int i = 10; i > 5; i--)
+        for (int i = 180; i > 3; i--)
         {
             secondsLeft = i;
             RpcUpdateStatus();
             yield return new WaitForSeconds(1);
         }
+
+        // Creation des dossiers parent pour les map des joueurs
 
         foreach (KeyValuePair<int, NetworkConnectionToClient> entry in NetworkServer.connections)
         {
@@ -108,7 +114,7 @@ public class RoundManager : NetworkBehaviour
             //RpcSetMapName(newFolder, "Map" + entry.Key.ToString());
         }
 
-        for (int i = 5; i >= 1; i--)
+        for (int i = 3; i >= 1; i--)
         {
             secondsLeft = i;
             RpcUpdateStatus();
@@ -133,6 +139,8 @@ public class RoundManager : NetworkBehaviour
             }
             else
             {
+                // Remise a zero des variables
+
                 currentRound += 1;
 
                 if (currentRound > rounds) break;
@@ -141,12 +149,14 @@ public class RoundManager : NetworkBehaviour
                 playersAlive = 0;
                 secondsLeft = maxRoundTimer;
 
+                // Suppression d'une map 1v1 si elle existe
                 if (current1v1map != null)
                 {
                     NetworkServer.UnSpawn(current1v1map);
                     current1v1map = null;
                 }
 
+                // Si la manche doit etre un 1v1 s'il y a plus d'un joueur
                 if ((currentRound == 3 || currentRound == 5) && NetworkManager.singleton.numPlayers > 1)
                 {
                     MapData chosenMap = SelectRandom1v1Map();
@@ -170,7 +180,10 @@ public class RoundManager : NetworkBehaviour
 
                         foreach (Transform child in mapFolder)
                         {
-                            NetworkServer.Destroy(child.gameObject);
+                            if (mapFolder != null)
+                            {
+                                NetworkServer.Destroy(child.gameObject);
+                            }
                         }
 
                         PlayerMovementController plrData = player.GetComponent<PlayerMovementController>();
@@ -185,11 +198,30 @@ public class RoundManager : NetworkBehaviour
                         playersAlive += 1;
                     }
                 }
-                else {
+                // Génération d'un donjon
+                else
+                {
+                    // Choix de la map
+
                     MapData chosenMap = SelectRandomMap();
                     RpcStartLoadingScreen(true, chosenMap.name);
 
+                    // Suppression de tous les graphs
+
+                    foreach (KeyValuePair<int, GameObject> mapToRemove in playerMapFolders)
+                    {
+                        foreach (Transform child in mapToRemove.Value.transform)
+                        {
+                            if (child != null)
+                            {
+                                NetworkServer.Destroy(child.gameObject);
+                            }
+                        }
+                    }
+
                     yield return new WaitForSeconds(0.1f);
+
+                    // Itération à travers chaque joueur pour instancier sa map, la déplacer localement, puis téléporter le joueur sur sa map en le remettant en vie
 
                     foreach (KeyValuePair<int, NetworkConnectionToClient> entry in NetworkServer.connections)
                     {
@@ -198,14 +230,8 @@ public class RoundManager : NetworkBehaviour
 
                         //Transform mapFolder = GameObject.Find("Map" + entry.Key.ToString()).transform;
                         Transform mapFolder = playerMapFolders[(int)conn.identity.netId].transform;
-
-                        foreach (Transform child in mapFolder)
-                        {
-                            NetworkServer.Destroy(child.gameObject);
-                            //GameObject.Destroy(child.gameObject);
-                        }
-
                         GameObject NewMap = Instantiate(chosenMap.gameObject, mapFolder);
+
                         //NewMap.transform.SetParent(mapFolder);
                         //NewMap.transform.position = mapFolder.transform.position;
 
@@ -213,6 +239,8 @@ public class RoundManager : NetworkBehaviour
 
                         RpcSwitchMap(NewMap, mapFolder);
                         RpcTeleportToSpawn(conn, NewMap, "PortalStart");
+
+                        RpcScanGraph(conn, NewMap);
 
                         PlayerMovementController plrData = player.GetComponent<PlayerMovementController>();
                         plrData.SetHealth(plrData.GetMaxHealth());
@@ -236,6 +264,27 @@ public class RoundManager : NetworkBehaviour
         EndGameAndReturnToLobby();
     }
 
+    private void CreateNewGraph(GameObject NewMap, Transform mapFolder)
+    {
+        AstarPath astarReference = NewMap.transform.Find("Astar").GetComponent<AstarPath>();
+        GridGraph graphReference = astarReference.graphs[0] as GridGraph;
+
+        GridGraph newGraph = astarPath.data.AddGraph(typeof(GridGraph)) as GridGraph;
+        newGraph.center = graphReference.center;
+        newGraph.nodeSize = graphReference.nodeSize;
+        newGraph.cutCorners = graphReference.cutCorners;
+        newGraph.collision.type = graphReference.collision.type;
+        newGraph.maxSlope = graphReference.maxSlope;
+        newGraph.maxClimb = graphReference.maxClimb;
+        newGraph.collision.heightMask = graphReference.collision.heightMask;
+        newGraph.collision.fromHeight = graphReference.collision.fromHeight;
+        newGraph.SetDimensions(graphReference.width, graphReference.depth, graphReference.nodeSize);
+
+        Debug.Log("reference pos: " + graphReference.center.ToString() + "; newmap pos: " + NewMap.transform.position.ToString() + "; mapFolder pos: " + mapFolder.position.ToString());
+
+        //AstarPath.active.Scan(newGraph);
+    }
+
     private void TeleportToPortal(Transform player, GameObject map, string name)
     {
         Transform PortalStart = map.transform.Find(name);
@@ -250,6 +299,7 @@ public class RoundManager : NetworkBehaviour
         }
     }
 
+    [Server]
     public void EndGameAndReturnToLobby()
     {
         if (NetworkServer.active && NetworkClient.isConnected)
@@ -287,9 +337,19 @@ public class RoundManager : NetworkBehaviour
 
                 if (playerIdentity.netId != conn.identity.netId)
                 {
+                    GameObject mapFolder = playerMapFolders[(int)playerIdentity.netId];
+
+                    if (mapFolder != null)
+                    {
+                        NetworkServer.UnSpawn(mapFolder);
+                    }
+
                     Debug.Log("Teleporting player " + playerIdentity.netId.ToString() + " to map id: " + conn.identity.netId.ToString());
 
-                    RpcTeleportToSpawn(playerIdentity.connectionToClient, playerMapFolders[(int)conn.identity.netId].transform.GetChild(0).gameObject, "PortalStart");
+                    GameObject invadedMap = playerMapFolders[(int)conn.identity.netId].transform.GetChild(0).gameObject;
+
+                    RpcTeleportToSpawn(playerIdentity.connectionToClient, invadedMap, "PortalStart");
+                    RpcScanGraph(conn, invadedMap);
                     RpcInvadeWorld(conn);
 
                     break;
@@ -324,11 +384,16 @@ public class RoundManager : NetworkBehaviour
         }
 
         graph.center += offset;
+    }
 
-        AstarPath.active.AddWorkItem(new AstarWorkItem(ctx =>
-        {
-            AstarPath.active.Scan(graph);
-        }));
+    [TargetRpc]
+    public void RpcScanGraph(NetworkConnectionToClient target, GameObject map)
+    {
+        AstarPath astarPath = map.transform.Find("Astar").GetComponent<AstarPath>();
+        GridGraph graph = astarPath.data.gridGraph;
+
+        AstarPath.active.Scan(graph);
+        Debug.Log("map scanned");
     }
 
     [TargetRpc]

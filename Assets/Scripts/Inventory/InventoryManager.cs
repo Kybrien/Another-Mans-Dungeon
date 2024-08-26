@@ -35,7 +35,7 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
     void Start()
     {
         HotbarItemChanged();
-        Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.lockState = CursorLockMode.Locked;
     }
 
     void Update()
@@ -168,16 +168,16 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
             else if (inventorySlot != null && inventorySlot.IsEmpty())
             {
                 inventorySlot.SetHeldItem(draggedObject);
-                draggedObject.transform.SetParent(inventorySlot.transform.parent.parent.GetChild(2));
+                draggedObject.transform.SetParent(inventorySlot.transform.parent.parent.Find("Items"));
             }
             // Si on relâche l'item sur un slot d'inventaire qui contient déjà un item
             else if (inventorySlot != null && !inventorySlot.IsEmpty())
             {
                 lastItemSlot.GetComponent<InventorySlot>().SetHeldItem(inventorySlot.HeldItem);
-                inventorySlot.HeldItem.transform.SetParent(inventorySlot.transform.parent.parent.GetChild(2));
+                inventorySlot.HeldItem.transform.SetParent(inventorySlot.transform.parent.parent.Find("Items"));
 
                 inventorySlot.SetHeldItem(draggedObject);
-                draggedObject.transform.SetParent(inventorySlot.transform.parent.parent.GetChild(2));
+                draggedObject.transform.SetParent(inventorySlot.transform.parent.parent.Find("Items"));
             }
             // Si on relâche l'item sur un slot de crafting qui contient déjà un item
             else if (craftingSlot != null && !craftingSlot.IsEmpty())
@@ -191,18 +191,20 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
             // Si on relâche l'item ailleurs (retourne l'item au dernier slot)
             else
             {
-                lastItemSlot.GetComponent<InventorySlot>().SetHeldItem(draggedObject);
-                draggedObject.transform.SetParent(lastItemSlot.transform.parent.parent.GetChild(2));
+                Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+                Vector3 position = ray.GetPoint(3);
+
+                GameObject newItem = Instantiate(draggedObject.GetComponent<InventoryItem>().itemScriptableObject.prefab, position, new Quaternion());
+                newItem.GetComponent<ItemPickable>().itemScriptableObject = draggedObject.GetComponent<InventoryItem>().itemScriptableObject;
+
+                lastItemSlot.GetComponent<InventorySlot>().HeldItem = null;
+                Destroy(draggedObject);
             }
 
+            HotbarItemChanged();
             draggedObject = null;
         }
     }
-
-
-
-
-
 
     public void ItemPicked(GameObject pickedItem)
     {
@@ -223,7 +225,7 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
         {
             GameObject newItem = Instantiate(itemPrefab);
             newItem.GetComponent<InventoryItem>().itemScriptableObject = pickedItem.GetComponent<ItemPickable>().itemScriptableObject;
-            newItem.transform.SetParent(emptySlot.transform.parent.parent.GetChild(2));
+            newItem.transform.SetParent(emptySlot.transform.parent.parent.Find("Items"));
             newItem.GetComponent<InventoryItem>().stackCurrent = 1;
 
             emptySlot.GetComponent<InventorySlot>().SetHeldItem(newItem);
@@ -271,7 +273,7 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
                 item.stackCurrent = storageItem.currentStack;
 
                 Transform slot = storageParent.transform.GetChild(1).GetChild(index);
-                newItem.transform.SetParent(slot.parent.parent.GetChild(2));
+                newItem.transform.SetParent(slot.parent.parent.Find("Items"));
                 slot.GetComponent<InventorySlot>().SetHeldItem(newItem);
                 newItem.transform.localScale = new Vector3(1, 1, 1);
             }

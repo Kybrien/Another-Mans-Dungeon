@@ -24,7 +24,7 @@ public class PlayerMovementController : NetworkBehaviour
 
     [Tooltip("Player Values")]
 
-    [SerializeField] private float Speed = 10f;
+    [SerializeField] private float speed = 10f;
     [SerializeField] private float jumpForce = 200f;
 
     [SyncVar(hook = nameof(UpdateHealthBar))]
@@ -76,6 +76,11 @@ public class PlayerMovementController : NetworkBehaviour
             {
                 Movement();
             }
+
+            if (!isLocalPlayer) {
+                _animator.SetFloat("Forward", rb.velocity.z);
+                _animator.SetFloat("Sided", rb.velocity.x);
+            }
         }
     }
 
@@ -96,19 +101,17 @@ public class PlayerMovementController : NetworkBehaviour
 
         Vector3 moveDirection = (forward  * zDirection) + (right * xDirection);
 
-        _animator.SetFloat("Forward",zDirection);
-        _animator.SetFloat("Sided", xDirection);
-
         if (Input.GetKeyDown(KeyCode.Space))
         {
             rb.AddForce(Vector3.up * jumpForce);
         }
 
-        transform.position += moveDirection * Speed * Time.deltaTime;
+        rb.MovePosition(rb.position + moveDirection * Time.deltaTime * speed);
 
-        if (transform.position.y < -5000)
+        if (transform.position.y < -2000)
         {
             transform.position = new Vector3(transform.position.x, 50, transform.position.z);
+            rb.velocity = Vector3.zero;
         }
     }
 

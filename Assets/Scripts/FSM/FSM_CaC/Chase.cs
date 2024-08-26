@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Pathfinding;
+using Mirror;
 
 public class ChaseState : StateCaC
 {
@@ -31,12 +32,13 @@ public class ChaseState : StateCaC
         }
         else
         {
-            //Debug.Log("Monster in Chase STATE");
+            Debug.Log("Monster in Chase STATE");
             aiPath.canMove = true;
         }
         
     }
 
+    [Server]
     public override void Update()
     {
         float distanceToPlayer = Vector3.Distance(monsterController.transform.position, player.position);

@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 7019820377247034954}
   - component: {fileID: 2873700000483932364}
   - component: {fileID: 14082264381187657}
+  - component: {fileID: 20292657095042878}
   m_Layer: 0
   m_Name: UNCSword2
   m_TagString: Untagged
@@ -170,3 +171,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemScriptableObject: {fileID: 11400000, guid: f94408886fa422c4fae0a0fe61465083, type: 2}
+--- !u!114 &20292657095042878
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1103392441193992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  _assetId: 55158962
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0

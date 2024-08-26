@@ -34,13 +34,9 @@ public class PlayerPickUp : NetworkBehaviour
 
                 else if (storage != null)
                 {
-                    if (Input.GetKeyDown(KeyCode.E) && inventoryManager.isStorageOpened)
+                    if (Input.GetKeyDown(KeyCode.E))
                     {
-                        inventoryManager.CloseStorage(storage);
-                    }
-                    else if (Input.GetKeyDown(KeyCode.E) && !inventoryManager.isStorageOpened)
-                    {
-                        inventoryManager.OpenStorage(storage);
+                        storage.CmdOpenChest();
                     }
                 }
             }

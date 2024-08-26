@@ -1,9 +1,13 @@
+using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Storage : MonoBehaviour
+public class Storage : NetworkBehaviour
 {
+    [SyncVar]
+    private bool isOpened;
+
     public string name;
     public int size;
     public List<StorageItem> items = new List<StorageItem>();
@@ -42,5 +46,14 @@ public class Storage : MonoBehaviour
                 }
             }
         }
+    }
+
+    [Command(requiresAuthority = false)]
+    public void CmdOpenChest()
+    {
+        if (isOpened) return;
+
+        isOpened = true;
+        Debug.Log("Opened");
     }
 }

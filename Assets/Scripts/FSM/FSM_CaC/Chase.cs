@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Pathfinding;
+using Mirror;
 
 public class ChaseState : StateCaC
 {
@@ -37,6 +38,7 @@ public class ChaseState : StateCaC
         
     }
 
+    [Server]
     public override void Update()
     {
         float distanceToPlayer = Vector3.Distance(monsterController.transform.position, player.position);

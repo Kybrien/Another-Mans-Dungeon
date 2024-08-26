@@ -258,6 +258,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1429469588375200196}
+  - component: {fileID: -2014616021017345045}
   - component: {fileID: 4809016632622929936}
   - component: {fileID: 5359622232156647759}
   - component: {fileID: 2852278238790168776}
@@ -287,6 +288,23 @@ Transform:
   - {fileID: 4040717199935266896}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 74.355, z: 0}
+--- !u!114 &-2014616021017345045
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4970779893899992391}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  _assetId: 3790954730
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0
 --- !u!33 &4809016632622929936
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -371,6 +389,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14ec31a9cabdfd14eac99fed5bc799ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   name: Mythical Chest
   size: 1
   items: []

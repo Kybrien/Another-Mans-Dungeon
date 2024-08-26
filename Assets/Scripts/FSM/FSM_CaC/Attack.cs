@@ -11,7 +11,7 @@ public class AttackState : StateCaC
 
     public override void EnterState()
     {
-        Debug.Log("Monster in Attack STATE");
+        //Debug.Log("Monster in Attack STATE");
         PerformAttack(); // Initialiser la première attaque
     }
 
@@ -32,11 +32,12 @@ public class AttackState : StateCaC
 
     private IEnumerator AttackRoutine()
     {
-        while (Vector3.Distance(monsterController.transform.position, GameObject.FindGameObjectWithTag("Player").transform.position) <= attackDistance)
+        GameObject Player = GameObject.FindGameObjectWithTag("Player");
+        while (Vector3.Distance(monsterController.transform.position, Player.transform.position) <= attackDistance)
         {
             // Générer un nombre aléatoire entre 1 et 3
             int random = Random.Range(1, 4);
-            Debug.Log("Random Attack Chosen: " + random);
+            //Debug.Log("Random Attack Chosen: " + random);
 
             if (random == 1)
             {
@@ -51,7 +52,9 @@ public class AttackState : StateCaC
                 SetAnimationTrigger("isAttacking3");
             }
 
-            Debug.Log("Performing attack: " + random);
+            //Debug.Log("Performing attack: " + random);
+
+            Player.GetComponent<PlayerMovementController>().TakeDamage(5);
 
             // Attendre l'intervalle avant de permettre une nouvelle attaque
             yield return new WaitForSeconds(attackInterval);

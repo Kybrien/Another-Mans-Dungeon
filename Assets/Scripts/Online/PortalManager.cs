@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
+using UnityEngine.UIElements;
 
 public class PortalManager : NetworkBehaviour
 {
@@ -24,14 +25,22 @@ public class PortalManager : NetworkBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (!canEnter) return;
+
         if (other.tag == "Player" && gameObject.name == "PortalEnd")
         {
             NetworkIdentity plrIdentity = other.GetComponent<NetworkIdentity>();
 
-            if (plrIdentity && canEnter) {
-                canEnter = false;
-                roundManager.CmdInvadeWorld(other.gameObject);
+            if (plrIdentity) {
+                CmdDisablePortal();
+                roundManager.CmdInvadeWorld(gameObject, other.gameObject);
             }
         }
+    }
+
+    [Command(requiresAuthority = false)]
+    public void CmdDisablePortal()
+    {
+        canEnter = false;
     }
 }

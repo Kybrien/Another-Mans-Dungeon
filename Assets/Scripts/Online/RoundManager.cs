@@ -1,12 +1,16 @@
 using Mirror;
 using Newtonsoft.Json.Linq;
+using Pathfinding;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Security.Cryptography;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using static RootMotion.FinalIK.GenericPoser;
+using static RootMotion.FinalIK.RagdollUtility;
 
 public class RoundManager : NetworkBehaviour
 {
@@ -18,6 +22,8 @@ public class RoundManager : NetworkBehaviour
     }
 
     [SerializeField] private GameObject mapFolderPrefab;
+
+    [SerializeField] private AstarPath astarPath;
 
     [Header("GAME SETTINGS")]
 
@@ -47,6 +53,8 @@ public class RoundManager : NetworkBehaviour
 
     [SyncVar]
     private int playersAlive = 0;
+
+    private GameObject current1v1map;
 
     public readonly SyncDictionary<int, GameObject> playerMapFolders = new SyncDictionary<int, GameObject>();
 
@@ -82,29 +90,31 @@ public class RoundManager : NetworkBehaviour
     [Server]
     IEnumerator HandleRounds()
     {
-        for (int i = 10; i > 5; i--)
+        for (int i = 180; i > 3; i--)
         {
             secondsLeft = i;
             RpcUpdateStatus();
             yield return new WaitForSeconds(1);
         }
 
+        // Creation des dossiers parent pour les map des joueurs
+
         foreach (KeyValuePair<int, NetworkConnectionToClient> entry in NetworkServer.connections)
         {
             NetworkConnectionToClient conn = entry.Value;
 
             GameObject newFolder = Instantiate(mapFolderPrefab);
-            newFolder.transform.position = new Vector3(0, 0, entry.Key * mapSpacing + mapSpacing);
+            newFolder.transform.position = new Vector3(0, 0, conn.identity.netId * mapSpacing + mapSpacing);
             //newFolder.name = "Map" + entry.Key.ToString();
 
             NetworkServer.Spawn(newFolder, conn);
 
-            playerMapFolders.Add(entry.Key, newFolder);
+            playerMapFolders.Add((int)conn.identity.netId, newFolder);
 
             //RpcSetMapName(newFolder, "Map" + entry.Key.ToString());
         }
 
-        for (int i = 5; i >= 1; i--)
+        for (int i = 3; i >= 1; i--)
         {
             secondsLeft = i;
             RpcUpdateStatus();
@@ -115,7 +125,7 @@ public class RoundManager : NetworkBehaviour
 
         while (currentRound <= rounds)
         {
-            if (secondsLeft > 0)
+            if (secondsLeft > 0 && playersAlive > 0)
             {
                 if (((currentRound == 3 || currentRound == 5) && NetworkManager.singleton.numPlayers > 1 && playersAlive == 1) || playersAlive == 0)
                 {
@@ -127,13 +137,26 @@ public class RoundManager : NetworkBehaviour
                 }
                 RpcUpdateStatus();
             }
-            else if (currentRound <= rounds)
+            else
             {
+                // Remise a zero des variables
+
                 currentRound += 1;
+
+                if (currentRound > rounds) break;
+
                 playerThroughPortal = 0;
                 playersAlive = 0;
                 secondsLeft = maxRoundTimer;
 
+                // Suppression d'une map 1v1 si elle existe
+                if (current1v1map != null)
+                {
+                    NetworkServer.UnSpawn(current1v1map);
+                    current1v1map = null;
+                }
+
+                // Si la manche doit etre un 1v1 s'il y a plus d'un joueur
                 if ((currentRound == 3 || currentRound == 5) && NetworkManager.singleton.numPlayers > 1)
                 {
                     MapData chosenMap = SelectRandom1v1Map();
@@ -146,25 +169,59 @@ public class RoundManager : NetworkBehaviour
                     GameObject NewMap = Instantiate(chosenMap.gameObject);
                     NetworkServer.Spawn(NewMap);
 
+                    current1v1map = NewMap;
+
                     foreach (KeyValuePair<int, NetworkConnectionToClient> entry in NetworkServer.connections)
                     {
                         NetworkConnectionToClient conn = entry.Value;
                         GameObject player = conn.identity.gameObject;
 
+                        Transform mapFolder = playerMapFolders[(int)conn.identity.netId].transform;
+
+                        foreach (Transform child in mapFolder)
+                        {
+                            if (mapFolder != null)
+                            {
+                                NetworkServer.Destroy(child.gameObject);
+                            }
+                        }
+
                         PlayerMovementController plrData = player.GetComponent<PlayerMovementController>();
                         plrData.SetHealth(plrData.GetMaxHealth());
 
-                        Debug.Log("Player id: " + conn.identity.netId.ToString() + ". portal name = " + "Portal_Player" + (1 + entry.Key % 2).ToString());
-                        player.transform.position = NewMap.transform.Find("Portal_Player" + (1 + entry.Key % 2).ToString()).position;
+                        string portalName = "Portal_Player" + (1 + (int)conn.identity.netId % 2).ToString();
+                        Debug.Log("Player id: " + conn.identity.netId.ToString() + ". portal name = " + portalName);
+                        //player.transform.position = NewMap.transform.Find(portalName).position;
+
+                        RpcTeleportToSpawn(conn, NewMap, portalName);
 
                         playersAlive += 1;
                     }
                 }
-                else {
+                // Génération d'un donjon
+                else
+                {
+                    // Choix de la map
+
                     MapData chosenMap = SelectRandomMap();
                     RpcStartLoadingScreen(true, chosenMap.name);
 
+                    // Suppression de tous les graphs
+
+                    foreach (KeyValuePair<int, GameObject> mapToRemove in playerMapFolders)
+                    {
+                        foreach (Transform child in mapToRemove.Value.transform)
+                        {
+                            if (child != null)
+                            {
+                                NetworkServer.Destroy(child.gameObject);
+                            }
+                        }
+                    }
+
                     yield return new WaitForSeconds(0.1f);
+
+                    // Itération à travers chaque joueur pour instancier sa map, la déplacer localement, puis téléporter le joueur sur sa map en le remettant en vie
 
                     foreach (KeyValuePair<int, NetworkConnectionToClient> entry in NetworkServer.connections)
                     {
@@ -172,22 +229,18 @@ public class RoundManager : NetworkBehaviour
                         GameObject player = conn.identity.gameObject;
 
                         //Transform mapFolder = GameObject.Find("Map" + entry.Key.ToString()).transform;
-                        Transform mapFolder = playerMapFolders[entry.Key].transform;
-
-                        foreach (Transform child in mapFolder)
-                        {
-                            NetworkServer.Destroy(child.gameObject);
-                            //GameObject.Destroy(child.gameObject);
-                        }
-
+                        Transform mapFolder = playerMapFolders[(int)conn.identity.netId].transform;
                         GameObject NewMap = Instantiate(chosenMap.gameObject, mapFolder);
+
                         //NewMap.transform.SetParent(mapFolder);
-                        NewMap.transform.position = mapFolder.transform.position;
+                        //NewMap.transform.position = mapFolder.transform.position;
 
                         NetworkServer.Spawn(NewMap);
 
                         RpcSwitchMap(NewMap, mapFolder);
-                        RpcTeleportToSpawn(conn, NewMap);
+                        RpcTeleportToSpawn(conn, NewMap, "PortalStart");
+
+                        RpcScanGraph(conn, NewMap);
 
                         PlayerMovementController plrData = player.GetComponent<PlayerMovementController>();
                         plrData.SetHealth(plrData.GetMaxHealth());
@@ -211,9 +264,30 @@ public class RoundManager : NetworkBehaviour
         EndGameAndReturnToLobby();
     }
 
-    private void TeleportToPortal(Transform player, GameObject map)
+    private void CreateNewGraph(GameObject NewMap, Transform mapFolder)
     {
-        Transform PortalStart = map.transform.Find("PortalStart");
+        AstarPath astarReference = NewMap.transform.Find("Astar").GetComponent<AstarPath>();
+        GridGraph graphReference = astarReference.graphs[0] as GridGraph;
+
+        GridGraph newGraph = astarPath.data.AddGraph(typeof(GridGraph)) as GridGraph;
+        newGraph.center = graphReference.center;
+        newGraph.nodeSize = graphReference.nodeSize;
+        newGraph.cutCorners = graphReference.cutCorners;
+        newGraph.collision.type = graphReference.collision.type;
+        newGraph.maxSlope = graphReference.maxSlope;
+        newGraph.maxClimb = graphReference.maxClimb;
+        newGraph.collision.heightMask = graphReference.collision.heightMask;
+        newGraph.collision.fromHeight = graphReference.collision.fromHeight;
+        newGraph.SetDimensions(graphReference.width, graphReference.depth, graphReference.nodeSize);
+
+        Debug.Log("reference pos: " + graphReference.center.ToString() + "; newmap pos: " + NewMap.transform.position.ToString() + "; mapFolder pos: " + mapFolder.position.ToString());
+
+        //AstarPath.active.Scan(newGraph);
+    }
+
+    private void TeleportToPortal(Transform player, GameObject map, string name)
+    {
+        Transform PortalStart = map.transform.Find(name);
         if (PortalStart)
         {
             player.position = PortalStart.transform.position;
@@ -225,6 +299,7 @@ public class RoundManager : NetworkBehaviour
         }
     }
 
+    [Server]
     public void EndGameAndReturnToLobby()
     {
         if (NetworkServer.active && NetworkClient.isConnected)
@@ -240,7 +315,7 @@ public class RoundManager : NetworkBehaviour
     }
 
     [Command(requiresAuthority = false)]
-    public void CmdInvadeWorld(GameObject player)
+    public void CmdInvadeWorld(GameObject portal, GameObject player)
     {
         Debug.Log("received portal request on server");
         playerThroughPortal += 1;
@@ -254,14 +329,28 @@ public class RoundManager : NetworkBehaviour
         }
         else
         {
-            int playerIdentity = (int)player.GetComponent<NetworkIdentity>().netId;
+            NetworkIdentity playerIdentity = player.GetComponent<NetworkIdentity>();
 
             foreach (KeyValuePair<int, NetworkConnectionToClient> entry in NetworkServer.connections)
             {
-                if (playerIdentity != entry.Key)
+                NetworkConnectionToClient conn = entry.Value;
+
+                if (playerIdentity.netId != conn.identity.netId)
                 {
-                    TeleportToPortal(NetworkClient.localPlayer.transform, playerMapFolders[entry.Key]);
-                    RpcInvadeWorld(entry.Value);
+                    GameObject mapFolder = playerMapFolders[(int)playerIdentity.netId];
+
+                    if (mapFolder != null)
+                    {
+                        NetworkServer.UnSpawn(mapFolder);
+                    }
+
+                    Debug.Log("Teleporting player " + playerIdentity.netId.ToString() + " to map id: " + conn.identity.netId.ToString());
+
+                    GameObject invadedMap = playerMapFolders[(int)conn.identity.netId].transform.GetChild(0).gameObject;
+
+                    RpcTeleportToSpawn(playerIdentity.connectionToClient, invadedMap, "PortalStart");
+                    RpcScanGraph(conn, invadedMap);
+                    RpcInvadeWorld(conn);
 
                     break;
                 }
@@ -284,12 +373,31 @@ public class RoundManager : NetworkBehaviour
     [ClientRpc]
     public void RpcSwitchMap(GameObject map, Transform parent)
     {
+        AstarPath astarPath = map.transform.Find("Astar").GetComponent<AstarPath>();
+        Pathfinding.GridGraph graph = astarPath.data.gridGraph;
+        Vector3 offset = new Vector3(0, 0, parent.transform.position.z);
+
         map.transform.parent = parent;
-        map.transform.position = new Vector3(map.transform.position.x, map.transform.position.y, parent.transform.position.z);
+        if (isClient && !isServer)
+        {
+            map.transform.position += offset;
+        }
+
+        graph.center += offset;
     }
 
     [TargetRpc]
-    public void RpcTeleportToSpawn(NetworkConnectionToClient target, GameObject map)
+    public void RpcScanGraph(NetworkConnectionToClient target, GameObject map)
+    {
+        AstarPath astarPath = map.transform.Find("Astar").GetComponent<AstarPath>();
+        GridGraph graph = astarPath.data.gridGraph;
+
+        AstarPath.active.Scan(graph);
+        Debug.Log("map scanned");
+    }
+
+    [TargetRpc]
+    public void RpcTeleportToSpawn(NetworkConnectionToClient target, GameObject map, string portalName)
     {
         if (map == null)
         {
@@ -297,7 +405,9 @@ public class RoundManager : NetworkBehaviour
             return;
         }
 
-        TeleportToPortal(NetworkClient.localPlayer.transform, map);
+        Debug.Log("teleporting to " + map.name + " with portal name: " + portalName);
+
+        TeleportToPortal(NetworkClient.localPlayer.transform, map, portalName);
     }
 
     [ClientRpc]
@@ -320,9 +430,14 @@ public class RoundManager : NetworkBehaviour
         Debug.Log("Your world is invaded !");
     }
 
-    [Command]
-    public void CmdPlayerDeath()
+    [Server]
+    public void PlayerDied()
     {
-        playersAlive -= 1;
+        if (isServer)
+        {
+            playersAlive -= 1;
+            Debug.Log("server died");
+            Debug.Log("There are " + playersAlive.ToString() + " players remaining.");
+        }
     }
 }

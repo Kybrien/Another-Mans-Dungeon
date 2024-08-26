@@ -8,7 +8,7 @@ using TMPro;
 
 public class PlayerMovementController : NetworkBehaviour
 {
-    private RoundManager roundManager;
+    [SerializeField] private RoundManager roundManager;
 
     [SerializeField] private GameObject PlayerModel;
     [SerializeField] private GameObject UICamera;
@@ -24,7 +24,7 @@ public class PlayerMovementController : NetworkBehaviour
 
     [Tooltip("Player Values")]
 
-    [SerializeField] private float Speed = 10f;
+    [SerializeField] private float speed = 10f;
     [SerializeField] private float jumpForce = 200f;
 
     [SyncVar(hook = nameof(UpdateHealthBar))]
@@ -45,12 +45,19 @@ public class PlayerMovementController : NetworkBehaviour
     {
         if (SceneManager.GetActiveScene().name == "OnlineGame")
         {
+            if (roundManager == null)
+            {
+                GameObject roundManagerGO = GameObject.Find("RoundManager");
+                if (roundManagerGO != null)
+                {
+                    roundManager = GameObject.Find("RoundManager").GetComponent<RoundManager>();
+                }
+            }
             if (PlayerModel.activeSelf == false)
             {
-                roundManager = GameObject.Find("RoundManager").GetComponent<RoundManager>();
-
                 GameObject SelectedModel = PlayerModel.transform.Find("Model" + (1 + NetworkClient.localPlayer.netId % 2).ToString()).gameObject;
                 _animator = SelectedModel.GetComponent<Animator>();
+
                 if (!isLocalPlayer)
                 {
                     Debug.Log("other player");
@@ -68,6 +75,11 @@ public class PlayerMovementController : NetworkBehaviour
             if (isLocalPlayer)
             {
                 Movement();
+            }
+
+            if (!isLocalPlayer) {
+                _animator.SetFloat("Forward", rb.velocity.z);
+                _animator.SetFloat("Sided", rb.velocity.x);
             }
         }
     }
@@ -89,19 +101,17 @@ public class PlayerMovementController : NetworkBehaviour
 
         Vector3 moveDirection = (forward  * zDirection) + (right * xDirection);
 
-        _animator.SetFloat("Forward",zDirection);
-        _animator.SetFloat("Sided", xDirection);
-
         if (Input.GetKeyDown(KeyCode.Space))
         {
             rb.AddForce(Vector3.up * jumpForce);
         }
 
-        transform.position += moveDirection * Speed * Time.deltaTime;
+        rb.MovePosition(rb.position + moveDirection * Time.deltaTime * speed);
 
-        if (transform.position.y < -5000)
+        if (transform.position.y < -2000)
         {
             transform.position = new Vector3(transform.position.x, 50, transform.position.z);
+            rb.velocity = Vector3.zero;
         }
     }
 
@@ -112,12 +122,14 @@ public class PlayerMovementController : NetworkBehaviour
 
     void UpdateHealthBar(float oldValue, float newValue)
     {
-        healthBar.rectTransform.sizeDelta = new Vector2((newValue / maxHealth) * 250, 10);
+        Debug.Log("Health changed: " + newValue.ToString());
+        healthBar.rectTransform.sizeDelta = new Vector2((newValue / maxHealth) * 400, healthBar.rectTransform.sizeDelta.y);
         healthText.text = newValue.ToString() + " / " + maxHealth.ToString();
 
         if (newValue <= 0 && isDead == false) {
+            Debug.Log("Dead");
             isDead = true;
-            roundManager.CmdPlayerDeath();
+            roundManager.PlayerDied();
         }
     }
 
@@ -137,6 +149,7 @@ public class PlayerMovementController : NetworkBehaviour
         if (health > 0)
         {
             isDead = false;
+            Debug.Log("healed");
         }
     } 
 

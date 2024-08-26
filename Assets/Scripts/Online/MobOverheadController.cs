@@ -14,6 +14,8 @@ public class MobOverheadController : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!isLocalPlayer) return;
+
         Vector3 position = gameObject.transform.position;
         Vector3 target = NetworkClient.localPlayer.gameObject.transform.position;
         Vector3 inverseHeight = new Vector3(0, (position.y - target.y) * 2, 0);

@@ -37,8 +37,11 @@ public class MonsterController : NetworkBehaviour
         return health;
     }
 
+    [Server]
     public void TakeDamage(int damage)
     {
+        if (!isServer) return;
+
         health = Mathf.Max(0, health - damage);
 
         if (isDead == false && health == 0)
@@ -53,6 +56,8 @@ public class MonsterController : NetworkBehaviour
     { 
         healthBar.rectTransform.sizeDelta = new Vector2((newValue / maxHealth) * 5, 1);
         healthText.text = newValue.ToString() + " / " + maxHealth.ToString();
+
+        Debug.Log("health updated");
     }
 
     void LocalUpdateHealthBar()

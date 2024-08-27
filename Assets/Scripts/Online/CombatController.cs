@@ -19,10 +19,11 @@ public class CombatController : NetworkBehaviour
     private Coroutine comboCoroutine;
 
     // TEMP VALUES
-    string weaponType = "Axe";
+    public string weaponType = "Axe";
     float cooldown = 0.3f;
     float currCooldown = 0;
-    bool isRange = false;
+    public bool isRange = false;
+    public int damage = 10;
 
     // Start is called before the first frame update
     void Start()
@@ -66,10 +67,10 @@ public class CombatController : NetworkBehaviour
     {
         if (enemy.tag == "Enemy")
         {
-            enemy.GetComponent<MonsterController>().TakeDamage(10);
+            enemy.GetComponent<MonsterController>().TakeDamage(damage);
         } else if (enemy.tag == "Player")
         {
-            enemy.GetComponent<PlayerMovementController>().TakeDamage(10);
+            enemy.GetComponent<PlayerMovementController>().TakeDamage(damage);
         }
     }
 

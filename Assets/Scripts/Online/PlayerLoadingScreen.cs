@@ -42,13 +42,12 @@ public class PlayerLoadingScreen : NetworkBehaviour
             }
         }
 
-        mapText.text = mapName;
-
         return loadingImage.texture;
     }
 
     public IEnumerator Load(string mapName)
     {
+        mapText.text = mapName;
         loadingImage.texture = FindMapImage(mapName);
         loadingScreen.SetActive(true);
         yield return null;

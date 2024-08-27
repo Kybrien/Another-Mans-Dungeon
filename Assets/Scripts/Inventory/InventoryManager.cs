@@ -9,6 +9,8 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
 {
     [HideInInspector] public bool isStorageOpened;
 
+    [SerializeField] private CombatController combatController;
+
     [SyncVar]
     [SerializeField] private GameObject[] hotbarSlots = new GameObject[4];
 
@@ -112,8 +114,15 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
             {
                 scale = new Vector3(1.1f, 1.1f, 1.1f);
 
-                if (slot.GetComponent<InventorySlot>().HeldItem != null)
+                GameObject heldItem = slot.GetComponent<InventorySlot>().HeldItem;
+
+                if (heldItem != null)
                 {
+                    ItemSO itemData = heldItem.GetComponent<InventoryItem>().itemScriptableObject;
+                    combatController.weaponType = itemData.type;
+                    combatController.isRange = itemData.isRange;
+                    Debug.Log(combatController.weaponType);
+
                     for (int i = 0; i < handParent.childCount; i++)
                     {
                         if (handParent.GetChild(i).GetComponent<ItemHand>().itemScriptableObject
@@ -139,6 +148,9 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
         {
             GameObject clickedObject = eventData.pointerCurrentRaycast.gameObject;
             InventorySlot slot = clickedObject.GetComponent<InventorySlot>();
+
+            Debug.Log(clickedObject);
+            Debug.Log(slot);
 
             //There is item in the slot - pick it up
             if (slot != null && slot.HeldItem != null)
@@ -191,6 +203,7 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
             // Si on relâche l'item ailleurs (retourne l'item au dernier slot)
             else
             {
+                Debug.Log("drop item");
                 Ray ray = cam.ScreenPointToRay(Input.mousePosition);
                 Vector3 position = ray.GetPoint(3);
 
@@ -231,7 +244,7 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
             emptySlot.GetComponent<InventorySlot>().SetHeldItem(newItem);
             newItem.transform.localScale = new Vector3(1, 1, 1);
 
-            Destroy(pickedItem);
+            NetworkServer.UnSpawn(pickedItem);
         }
     }
 

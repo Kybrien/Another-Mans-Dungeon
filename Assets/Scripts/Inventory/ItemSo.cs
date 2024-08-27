@@ -9,4 +9,6 @@ public class ItemSO : ScriptableObject
     public Sprite icon;
     public GameObject prefab;
     public int stackMax;
+    public string type;
+    public bool isRange;
 }

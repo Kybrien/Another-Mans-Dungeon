@@ -16,3 +16,5 @@ MonoBehaviour:
   icon: {fileID: -433929376, guid: 847f3e08157367e458aec63415b2d664, type: 3}
   prefab: {fileID: 7915223420922734103, guid: 28f74039ed876aa49b588ef6a9f89423, type: 3}
   stackMax: 0
+  type: Potion
+  isRange: 0

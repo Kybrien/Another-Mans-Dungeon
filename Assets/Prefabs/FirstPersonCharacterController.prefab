@@ -721,6 +721,9 @@ MonoBehaviour:
   syncInterval: 0
   HitboxPrefab: {fileID: 1169305782704711723, guid: 532df075e9c1a6545a7ac0957e66932f, type: 3}
   ModelRoot: {fileID: 1562731983527892215}
+  weaponType: Axe
+  isRange: 0
+  damage: 10
 --- !u!114 &4090609396020732146
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -793,6 +796,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   isStorageOpened: 0
+  combatController: {fileID: 7427026361115659796}
   hotbarSlots:
   - {fileID: 7644756155093793321}
   - {fileID: 5693883229185110248}
@@ -1057,7 +1061,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -3608,7 +3612,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:

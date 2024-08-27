@@ -17,7 +17,9 @@ public class Storage : NetworkBehaviour
 
     private bool itemsSpawned;
 
-    void Start()
+    [SerializeField] private GameObject worldUIGO;
+
+    public override void OnStartServer()
     {
         int itemsToAdd = size - items.Count;
         for (int i = 0; i < itemsToAdd; i++)
@@ -48,12 +50,37 @@ public class Storage : NetworkBehaviour
         }
     }
 
+    private void Update()
+    {
+        if (isServer) {
+            Debug.Log("server");
+        }
+
+        Vector3 position = worldUIGO.transform.position;
+        Vector3 target = NetworkClient.localPlayer.gameObject.transform.Find("CameraRoot").Find("CameraControls").Find("Camera").position;
+        Vector3 inverseHeight = new Vector3(0, (position.y - target.y) * 2, 0);
+        worldUIGO.transform.LookAt(2 * (position + inverseHeight) - target);
+    }
+
     [Command(requiresAuthority = false)]
     public void CmdOpenChest()
     {
         if (isOpened) return;
 
         isOpened = true;
+
+        GetComponent<AudioSource>().Play();
+
+        foreach (StorageItem item in items)
+        {
+            if (item != null && item.itemScriptableObject.prefab != null)
+            {
+                GameObject newWeapon = Instantiate(item.itemScriptableObject.prefab, transform.position + transform.forward * 3, transform.rotation);
+
+                NetworkServer.Spawn(newWeapon);
+            }
+        }
+
         Debug.Log("Opened");
     }
 }

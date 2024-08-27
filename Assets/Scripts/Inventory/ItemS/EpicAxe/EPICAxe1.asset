@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: EPICAxe1
   m_EditorClassIdentifier: 
   name: Hache de Saba
-  icon: {fileID: 21300026, guid: 09e4c6a7d75923945afe43953ef58ad2, type: 3}
+  icon: {fileID: 21300000, guid: a6cdb0429594b8c46a535d4950323739, type: 3}
   prefab: {fileID: 1559127682321924, guid: 1c9ebadb4f9b7bf43aebdb85962b0903, type: 3}
   stackMax: 1
   type: Axe

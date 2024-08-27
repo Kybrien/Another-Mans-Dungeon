@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: LEGSword6
   m_EditorClassIdentifier: 
   name: "Ep\xE9e du prince"
-  icon: {fileID: 21300000, guid: 7ab74e659e1f0a34d9cfec21c478fc12, type: 3}
+  icon: {fileID: 21300000, guid: e8d242bce2b973542b14a7f32af6ad4b, type: 3}
   prefab: {fileID: 1539838672620298, guid: 000ba31fdb0111d4584775b384f6efac, type: 3}
   stackMax: 1
   type: Sword

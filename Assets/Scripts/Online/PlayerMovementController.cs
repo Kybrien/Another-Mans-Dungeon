@@ -5,12 +5,14 @@ using UnityEngine.SceneManagement;
 using Mirror;
 using UnityEngine.UI;
 using TMPro;
+using Mirror.Examples.MultipleMatch;
 
 public class PlayerMovementController : NetworkBehaviour
 {
     [SerializeField] private RoundManager roundManager;
 
     [SerializeField] private GameObject PlayerModel;
+    [SerializeField] private GameObject PlayerGui;
     [SerializeField] private GameObject UICamera;
     [SerializeField] private Rigidbody rb;
 
@@ -67,6 +69,7 @@ public class PlayerMovementController : NetworkBehaviour
                 rb.useGravity = true;
                 rb.constraints = RigidbodyConstraints.FreezeRotation;
                 PlayerModel.SetActive(true);
+                PlayerGui.SetActive(true);
                 UICamera.SetActive(true);
                 SetSpawnPosition();
                 Debug.Log(gameObject.name + " Position is: " + gameObject.transform.position);

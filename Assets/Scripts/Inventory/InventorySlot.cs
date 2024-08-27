@@ -16,7 +16,7 @@ public class InventorySlot : MonoBehaviour
             HeldItem.transform.SetParent(transform);
             HeldItem.transform.localScale = Vector3.one;
         }
-        Debug.Log("InventorySlot: Item set or changed");
+        //Debug.Log("InventorySlot: Item set or changed");
         OnSlotChanged?.Invoke();
     }
 

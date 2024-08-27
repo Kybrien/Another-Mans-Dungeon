@@ -12,7 +12,7 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
     [SerializeField] private CombatController combatController;
 
     [SyncVar]
-    [SerializeField] private GameObject[] hotbarSlots = new GameObject[4];
+    [SerializeField] private GameObject[] hotbarSlots = new GameObject[3];
 
     [SyncVar]
     [SerializeField] private GameObject[] slots = new GameObject[20];
@@ -92,11 +92,6 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
             selectedHotbarSlot = 2;
             HotbarItemChanged();
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
-            selectedHotbarSlot = 3;
-            HotbarItemChanged();
-        }
     }
 
     private void HotbarItemChanged()
@@ -112,7 +107,7 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
 
             if (slot == hotbarSlots[selectedHotbarSlot])
             {
-                scale = new Vector3(1.1f, 1.1f, 1.1f);
+                scale = new Vector3(1.2f, 1.2f, 1.2f);
 
                 GameObject heldItem = slot.GetComponent<InventorySlot>().HeldItem;
 
@@ -135,7 +130,7 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
             }
             else
             {
-                scale = new Vector3(0.9f, 0.9f, 0.9f);
+                scale = new Vector3(1f, 1f, 1f);
             }
 
             slot.transform.localScale = scale;
@@ -149,9 +144,6 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
             GameObject clickedObject = eventData.pointerCurrentRaycast.gameObject;
             InventorySlot slot = clickedObject.GetComponent<InventorySlot>();
 
-            Debug.Log(clickedObject);
-            Debug.Log(slot);
-
             //There is item in the slot - pick it up
             if (slot != null && slot.HeldItem != null)
             {
@@ -164,48 +156,56 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        if (draggedObject != null && eventData.pointerCurrentRaycast.gameObject != null && eventData.button == PointerEventData.InputButton.Left)
+        if (draggedObject != null && eventData.button == PointerEventData.InputButton.Left)
         {
-            GameObject clickedObject = eventData.pointerCurrentRaycast.gameObject;
-            InventorySlot inventorySlot = clickedObject.GetComponent<InventorySlot>();
-            CraftingSlot craftingSlot = clickedObject.GetComponent<CraftingSlot>();
+            if (eventData.pointerCurrentRaycast.gameObject != null)
+            {
+                GameObject clickedObject = eventData.pointerCurrentRaycast.gameObject;
+                InventorySlot inventorySlot = clickedObject.GetComponent<InventorySlot>();
+                CraftingSlot craftingSlot = clickedObject.GetComponent<CraftingSlot>();
 
-            // Si on relâche l'item sur un slot de crafting vide
-            if (craftingSlot != null && craftingSlot.IsEmpty())
-            {
-                craftingSlot.SetHeldItem(draggedObject);
-                draggedObject.transform.SetParent(craftingSlot.transform);
-            }
-            // Si on relâche l'item sur un slot d'inventaire vide
-            else if (inventorySlot != null && inventorySlot.IsEmpty())
-            {
-                inventorySlot.SetHeldItem(draggedObject);
-                draggedObject.transform.SetParent(inventorySlot.transform.parent.parent.Find("Items"));
-            }
-            // Si on relâche l'item sur un slot d'inventaire qui contient déjà un item
-            else if (inventorySlot != null && !inventorySlot.IsEmpty())
-            {
-                lastItemSlot.GetComponent<InventorySlot>().SetHeldItem(inventorySlot.HeldItem);
-                inventorySlot.HeldItem.transform.SetParent(inventorySlot.transform.parent.parent.Find("Items"));
+                // Si on relâche l'item sur un slot de crafting vide
+                if (craftingSlot != null && craftingSlot.IsEmpty())
+                {
+                    craftingSlot.SetHeldItem(draggedObject);
+                    draggedObject.transform.SetParent(craftingSlot.transform);
+                }
+                // Si on relâche l'item sur un slot d'inventaire vide
+                else if (inventorySlot != null && inventorySlot.IsEmpty())
+                {
+                    inventorySlot.SetHeldItem(draggedObject);
+                    draggedObject.transform.SetParent(inventorySlot.transform);
+                }
+                // Si on relâche l'item sur un slot d'inventaire qui contient déjà un item
+                else if (inventorySlot != null && !inventorySlot.IsEmpty())
+                {
+                    lastItemSlot.GetComponent<InventorySlot>().SetHeldItem(inventorySlot.HeldItem);
+                    inventorySlot.HeldItem.transform.SetParent(inventorySlot.transform);
 
-                inventorySlot.SetHeldItem(draggedObject);
-                draggedObject.transform.SetParent(inventorySlot.transform.parent.parent.Find("Items"));
-            }
-            // Si on relâche l'item sur un slot de crafting qui contient déjà un item
-            else if (craftingSlot != null && !craftingSlot.IsEmpty())
-            {
-                lastItemSlot.GetComponent<InventorySlot>().SetHeldItem(craftingSlot.HeldItem);
-                craftingSlot.HeldItem.transform.SetParent(craftingSlot.transform.parent);
+                    inventorySlot.SetHeldItem(draggedObject);
+                    draggedObject.transform.SetParent(lastItemSlot.transform);
+                }
+                // Si on relâche l'item sur un slot de crafting qui contient déjà un item
+                else if (craftingSlot != null && !craftingSlot.IsEmpty())
+                {
+                    lastItemSlot.GetComponent<InventorySlot>().SetHeldItem(craftingSlot.HeldItem);
+                    craftingSlot.HeldItem.transform.SetParent(craftingSlot.transform.parent);
 
-                craftingSlot.SetHeldItem(draggedObject);
-                draggedObject.transform.SetParent(craftingSlot.transform);
+                    craftingSlot.SetHeldItem(draggedObject);
+                    draggedObject.transform.SetParent(craftingSlot.transform);
+                }
+                // Si on relâche l'item ailleurs (retourne l'item au dernier slot)
+                else
+                {
+                    lastItemSlot.GetComponent<InventorySlot>().SetHeldItem(draggedObject);
+                    draggedObject.transform.SetParent(lastItemSlot.transform);
+                }
+
+                draggedObject.transform.rotation = draggedObject.transform.rotation;
             }
-            // Si on relâche l'item ailleurs (retourne l'item au dernier slot)
             else
             {
-                Debug.Log("drop item");
-                Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-                Vector3 position = ray.GetPoint(3);
+                Vector3 position = gameObject.transform.position + gameObject.transform.forward * 2;
 
                 GameObject newItem = Instantiate(draggedObject.GetComponent<InventoryItem>().itemScriptableObject.prefab, position, new Quaternion());
                 newItem.GetComponent<ItemPickable>().itemScriptableObject = draggedObject.GetComponent<InventoryItem>().itemScriptableObject;
@@ -214,8 +214,8 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
                 Destroy(draggedObject);
             }
 
-            HotbarItemChanged();
             draggedObject = null;
+            HotbarItemChanged();
         }
     }
 
@@ -223,14 +223,28 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
     {
         GameObject emptySlot = null;
 
-        for (int i = 0; i < slots.Length; i++)
+        for (int i = 0; i < hotbarSlots.Length; i++)
         {
-            InventorySlot slot = slots[i].GetComponent<InventorySlot>();
+            InventorySlot slot = hotbarSlots[i].GetComponent<InventorySlot>();
 
             if (slot.HeldItem == null)
             {
-                emptySlot = slots[i];
+                emptySlot = hotbarSlots[i];
                 break;
+            }
+        }
+
+        if (emptySlot == null)
+        {
+            for (int i = 0; i < slots.Length; i++)
+            {
+                InventorySlot slot = slots[i].GetComponent<InventorySlot>();
+
+                if (slot.HeldItem == null)
+                {
+                    emptySlot = slots[i];
+                    break;
+                }
             }
         }
 
@@ -238,7 +252,7 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
         {
             GameObject newItem = Instantiate(itemPrefab);
             newItem.GetComponent<InventoryItem>().itemScriptableObject = pickedItem.GetComponent<ItemPickable>().itemScriptableObject;
-            newItem.transform.SetParent(emptySlot.transform.parent.parent.Find("Items"));
+            newItem.transform.SetParent(emptySlot.transform);
             newItem.GetComponent<InventoryItem>().stackCurrent = 1;
 
             emptySlot.GetComponent<InventorySlot>().SetHeldItem(newItem);
@@ -246,6 +260,8 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
 
             NetworkServer.UnSpawn(pickedItem);
         }
+
+        HotbarItemChanged();
     }
 
     public void OpenStorage(Storage storage)

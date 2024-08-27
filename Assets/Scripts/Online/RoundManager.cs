@@ -90,7 +90,7 @@ public class RoundManager : NetworkBehaviour
     [Server]
     IEnumerator HandleRounds()
     {
-        for (int i = 5; i > 3; i--)
+        for (int i = 20; i > 3; i--)
         {
             secondsLeft = i;
             RpcUpdateStatus();

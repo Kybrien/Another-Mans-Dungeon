@@ -14,10 +14,7 @@ public class MobOverheadController : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isClient)
-        {
-            Debug.Log("islocal");
-        }
+        if (!isClient) return;
 
         Vector3 position = gameObject.transform.position;
         Vector3 target = NetworkClient.localPlayer.gameObject.transform.position;

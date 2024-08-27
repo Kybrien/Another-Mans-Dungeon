@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 1494796775785660149}
   - component: {fileID: 7291931609950025972}
   - component: {fileID: -4804602837939268442}
+  - component: {fileID: 6441436369220964855}
   m_Layer: 0
   m_Name: RAREGun2
   m_TagString: Untagged
@@ -148,6 +149,23 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &6441436369220964855
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1871136373825230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  _assetId: 4147974459
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0
 --- !u!1 &1895041329609582
 GameObject:
   m_ObjectHideFlags: 0

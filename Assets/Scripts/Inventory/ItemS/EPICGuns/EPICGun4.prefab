@@ -97,6 +97,7 @@ GameObject:
   - component: {fileID: -7919138926372514231}
   - component: {fileID: -3937528444279037869}
   - component: {fileID: 5133756440147226820}
+  - component: {fileID: 1539386545266293149}
   m_Layer: 0
   m_Name: EPICGun4
   m_TagString: Untagged
@@ -232,6 +233,23 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1539386545266293149
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1627695094941780}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  _assetId: 1048006373
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0
 --- !u!1 &1893185512721014
 GameObject:
   m_ObjectHideFlags: 0

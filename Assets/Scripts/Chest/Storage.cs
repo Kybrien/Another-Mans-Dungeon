@@ -17,7 +17,8 @@ public class Storage : NetworkBehaviour
 
     private bool itemsSpawned;
 
-    [SerializeField] private GameObject worldUIGO;
+    [SerializeField] private GameObject proximityPrompt;
+    [SerializeField] private float promptDistance;
 
     public override void OnStartServer()
     {
@@ -50,16 +51,23 @@ public class Storage : NetworkBehaviour
         }
     }
 
-    private void Update()
+    void Update()
     {
-        if (isServer) {
-            Debug.Log("server");
+        if (!isClient) return;
+
+        if ((NetworkClient.localPlayer.transform.position - transform.position).magnitude > promptDistance)
+        {
+            proximityPrompt.SetActive(false);
+        }
+        else
+        {
+            proximityPrompt.SetActive(true);
         }
 
-        Vector3 position = worldUIGO.transform.position;
+        Vector3 position = proximityPrompt.transform.position;
         Vector3 target = NetworkClient.localPlayer.gameObject.transform.Find("CameraRoot").Find("CameraControls").Find("Camera").position;
         Vector3 inverseHeight = new Vector3(0, (position.y - target.y) * 2, 0);
-        worldUIGO.transform.LookAt(2 * (position + inverseHeight) - target);
+        proximityPrompt.transform.LookAt(2 * (position + inverseHeight) - target);
     }
 
     [Command(requiresAuthority = false)]

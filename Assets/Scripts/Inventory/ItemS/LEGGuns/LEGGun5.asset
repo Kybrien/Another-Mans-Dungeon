@@ -16,5 +16,6 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 86e5751c5f137f141ba89cacc3fa9e54, type: 3}
   prefab: {fileID: 7247033467817093379, guid: db12bfe9dec3cd5408f038d28207f882, type: 3}
   stackMax: 1
-  type: 
+  type: Gun
   isRange: 0
+  damage: 22

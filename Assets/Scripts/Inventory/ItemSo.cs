@@ -11,4 +11,5 @@ public class ItemSO : ScriptableObject
     public int stackMax;
     public string type;
     public bool isRange;
+    public float damage;
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using Mirror;
+using UnityEngine.UIElements;
 
 public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerUpHandler
 {
@@ -200,12 +201,7 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
             }
             else
             {
-                Vector3 position = gameObject.transform.position + gameObject.transform.forward * 2;
-
-                GameObject newItem = Instantiate(draggedObject.GetComponent<InventoryItem>().itemScriptableObject.prefab, position, new Quaternion());
-                newItem.GetComponent<ItemPickable>().itemScriptableObject = draggedObject.GetComponent<InventoryItem>().itemScriptableObject;
-
-                CmdDropItem(newItem);
+                CmdDropItem(draggedObject.GetComponent<InventoryItem>().itemScriptableObject.prefab);
 
                 lastItemSlot.GetComponent<InventorySlot>().HeldItem = null;
                 Destroy(draggedObject);
@@ -257,6 +253,8 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
             newItem.transform.localScale = new Vector3(1, 1, 1);
 
             CmdPickItem(pickedItem);
+
+            Destroy(pickedItem);
         }
 
         HotbarItemChanged();
@@ -280,6 +278,11 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
     [Command]
     void CmdDropItem(GameObject item)
     {
+        Vector3 position = gameObject.transform.position + gameObject.transform.forward * 2;
+
+        GameObject newItem = Instantiate(draggedObject.GetComponent<InventoryItem>().itemScriptableObject.prefab, position, new Quaternion());
+        newItem.GetComponent<ItemPickable>().itemScriptableObject = draggedObject.GetComponent<InventoryItem>().itemScriptableObject;
+
         NetworkServer.Spawn(item);
     }
 }

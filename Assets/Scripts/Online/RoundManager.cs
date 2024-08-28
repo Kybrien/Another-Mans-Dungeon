@@ -240,7 +240,11 @@ public class RoundManager : NetworkBehaviour
                         RpcSwitchMap(NewMap, mapFolder);
                         RpcTeleportToSpawn(conn, NewMap, "PortalStart");
 
-                        RpcScanGraph(conn, NewMap);
+                        AstarPath astarPath = NewMap.transform.Find("Astar").GetComponent<AstarPath>();
+                        GridGraph graph = astarPath.data.gridGraph;
+                        AstarPath.active.Scan(graph);
+
+                        //RpcScanGraph(conn, NewMap);
 
                         PlayerMovementController plrData = player.GetComponent<PlayerMovementController>();
                         plrData.SetHealth(plrData.GetMaxHealth());

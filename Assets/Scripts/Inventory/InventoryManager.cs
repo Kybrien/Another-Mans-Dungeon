@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using Mirror;
 using UnityEngine.UIElements;
+using Unity.VisualScripting;
 
 public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerUpHandler
 {
@@ -12,11 +13,14 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
 
     [SerializeField] private CombatController combatController;
 
-    [SyncVar]
     [SerializeField] private GameObject[] hotbarSlots = new GameObject[3];
 
-    [SyncVar]
     [SerializeField] private GameObject[] slots = new GameObject[20];
+
+    private GameObject lastSlot;
+
+    [SyncVar]
+    private List<GameObject> playerItems = new List<GameObject>();
 
     [SerializeField] private GameObject inventoryParent;
     [SerializeField] private GameObject storageParent;
@@ -59,13 +63,13 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
         {
             if (isInventoryOpened)
             {
-                Cursor.lockState = CursorLockMode.Locked;
+                UnityEngine.Cursor.lockState = CursorLockMode.Locked;
                 isInventoryOpened = false;
                 isStorageOpened = false;
             }
             else
             {
-                Cursor.lockState = CursorLockMode.None;
+                UnityEngine.Cursor.lockState = CursorLockMode.None;
                 isInventoryOpened = true;
             }
         }
@@ -201,7 +205,7 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
             }
             else
             {
-                CmdDropItem(draggedObject.GetComponent<InventoryItem>().itemScriptableObject.prefab);
+                CmdDropItem(draggedObject);
 
                 lastItemSlot.GetComponent<InventorySlot>().HeldItem = null;
                 Destroy(draggedObject);
@@ -215,6 +219,8 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
 
     public void ItemPicked(GameObject pickedItem)
     {
+        if (!isClient) return;
+
         GameObject emptySlot = null;
 
         for (int i = 0; i < hotbarSlots.Length; i++)
@@ -242,19 +248,23 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
             }
         }
 
+
+
         if (emptySlot != null)
         {
+            lastSlot = emptySlot;
+
             GameObject newItem = Instantiate(itemPrefab);
             newItem.GetComponent<InventoryItem>().itemScriptableObject = pickedItem.GetComponent<ItemPickable>().itemScriptableObject;
             newItem.transform.SetParent(emptySlot.transform);
             newItem.GetComponent<InventoryItem>().stackCurrent = 1;
-
-            emptySlot.GetComponent<InventorySlot>().SetHeldItem(newItem);
             newItem.transform.localScale = new Vector3(1, 1, 1);
 
-            CmdPickItem(pickedItem);
+            newItem.transform.position = Vector3.zero;
 
-            Destroy(pickedItem);
+            CmdPickItem(pickedItem.GetComponent<NetworkIdentity>());
+
+            pickedItem.SetActive(false);
         }
 
         HotbarItemChanged();
@@ -269,10 +279,38 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
         }
     }
 
-    [Command]
-    void CmdPickItem(GameObject item)
+    [Command(requiresAuthority = false)]
+    void CmdPickItem(NetworkIdentity itemToRemoveId)
     {
-        NetworkServer.UnSpawn(item);
+        if (itemToRemoveId.GetComponent<ItemPickable>().isPicked) return;
+
+        itemToRemoveId.GetComponent<ItemPickable>().isPicked = true;
+
+        playerItems.Add(itemToRemoveId.gameObject);
+
+        RpcPickItem(connectionToClient, itemToRemoveId.gameObject);
+
+        Debug.Log(itemToRemoveId.gameObject.GetComponent<ItemPickable>().itemScriptableObject);
+
+        itemToRemoveId.gameObject.SetActive(false);
+
+        //NetworkServer.UnSpawn(itemToRemoveId.gameObject);
+    }
+
+    [TargetRpc]
+    void RpcPickItem(NetworkConnection conn, GameObject pickedItem)
+    {
+        Debug.Log(lastSlot);
+
+/*        GameObject newItem = Instantiate(itemPrefab);
+        newItem.GetComponent<InventoryItem>().itemScriptableObject = pickedItem.GetComponent<ItemPickable>().itemScriptableObject;
+        newItem.transform.SetParent(lastSlot.transform);
+        newItem.GetComponent<InventoryItem>().stackCurrent = 1;
+        newItem.transform.localScale = new Vector3(1, 1, 1);*/
+
+        Debug.Log(pickedItem.GetComponent<ItemPickable>().itemScriptableObject.prefab);
+
+        lastSlot = null;
     }
 
     [Command]
@@ -280,8 +318,8 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
     {
         Vector3 position = gameObject.transform.position + gameObject.transform.forward * 2;
 
-        GameObject newItem = Instantiate(draggedObject.GetComponent<InventoryItem>().itemScriptableObject.prefab, position, new Quaternion());
-        newItem.GetComponent<ItemPickable>().itemScriptableObject = draggedObject.GetComponent<InventoryItem>().itemScriptableObject;
+        GameObject newItem = Instantiate(item.GetComponent<InventoryItem>().itemScriptableObject.prefab, position, new Quaternion());
+        newItem.GetComponent<ItemPickable>().itemScriptableObject = item.GetComponent<InventoryItem>().itemScriptableObject;
 
         NetworkServer.Spawn(item);
     }

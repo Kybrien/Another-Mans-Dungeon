@@ -30,7 +30,7 @@ public class PlayerPickUp : NetworkBehaviour
 
                 if (item != null)
                 {
-                    Debug.Log(hitInfo.collider.gameObject);
+                    if (item.isPicked == true) return;
                     inventoryManager.ItemPicked(hitInfo.collider.gameObject);
                 }
 

@@ -11,7 +11,7 @@ public class Storage : NetworkBehaviour
 
     public string name;
     public int size;
-    public List<StorageItem> items = new List<StorageItem>();
+    public SyncList<StorageItem> items = new SyncList<StorageItem>();
 
     [SerializeField] RandomSpawningItems itemsToSpawn;
     [SerializeField] bool spawnItems;
@@ -76,6 +76,8 @@ public class Storage : NetworkBehaviour
     [Command(requiresAuthority = false)]
     public void CmdOpenChest()
     {
+        Debug.Log("opening");
+
         if (isOpened) return;
 
         isOpened = true;

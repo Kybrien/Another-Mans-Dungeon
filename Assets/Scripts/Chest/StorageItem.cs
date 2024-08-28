@@ -8,6 +8,11 @@ public class StorageItem
     public int currentStack;
     public ItemSO itemScriptableObject;
 
+    public StorageItem()
+    {
+
+    }
+
     public StorageItem(int _currentStack, ItemSO _itemScriptableObject)
     {
         currentStack = _currentStack;

@@ -6,7 +6,6 @@ using UnityEngine;
 public class ItemSO : ScriptableObject
 {
     public string name;
-    public Sprite icon;
     public GameObject prefab;
     public int stackMax;
     public string type;

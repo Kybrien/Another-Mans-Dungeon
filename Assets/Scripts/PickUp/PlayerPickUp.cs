@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
+using Unity.VisualScripting;
 
 public class PlayerPickUp : NetworkBehaviour
 {
@@ -29,6 +30,7 @@ public class PlayerPickUp : NetworkBehaviour
 
                 if (item != null)
                 {
+                    Debug.Log(hitInfo.collider.gameObject);
                     inventoryManager.ItemPicked(hitInfo.collider.gameObject);
                 }
 

@@ -58,7 +58,9 @@ public class Storage : NetworkBehaviour
     {
         if (!isClient) return;
 
-        if ((NetworkClient.localPlayer.transform.position - transform.position).magnitude > promptDistance)
+        float distance = (NetworkClient.localPlayer.transform.position - transform.position).magnitude;
+
+        if (distance > promptDistance)
         {
             proximityPrompt.SetActive(false);
         }
@@ -67,10 +69,13 @@ public class Storage : NetworkBehaviour
             proximityPrompt.SetActive(true);
         }
 
-        Vector3 position = proximityPrompt.transform.position;
-        Vector3 target = NetworkClient.localPlayer.gameObject.transform.position;
-        Vector3 inverseHeight = new Vector3(0, (position.y - target.y) * 2, 0);
-        proximityPrompt.transform.LookAt(2 * (position + inverseHeight) - target);
+        if (proximityPrompt.activeSelf)
+        {
+            Vector3 position = proximityPrompt.transform.position;
+            Vector3 target = NetworkClient.localPlayer.gameObject.transform.position;
+            Vector3 inverseHeight = new Vector3(0, (position.y - target.y) * 2, 0);
+            proximityPrompt.transform.LookAt(2 * (position + inverseHeight) - target);
+        }
     }
 
     [Command(requiresAuthority = false)]

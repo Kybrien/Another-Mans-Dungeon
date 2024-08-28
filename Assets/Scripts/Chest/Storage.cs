@@ -81,9 +81,6 @@ public class Storage : NetworkBehaviour
         if (isOpened) return;
 
         isOpened = true;
-        proximityPrompt.SetActive(false);
-
-        GetComponent<AudioSource>().Play();
 
         foreach (StorageItem item in items)
         {
@@ -94,6 +91,16 @@ public class Storage : NetworkBehaviour
                 NetworkServer.Spawn(newWeapon);
             }
         }
+
+        RpcOpenChest();
+    }
+
+    [ClientRpc]
+    void RpcOpenChest()
+    {
+        proximityPrompt.SetActive(false);
+
+        GetComponent<AudioSource>().Play();
 
         if (upperChest != null)
         {

@@ -61,11 +61,6 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
                 Cursor.lockState = CursorLockMode.Locked;
                 isInventoryOpened = false;
                 isStorageOpened = false;
-
-                if (lastStorage != null)
-                {
-                    CloseStorage(lastStorage);
-                }
             }
             else
             {
@@ -210,6 +205,8 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
                 GameObject newItem = Instantiate(draggedObject.GetComponent<InventoryItem>().itemScriptableObject.prefab, position, new Quaternion());
                 newItem.GetComponent<ItemPickable>().itemScriptableObject = draggedObject.GetComponent<InventoryItem>().itemScriptableObject;
 
+                CmdDropItem(newItem);
+
                 lastItemSlot.GetComponent<InventorySlot>().HeldItem = null;
                 Destroy(draggedObject);
             }
@@ -259,85 +256,11 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
             emptySlot.GetComponent<InventorySlot>().SetHeldItem(newItem);
             newItem.transform.localScale = new Vector3(1, 1, 1);
 
-            NetworkServer.UnSpawn(pickedItem);
+            CmdPickItem(pickedItem);
         }
 
         HotbarItemChanged();
     }
-
-    public void OpenStorage(Storage storage)
-    {
-        lastStorage = storage;
-
-        Cursor.lockState = CursorLockMode.None;
-        isStorageOpened = true;
-
-        for (int i = 0; i < storageParent.transform.GetChild(1).childCount; i++)
-        {
-            storageParent.transform.GetChild(1).GetChild(i).gameObject.SetActive(false);
-        }
-
-        for (int i = 0; i < storage.size; i++)
-        {
-            storageParent.transform.GetChild(1).GetChild(i).gameObject.SetActive(true);
-        }
-        float sizeY = (float)Mathf.CeilToInt(storage.size / 4f) / 4;
-        storageParent.transform.GetChild(0).localScale = new Vector2(1, sizeY);
-
-        float posY = (1 - sizeY) * 230;
-        storageParent.transform.GetChild(0).localPosition = new Vector2(-615, 130 + posY);
-
-        for (int i = 0; i < storageParent.transform.GetChild(2).childCount; i++)
-        {
-            Destroy(storageParent.transform.GetChild(2).GetChild(i).gameObject);
-        }
-
-        int index = 0;
-        foreach (StorageItem storageItem in storage.items)
-        {
-            if (storageItem.itemScriptableObject != null)
-            {
-                GameObject newItem = Instantiate(itemPrefab);
-                InventoryItem item = newItem.GetComponent<InventoryItem>();
-                item.itemScriptableObject = storageItem.itemScriptableObject;
-                item.stackCurrent = storageItem.currentStack;
-
-                Transform slot = storageParent.transform.GetChild(1).GetChild(index);
-                newItem.transform.SetParent(slot.parent.parent.Find("Items"));
-                slot.GetComponent<InventorySlot>().SetHeldItem(newItem);
-                newItem.transform.localScale = new Vector3(1, 1, 1);
-            }
-            index++;
-        }
-    }
-
-    public void CloseStorage(Storage storage)
-    {
-        lastStorage = null;
-        Cursor.lockState = CursorLockMode.Locked;
-        isStorageOpened = false;
-
-        Transform slotsParent = storageParent.transform.GetChild(1);
-
-        storage.items.Clear();
-
-        for (int i = 0; i < slotsParent.childCount; i++)
-        {
-            Transform slot = slotsParent.GetChild(i);
-
-            if (slot.gameObject.activeInHierarchy && slot.GetComponent<InventorySlot>().HeldItem != null)
-            {
-                InventoryItem inventoryItem = slot.GetComponent<InventorySlot>().HeldItem.GetComponent<InventoryItem>();
-
-                storage.items.Add(new StorageItem(inventoryItem.stackCurrent, inventoryItem.itemScriptableObject));
-            }
-            else
-            {
-                storage.items.Add(new StorageItem(0, null));
-            }
-        }
-    }
-
 
     public void OnCraftButtonPressed()
     {
@@ -346,6 +269,18 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
         {
             craftingManager.AttemptCraft();
         }
+    }
+
+    [Command]
+    void CmdPickItem(GameObject item)
+    {
+        NetworkServer.UnSpawn(item);
+    }
+
+    [Command]
+    void CmdDropItem(GameObject item)
+    {
+        NetworkServer.Spawn(item);
     }
 }
 

@@ -2,6 +2,7 @@ using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class Storage : NetworkBehaviour
 {
@@ -17,8 +18,10 @@ public class Storage : NetworkBehaviour
 
     private bool itemsSpawned;
 
+    [SerializeField] private GameObject upperChest;
+
     [SerializeField] private GameObject proximityPrompt;
-    [SerializeField] private float promptDistance;
+    [SerializeField] private float promptDistance = 3f;
 
     public override void OnStartServer()
     {
@@ -59,13 +62,13 @@ public class Storage : NetworkBehaviour
         {
             proximityPrompt.SetActive(false);
         }
-        else
+        else if (!isOpened)
         {
             proximityPrompt.SetActive(true);
         }
 
         Vector3 position = proximityPrompt.transform.position;
-        Vector3 target = NetworkClient.localPlayer.gameObject.transform.Find("CameraRoot").Find("CameraControls").Find("Camera").position;
+        Vector3 target = NetworkClient.localPlayer.gameObject.transform.position;
         Vector3 inverseHeight = new Vector3(0, (position.y - target.y) * 2, 0);
         proximityPrompt.transform.LookAt(2 * (position + inverseHeight) - target);
     }
@@ -76,6 +79,7 @@ public class Storage : NetworkBehaviour
         if (isOpened) return;
 
         isOpened = true;
+        proximityPrompt.SetActive(false);
 
         GetComponent<AudioSource>().Play();
 
@@ -89,6 +93,9 @@ public class Storage : NetworkBehaviour
             }
         }
 
-        Debug.Log("Opened");
+        if (upperChest != null)
+        {
+            upperChest.transform.Rotate(-45, 0, 0);
+        }
     }
 }

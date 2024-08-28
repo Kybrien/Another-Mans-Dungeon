@@ -1,8 +1,12 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
-public class InventorySlot : MonoBehaviour
+public class InventorySlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public GameObject HeldItem;
+    public AudioClip hoverSound;
+    public AudioClip clickSound;
 
     public delegate void SlotChanged();
     public event SlotChanged OnSlotChanged;
@@ -34,5 +38,17 @@ public class InventorySlot : MonoBehaviour
     public bool IsEmpty()
     {
         return HeldItem == null;
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        GetComponent<Image>().color = Color.yellow;
+        GetComponent<AudioSource>().PlayOneShot(hoverSound);
+    }
+
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        GetComponent<Image>().color = Color.white;
     }
 }

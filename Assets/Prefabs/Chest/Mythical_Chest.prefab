@@ -399,8 +399,9 @@ MonoBehaviour:
   items: []
   itemsToSpawn: {fileID: 11400000, guid: 46f6cadf638989b4699843e72b926a2a, type: 2}
   spawnItems: 1
+  upperChest: {fileID: 557069593914762575}
   proximityPrompt: {fileID: 3576017547219848820}
-  promptDistance: 0
+  promptDistance: 3
 --- !u!82 &-2096106294697641763
 AudioSource:
   m_ObjectHideFlags: 0
@@ -538,6 +539,18 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 959451509687141438, guid: 072ffdcf11615fd4ebfc55688a7049cc, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 959451509687141438, guid: 072ffdcf11615fd4ebfc55688a7049cc, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 959451509687141438, guid: 072ffdcf11615fd4ebfc55688a7049cc, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 959451509687141438, guid: 072ffdcf11615fd4ebfc55688a7049cc, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -571,7 +584,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 959451509687141438, guid: 072ffdcf11615fd4ebfc55688a7049cc, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 1.749
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 959451509687141438, guid: 072ffdcf11615fd4ebfc55688a7049cc, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -585,9 +598,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 959451509687141438, guid: 072ffdcf11615fd4ebfc55688a7049cc, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8964339677665884035, guid: 072ffdcf11615fd4ebfc55688a7049cc, type: 3}
       propertyPath: m_Name
       value: ProximityPrompt
+      objectReference: {fileID: 0}
+    - target: {fileID: 8964339677665884035, guid: 072ffdcf11615fd4ebfc55688a7049cc, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

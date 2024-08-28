@@ -25,6 +25,8 @@ public class CameraController : NetworkBehaviour
 
         if (SceneManager.GetActiveScene().name == "OnlineGame")
         {
+            if (Cursor.lockState != CursorLockMode.Locked) return;
+
             //Cursor.visible = false;
             //Cursor.lockState = CursorLockMode.Locked;
 

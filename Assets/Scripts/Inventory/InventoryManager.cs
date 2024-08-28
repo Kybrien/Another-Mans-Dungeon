@@ -219,6 +219,7 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
         }
     }
 
+
     public void ItemPicked(GameObject pickedItem)
     {
         GameObject emptySlot = null;

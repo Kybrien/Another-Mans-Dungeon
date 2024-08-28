@@ -14,6 +14,7 @@ public class CombatController : NetworkBehaviour
     bool isClicking = false;
     [SerializeField] private GameObject HitboxPrefab;
     [SerializeField] private Transform ModelRoot;
+    [SerializeField] private Transform CameraRoot;
     private Animator PlayerAnimator;
     private int comboCount = 0;
     private Coroutine comboCoroutine;
@@ -65,6 +66,8 @@ public class CombatController : NetworkBehaviour
     [Command]
     private void CmdDealMonsterDamage(GameObject enemy)
     {
+        if (enemy == null) return;
+
         if (enemy.tag == "Enemy")
         {
             enemy.GetComponent<MonsterController>().TakeDamage(damage);
@@ -77,14 +80,14 @@ public class CombatController : NetworkBehaviour
     private void SendDebugRaycast()
     {
         RaycastHit hit;
-        if (Physics.Raycast(ModelRoot.transform.position, ModelRoot.transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity))
+        if (Physics.Raycast(ModelRoot.transform.position, CameraRoot.transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity))
         {
-            Debug.DrawRay(ModelRoot.transform.position, ModelRoot.transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
+            Debug.DrawRay(ModelRoot.transform.position, CameraRoot.transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
             //Debug.Log("Did Hit");
         }
         else
         {
-            Debug.DrawRay(ModelRoot.transform.position, ModelRoot.transform.TransformDirection(Vector3.forward) * 1000, Color.white);
+            Debug.DrawRay(ModelRoot.transform.position, CameraRoot.transform.TransformDirection(Vector3.forward) * 1000, Color.white);
             //Debug.Log("Did not Hit");
         }
     }
@@ -93,7 +96,7 @@ public class CombatController : NetworkBehaviour
     {
 
         RaycastHit hit;
-        Physics.Raycast(ModelRoot.transform.position, ModelRoot.transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity);
+        Physics.Raycast(ModelRoot.transform.position, CameraRoot.transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity);
 
         return hit;
     }
@@ -165,16 +168,8 @@ public class CombatController : NetworkBehaviour
             comboCoroutine = StartCoroutine(ComboTick());
         }
 
-        if (isRange)
-        {
-            RaycastHit result = SendRaycast();
-            CmdDealMonsterDamage(result.transform.gameObject);
-        }
-        else
-        {
-            CmdCreateHitbox(NetworkClient.localPlayer, new Vector3(4, 4, 4));
-            currCooldown = cooldown;
-        }
+
+        CmdCreateHitbox(NetworkClient.localPlayer, new Vector3(4, 4, 4));
 
         //CreateHitbox(new Vector3(1, 1, 1));
     }
@@ -182,7 +177,20 @@ public class CombatController : NetworkBehaviour
     {
         if (pressing && currCooldown <= 0)
         {
-            HandleCombo();
+            if (isRange)
+            {
+                RaycastHit result = SendRaycast();
+                if (result.transform != null)
+                {
+                    CmdDealMonsterDamage(result.transform.gameObject);
+                };
+            }
+            else
+            {
+                HandleCombo();
+            }
+
+            currCooldown = cooldown;
         }
     }
 }

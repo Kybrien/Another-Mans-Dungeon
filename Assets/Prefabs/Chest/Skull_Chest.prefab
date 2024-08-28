@@ -231,8 +231,9 @@ MonoBehaviour:
   items: []
   itemsToSpawn: {fileID: 11400000, guid: e851152ecb390fa44a4fdd073892e792, type: 2}
   spawnItems: 1
+  upperChest: {fileID: 1003972941410644800}
   proximityPrompt: {fileID: 8114058118329320261}
-  promptDistance: 0
+  promptDistance: 3
 --- !u!82 &3195174554479036149
 AudioSource:
   m_ObjectHideFlags: 0
@@ -403,7 +404,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 959451509687141438, guid: 072ffdcf11615fd4ebfc55688a7049cc, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 1
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 959451509687141438, guid: 072ffdcf11615fd4ebfc55688a7049cc, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

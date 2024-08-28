@@ -69,8 +69,11 @@ public class PlayerMovementController : NetworkBehaviour
                 rb.useGravity = true;
                 rb.constraints = RigidbodyConstraints.FreezeRotation;
                 PlayerModel.SetActive(true);
-                PlayerGui.SetActive(true);
-                UICamera.SetActive(true);
+                if (isLocalPlayer)
+                {
+                    PlayerGui.SetActive(true);
+                    UICamera.SetActive(true);
+                }
                 SetSpawnPosition();
                 Debug.Log(gameObject.name + " Position is: " + gameObject.transform.position);
             }

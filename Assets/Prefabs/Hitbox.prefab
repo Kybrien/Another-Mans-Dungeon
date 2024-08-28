@@ -119,6 +119,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20b4b0de91a43b04c853fa8257197634, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  plrIdentity: {fileID: 0}
+  hitSound: {fileID: 8300000, guid: a37f44cbf8c2a7443a3c361efa2f233a, type: 3}
 --- !u!114 &7293102824172730044
 MonoBehaviour:
   m_ObjectHideFlags: 0

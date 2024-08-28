@@ -20,16 +20,17 @@ public class MonsterController : NetworkBehaviour
     [SerializeField] private RawImage healthBar;
     [SerializeField] private TextMeshProUGUI healthText;
 
+    [Header("-- Loot --")]
+    [SerializeField] private LootTable lootTable;  
+
     // Start is called before the first frame update
     void Start()
     {
-
     }
 
     // Update is called once per frame
     void Update()
     {
-
     }
 
     public float GetHealth()
@@ -44,7 +45,7 @@ public class MonsterController : NetworkBehaviour
 
         health = Mathf.Max(0, health - damage);
 
-        if (isDead == false && health == 0)
+        if (!isDead && health == 0)
         {
             isDead = true;
             OnDeath();
@@ -53,7 +54,7 @@ public class MonsterController : NetworkBehaviour
     }
 
     void UpdateHealthBar(float oldValue, float newValue)
-    { 
+    {
         healthBar.rectTransform.sizeDelta = new Vector2((newValue / maxHealth) * 5, 1);
         healthText.text = newValue.ToString() + " / " + maxHealth.ToString();
 
@@ -66,8 +67,29 @@ public class MonsterController : NetworkBehaviour
         healthText.text = health.ToString() + " / " + maxHealth.ToString();
     }
 
+    [Server]
     void OnDeath()
     {
+        if (lootTable == null)
+        {
+            Debug.LogError("LootTable is not assigned.");
+            return;
+        }
 
+        if (LootSystem.Instance == null)
+        {
+            Debug.LogError("LootSystem.Instance is not initialized.");
+            return;
+        }
+
+        LootSystem.Instance.GenerateLoot(lootTable, transform.position);
+
+
+        NetworkServer.Destroy(gameObject);
     }
+
+
+
+
+
 }

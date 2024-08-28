@@ -1,10 +1,8 @@
-using Org.BouncyCastle.Cms;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.HID;
 using Mirror;
 using Steamworks;
 using UnityEngine.SceneManagement;
@@ -24,11 +22,23 @@ public class CombatController : NetworkBehaviour
     float currCooldown = 0;
     bool isRange = false;
 
+    // ** Audio Clips for Sword Sounds **
+    [SerializeField] private AudioClip swordSound1;
+    [SerializeField] private AudioClip swordSound2;
+    private AudioSource audioSource;
+
     // Start is called before the first frame update
     void Start()
     {
         //PlayerAnimator = ModelRoot.transform.Find("Model").GetComponent<Animator>();
         //SetAnimation(weaponType + "Idle");
+
+        // Get the AudioSource component or add one if it doesn't exist
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
     }
 
     // Update is called once per frame
@@ -67,7 +77,8 @@ public class CombatController : NetworkBehaviour
         if (enemy.tag == "Enemy")
         {
             enemy.GetComponent<MonsterController>().TakeDamage(10);
-        } else if (enemy.tag == "Player")
+        }
+        else if (enemy.tag == "Player")
         {
             enemy.GetComponent<PlayerMovementController>().TakeDamage(10);
         }
@@ -171,17 +182,29 @@ public class CombatController : NetworkBehaviour
         }
         else
         {
+            PlaySwordSound(); 
             CmdCreateHitbox(NetworkClient.localPlayer, new Vector3(4, 4, 4));
             currCooldown = cooldown;
         }
 
         //CreateHitbox(new Vector3(1, 1, 1));
     }
+
     private void HandleCombat(bool pressing)
     {
         if (pressing && currCooldown <= 0)
         {
             HandleCombo();
+        }
+    }
+
+   
+    private void PlaySwordSound()
+    {
+        if (audioSource != null)
+        {
+            AudioClip chosenClip = UnityEngine.Random.value > 0.5f ? swordSound1 : swordSound2;
+            audioSource.PlayOneShot(chosenClip);
         }
     }
 }

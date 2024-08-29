@@ -17,8 +17,6 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
 
     [SerializeField] private GameObject[] slots = new GameObject[20];
 
-    private GameObject lastSlot;
-
     [SyncVar]
     private List<GameObject> playerItems = new List<GameObject>();
 
@@ -288,7 +286,7 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
 
         playerItems.Add(itemToRemoveId.gameObject);
 
-        RpcPickItem(connectionToClient, itemToRemoveId.gameObject);
+        RpcPickItem(itemToRemoveId.gameObject);
 
         Debug.Log(itemToRemoveId.gameObject.GetComponent<ItemPickable>().itemScriptableObject);
 
@@ -297,11 +295,9 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
         //NetworkServer.UnSpawn(itemToRemoveId.gameObject);
     }
 
-    [TargetRpc]
-    void RpcPickItem(NetworkConnection conn, GameObject pickedItem)
+    [ClientRpc]
+    void RpcPickItem(GameObject pickedItem)
     {
-        Debug.Log(lastSlot);
-
         pickedItem.SetActive(false);
 
         /*        GameObject newItem = Instantiate(itemPrefab);
@@ -311,8 +307,6 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
                 newItem.transform.localScale = new Vector3(1, 1, 1);*/
 
         Debug.Log(pickedItem.GetComponent<ItemPickable>().itemScriptableObject.prefab);
-
-        lastSlot = null;
     }
 
     [Command]

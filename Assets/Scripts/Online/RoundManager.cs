@@ -244,7 +244,7 @@ public class RoundManager : NetworkBehaviour
                         GridGraph graph = astarPath.data.gridGraph;
                         //AstarPath.active.Scan(graph);
 
-                        RpcScanGraph(conn, NewMap);
+                        RpcScanGraph(NewMap);
 
                         PlayerMovementController plrData = player.GetComponent<PlayerMovementController>();
                         plrData.SetHealth(plrData.GetMaxHealth());
@@ -353,7 +353,7 @@ public class RoundManager : NetworkBehaviour
                     GameObject invadedMap = playerMapFolders[(int)conn.identity.netId].transform.GetChild(0).gameObject;
 
                     RpcTeleportToSpawn(playerIdentity.connectionToClient, invadedMap, "PortalStart");
-                    RpcScanGraph(conn, invadedMap);
+                    //RpcScanGraph(invadedMap);
                     RpcInvadeWorld(conn);
 
                     break;
@@ -390,14 +390,16 @@ public class RoundManager : NetworkBehaviour
         graph.center += offset;
     }
 
-    [TargetRpc]
-    public void RpcScanGraph(NetworkConnectionToClient target, GameObject map)
+    [ClientRpc]
+    public void RpcScanGraph(GameObject map)
     {
+        if (!isServer && isClient) return;
+
         AstarPath astarPath = map.transform.Find("Astar").GetComponent<AstarPath>();
         GridGraph graph = astarPath.data.gridGraph;
 
         AstarPath.active.Scan(graph);
-        Debug.Log("map scanned");
+        Debug.Log("Initial scan completed.");
     }
 
     [TargetRpc]

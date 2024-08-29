@@ -23,6 +23,9 @@ public class MonsterController : NetworkBehaviour
     [Header("-- Loot --")]
     [SerializeField] private LootTable lootTable;
 
+    [SyncVar]
+    public bool canMove = false;
+
     // Start is called before the first frame update
     void Start()
     {

@@ -1,8 +1,9 @@
+using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class StateHit
+public abstract class StateHit : NetworkBehaviour
 {
     protected MonsterControllerHit monsterController;
 
@@ -16,7 +17,7 @@ public abstract class StateHit
     public virtual void ExitState() { }
 
     // Méthode abstraite pour la mise à jour de l'état
-    public abstract void Update();
+    public abstract void UpdateState();
 
     // Méthode pour définir un trigger d'animation
     protected void SetAnimationTrigger(string triggerName)

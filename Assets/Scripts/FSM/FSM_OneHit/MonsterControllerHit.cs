@@ -46,7 +46,10 @@ public class MonsterControllerHit : MonsterController
 
     void Update()
     {
-        currentState.Update();
+        if (isClient)
+        {
+            currentState.UpdateState();
+        }
     }
 
     public void TransitionToState(StateHit nextState)

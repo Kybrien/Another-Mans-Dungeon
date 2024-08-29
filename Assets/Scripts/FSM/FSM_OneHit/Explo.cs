@@ -24,7 +24,7 @@ public class ExploState : StateHit
         PerformExplo(); // Initialiser la première attaque
     }
 
-    public override void Update()
+    public override void UpdateState()
     {
         RotateTowardsPlayer();
     }

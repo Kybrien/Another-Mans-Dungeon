@@ -11,7 +11,7 @@ public class IdleHitState : StateHit
         Debug.Log("Monster in Idle STATE");
         // Logique d'initialisation de l'état Idle
     }
-    public override void Update()
+    public override void UpdateState()
     {
         SetAnimationTrigger("isIdle");
         // Logique pour l'état Idle

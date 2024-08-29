@@ -33,7 +33,7 @@ public class ChaseState : StateCaC
         else
         {
             Debug.Log("Monster in Chase STATE");
-            aiPath.canMove = true;
+            //aiPath.canMove = true;
         }
         
     }
@@ -52,7 +52,7 @@ public class ChaseState : StateCaC
             }
             aiPath.destination = player.position;
             SetAnimationTrigger("isChasing");
-            aiPath.canMove = true;
+            //aiPath.canMove = true;
 
             if (distanceToPlayer <= monsterController.attackDistance)
             {

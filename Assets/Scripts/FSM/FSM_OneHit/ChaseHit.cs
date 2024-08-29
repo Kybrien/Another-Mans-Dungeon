@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Pathfinding;
+using Mirror;
 
 public class ChaseHitState : StateHit
 {
@@ -20,11 +21,11 @@ public class ChaseHitState : StateHit
     {
         float distanceToPlayer = Vector3.Distance(monsterController.transform.position, player.position);
         Debug.Log("Monster in Chase STATE");
-        aiPath.canMove = true;
+        //aiPath.canMove = true;
         
     }
 
-    public override void Update()
+    public override void UpdateState()
     {
         float distanceToPlayer = Vector3.Distance(monsterController.transform.position, player.position);
 
@@ -37,7 +38,7 @@ public class ChaseHitState : StateHit
             }
             aiPath.destination = player.position;
             SetAnimationTrigger("isChasing");
-            aiPath.canMove = true;
+            //aiPath.canMove = true;
 
             if (distanceToPlayer <= monsterController.attackDistance)
             {

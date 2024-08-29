@@ -302,11 +302,13 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
     {
         Debug.Log(lastSlot);
 
-/*        GameObject newItem = Instantiate(itemPrefab);
-        newItem.GetComponent<InventoryItem>().itemScriptableObject = pickedItem.GetComponent<ItemPickable>().itemScriptableObject;
-        newItem.transform.SetParent(lastSlot.transform);
-        newItem.GetComponent<InventoryItem>().stackCurrent = 1;
-        newItem.transform.localScale = new Vector3(1, 1, 1);*/
+        pickedItem.SetActive(false);
+
+        /*        GameObject newItem = Instantiate(itemPrefab);
+                newItem.GetComponent<InventoryItem>().itemScriptableObject = pickedItem.GetComponent<ItemPickable>().itemScriptableObject;
+                newItem.transform.SetParent(lastSlot.transform);
+                newItem.GetComponent<InventoryItem>().stackCurrent = 1;
+                newItem.transform.localScale = new Vector3(1, 1, 1);*/
 
         Debug.Log(pickedItem.GetComponent<ItemPickable>().itemScriptableObject.prefab);
 

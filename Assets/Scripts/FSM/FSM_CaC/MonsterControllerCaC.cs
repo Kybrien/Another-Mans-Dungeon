@@ -55,10 +55,9 @@ public class MonsterControllerCaC : MonsterController
 
     void Update()
     {
-        if (isClient)
-        {
-            currentState.Update();
-        }
+        if (!isServer) return;
+
+        currentState.Update();
     }
 
     public void TransitionToState(StateCaC nextState)

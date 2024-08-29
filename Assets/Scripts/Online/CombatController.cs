@@ -26,9 +26,18 @@ public class CombatController : NetworkBehaviour
     public bool isRange = false;
     public int damage = 10;
 
+    [SerializeField] private AudioClip swordSound1;
+    [SerializeField] private AudioClip swordSound2;
+    private AudioSource audioSource;
+
     // Start is called before the first frame update
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null )
+        {
+            audioSource = GetComponent<AudioSource>();
+        }
         //PlayerAnimator = ModelRoot.transform.Find("Model").GetComponent<Animator>();
         //SetAnimation(weaponType + "Idle");
     }
@@ -168,7 +177,7 @@ public class CombatController : NetworkBehaviour
             comboCoroutine = StartCoroutine(ComboTick());
         }
 
-
+        PlaySwordSound();
         CmdCreateHitbox(NetworkClient.localPlayer, new Vector3(4, 4, 4));
 
         //CreateHitbox(new Vector3(1, 1, 1));
@@ -191,6 +200,15 @@ public class CombatController : NetworkBehaviour
             }
 
             currCooldown = cooldown;
+        }
+    }
+
+    private void PlaySwordSound()
+    {
+        if (audioSource != null)
+        {
+            AudioClip chosenClip = UnityEngine.Random.value > 0.5f ? swordSound1 : swordSound2;
+            audioSource.PlayOneShot(chosenClip);
         }
     }
 }

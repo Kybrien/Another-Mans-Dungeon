@@ -21,7 +21,7 @@ public class MonsterController : NetworkBehaviour
     [SerializeField] private TextMeshProUGUI healthText;
 
     [Header("-- Loot --")]
-    [SerializeField] private LootTable lootTable;  
+    [SerializeField] private LootTable lootTable;
 
     // Start is called before the first frame update
     void Start()

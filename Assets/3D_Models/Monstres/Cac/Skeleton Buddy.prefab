@@ -226,6 +226,7 @@ MonoBehaviour:
   canvas: {fileID: 5561678473512428999}
   healthBar: {fileID: 3161374550497143884}
   healthText: {fileID: 4570454054689222341}
+  lootTable: {fileID: 11400000, guid: bb500fc4a3a9e8d4d9ade114782be17c, type: 2}
   player: {fileID: 0}
   aiPath: {fileID: 274842834429404002}
   animator: {fileID: 3863516179148543352}

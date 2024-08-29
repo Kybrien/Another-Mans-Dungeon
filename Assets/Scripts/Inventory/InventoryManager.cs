@@ -348,7 +348,8 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
     [ClientRpc]
     void RpcDropItem(GameObject playerItem, Vector3 position)
     {
-        //playerItem.transform.position = position;
+        playerItem.SetActive(true);
+        playerItem.transform.position = position;
     }
 }
 

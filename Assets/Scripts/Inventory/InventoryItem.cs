@@ -23,8 +23,7 @@ public class InventoryItem : MonoBehaviour
     {
         if (itemScriptableObject != null)
         {
-            Debug.Log(itemScriptableObject.prefab);
-            //iconImage.sprite = Resources.Load<Sprite>("Assets/Resources/WeaponImage/" + itemScriptableObject.prefab.name + ".png");
+            iconImage.sprite = Resources.Load<Sprite>("Assets/Resources/WeaponImage/" + itemScriptableObject.prefab.name + ".png");
         }
 
         if (stackMax > 1)

@@ -205,7 +205,7 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
             }
             else
             {
-                CmdDropItem(draggedObject);
+                CmdDropItem(draggedObject.GetComponent<InventoryItem>().itemScriptableObject.name);
 
                 lastItemSlot.GetComponent<InventorySlot>().HeldItem = null;
                 Destroy(draggedObject);
@@ -258,9 +258,9 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
             newItem.GetComponent<InventoryItem>().itemScriptableObject = pickedItem.GetComponent<ItemPickable>().itemScriptableObject;
             newItem.transform.SetParent(emptySlot.transform);
             newItem.GetComponent<InventoryItem>().stackCurrent = 1;
-            newItem.transform.localScale = new Vector3(1, 1, 1);
 
-            newItem.transform.position = Vector3.zero;
+            emptySlot.GetComponent<InventorySlot>().SetHeldItem(newItem);
+            newItem.transform.localScale = new Vector3(1, 1, 1);
 
             CmdPickItem(pickedItem.GetComponent<NetworkIdentity>());
 
@@ -314,14 +314,41 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
     }
 
     [Command]
-    void CmdDropItem(GameObject item)
+    void CmdDropItem(string testItem)
     {
+        Debug.Log(testItem);
+
         Vector3 position = gameObject.transform.position + gameObject.transform.forward * 2;
 
-        GameObject newItem = Instantiate(item.GetComponent<InventoryItem>().itemScriptableObject.prefab, position, new Quaternion());
-        newItem.GetComponent<ItemPickable>().itemScriptableObject = item.GetComponent<InventoryItem>().itemScriptableObject;
+        for (int i = 0; i < playerItems.Count; i++)
+        {
+            GameObject playerItem = playerItems[i];
+            Debug.Log("itering: " + playerItem);
 
-        NetworkServer.Spawn(item);
+            if (playerItem.GetComponent<ItemPickable>().itemScriptableObject.name == testItem)
+            {
+                Debug.Log("trouve");
+
+                playerItem.SetActive(true);
+                playerItem.transform.position = position;
+
+                playerItem.GetComponent<ItemPickable>().isPicked = false;
+
+                //NetworkServer.Spawn(playerItem);
+
+                playerItems.RemoveAt(i);
+
+                RpcDropItem(playerItem, position);
+
+                break;
+            }
+        }
+    }
+
+    [ClientRpc]
+    void RpcDropItem(GameObject playerItem, Vector3 position)
+    {
+        //playerItem.transform.position = position;
     }
 }
 

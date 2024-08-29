@@ -65,8 +65,6 @@ public class PlayerMovementController : NetworkBehaviour
     {
         PlayerModel.SetActive(false);
 
-        if (!isLocalPlayer) return;
-
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null)
         {

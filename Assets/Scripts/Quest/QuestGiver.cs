@@ -1,38 +1,56 @@
 using UnityEngine;
+using Mirror;
 
-public class QuestGiver : MonoBehaviour
+public class QuestGiver : NetworkBehaviour
 {
     public GameObject dialoguePanel; // Assign in the Inspector
     public GameObject questSteps; // Assign in the Inspector
-    public GameObject rewardDialogue;
+    public GameObject rewardDialogue; // Assign in the Inspector
     public GameObject npc; // Assign in the Inspector
     public QuestManager questManager; // Assign in the Inspector
     public BoxCollider boxCollider; // Assign in the Inspector
+    public GameObject weaponPrefab; // Assigner dans l'Inspecteur
 
     private bool playerInRange = false;
+
+    [SyncVar(hook = nameof(OnQuestAcceptedChanged))]
     private bool questAccepted = false;
+
     public int questIndex; // L'index de la quête à accepter, assigné dans l'inspecteur
 
     private void Update()
     {
+        if (!isLocalPlayer) return;
+
         if (playerInRange && Input.GetKeyDown(KeyCode.A))
         {
             if (questAccepted)
             {
                 if (questManager.currentQuest != null && questManager.currentQuest.isComplete)
                 {
-                    boxCollider.enabled = true;
+                    CmdEnableCollider();
                 }
             }
             else
             {
-                AcceptQuest();
+                CmdAcceptQuest();
             }
+        }
+    }
+
+    [Command]
+    private void CmdEnableCollider()
+    {
+        if (boxCollider != null)
+        {
+            boxCollider.enabled = true;
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        if (!isLocalPlayer) return;
+
         if (other.CompareTag("Player") && !questAccepted)
         {
             Debug.Log("Player entered NPC trigger zone");
@@ -40,16 +58,16 @@ public class QuestGiver : MonoBehaviour
             playerInRange = true;
         }
 
-        // Vérifie si la quête est complète lorsque le joueur entre en collision avec le NPC
         if (other.CompareTag("Player") && questAccepted && questManager.currentQuest != null && questManager.currentQuest.isComplete)
         {
-            // Activer le canvas de récompense
             rewardDialogue.SetActive(true);
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
+        if (!isLocalPlayer) return;
+
         if (other.CompareTag("Player"))
         {
             Debug.Log("Player exited NPC trigger zone");
@@ -58,7 +76,8 @@ public class QuestGiver : MonoBehaviour
         }
     }
 
-    public void AcceptQuest()
+    [Command]
+    public void CmdAcceptQuest()
     {
         Debug.Log("Quest accepted");
 
@@ -86,36 +105,53 @@ public class QuestGiver : MonoBehaviour
             return;
         }
 
-        dialoguePanel.SetActive(false);
-        questSteps.SetActive(true);
-        questManager.StartQuest(questIndex); // Passer l'index de la quête
         questAccepted = true;
+        questManager.StartQuest(questIndex);
+        RpcUpdateQuestUI();
+    }
 
-        // Désactiver le BoxCollider du NPC
-        if (boxCollider != null)
+    private void OnQuestAcceptedChanged(bool oldQuestAccepted, bool newQuestAccepted)
+    {
+        if (newQuestAccepted)
         {
-            boxCollider.enabled = false;
-        }
-        else
-        {
-            Debug.LogError("boxCollider is not assigned!");
-        }
+            dialoguePanel.SetActive(false);
+            questSteps.SetActive(true);
 
-        // Mettre à jour l'interface utilisateur de suivi de quête
+            if (boxCollider != null)
+            {
+                boxCollider.enabled = false;
+            }
+        }
+    }
+
+    [ClientRpc]
+    private void RpcUpdateQuestUI()
+    {
         questManager.UpdateQuestUI();
     }
 
-    public void ClaimReward()
+    [Command]
+    public void CmdClaimReward()
     {
         Debug.Log("Reward claimed");
 
-        // Hide all quest-related UI elements
+        if (questManager.currentQuest != null && questManager.currentQuest.isComplete && weaponPrefab != null)
+        {
+            GameObject weapon = Instantiate(weaponPrefab, transform.position + transform.forward * 2, Quaternion.identity);
+            NetworkServer.Spawn(weapon);
+        }
+
+        RpcHideQuestUI();
+
+        if (boxCollider != null) boxCollider.enabled = false;
+        if (npc != null) npc.SetActive(false);
+    }
+
+    [ClientRpc]
+    private void RpcHideQuestUI()
+    {
         dialoguePanel.SetActive(false);
         questSteps.SetActive(false);
         rewardDialogue.SetActive(false);
-
-        // Hide NPC interaction
-        boxCollider.enabled = false;
-        npc.SetActive(false);
     }
 }

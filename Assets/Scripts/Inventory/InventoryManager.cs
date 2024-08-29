@@ -250,8 +250,6 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
 
         if (emptySlot != null)
         {
-            lastSlot = emptySlot;
-
             GameObject newItem = Instantiate(itemPrefab);
             newItem.GetComponent<InventoryItem>().itemScriptableObject = pickedItem.GetComponent<ItemPickable>().itemScriptableObject;
             newItem.transform.SetParent(emptySlot.transform);

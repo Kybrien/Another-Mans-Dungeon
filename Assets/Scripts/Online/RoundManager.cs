@@ -59,6 +59,12 @@ public class RoundManager : NetworkBehaviour
     public readonly SyncDictionary<int, GameObject> playerMapFolders = new SyncDictionary<int, GameObject>();
 
     // Start is called before the first frame update
+
+    private void Awake()
+    {
+        
+    }
+
     void Start()
     {
 
@@ -90,7 +96,7 @@ public class RoundManager : NetworkBehaviour
     [Server]
     IEnumerator HandleRounds()
     {
-        for (int i = 20; i > 3; i--)
+        for (int i = 5; i > 3; i--)
         {
             secondsLeft = i;
             RpcUpdateStatus();
@@ -240,11 +246,13 @@ public class RoundManager : NetworkBehaviour
                         RpcSwitchMap(NewMap, mapFolder);
                         RpcTeleportToSpawn(conn, NewMap, "PortalStart");
 
-                        AstarPath astarPath = NewMap.transform.Find("Astar").GetComponent<AstarPath>();
-                        GridGraph graph = astarPath.data.gridGraph;
-                        //AstarPath.active.Scan(graph);
+                        yield return new WaitForSeconds(1);
 
-                        RpcScanGraph(NewMap);
+                        CreateNewGraph(NewMap, mapFolder);
+
+                        Debug.Log("map scannée");
+
+                        //RpcScanGraph(NewMap);
 
                         PlayerMovementController plrData = player.GetComponent<PlayerMovementController>();
                         plrData.SetHealth(plrData.GetMaxHealth());
@@ -273,11 +281,12 @@ public class RoundManager : NetworkBehaviour
         AstarPath astarReference = NewMap.transform.Find("Astar").GetComponent<AstarPath>();
         GridGraph graphReference = astarReference.graphs[0] as GridGraph;
 
-        GridGraph newGraph = astarPath.data.AddGraph(typeof(GridGraph)) as GridGraph;
+        GridGraph newGraph = AstarPath.active.data.AddGraph(typeof(GridGraph)) as GridGraph;
         newGraph.center = graphReference.center;
         newGraph.nodeSize = graphReference.nodeSize;
         newGraph.cutCorners = graphReference.cutCorners;
         newGraph.collision.type = graphReference.collision.type;
+        newGraph.collision.mask = graphReference.collision.mask;
         newGraph.maxSlope = graphReference.maxSlope;
         newGraph.maxClimb = graphReference.maxClimb;
         newGraph.collision.heightMask = graphReference.collision.heightMask;
@@ -286,7 +295,7 @@ public class RoundManager : NetworkBehaviour
 
         Debug.Log("reference pos: " + graphReference.center.ToString() + "; newmap pos: " + NewMap.transform.position.ToString() + "; mapFolder pos: " + mapFolder.position.ToString());
 
-        //AstarPath.active.Scan(newGraph);
+        AstarPath.active.Scan(newGraph);
     }
 
     private void TeleportToPortal(Transform player, GameObject map, string name)
@@ -393,13 +402,18 @@ public class RoundManager : NetworkBehaviour
     [ClientRpc]
     public void RpcScanGraph(GameObject map)
     {
-        if (!isServer && isClient) return;
+        if (isServer && isClient)
+        {
+            CreateNewGraph(map, map.transform.parent);
+        };
 
-        AstarPath astarPath = map.transform.Find("Astar").GetComponent<AstarPath>();
+        map.transform.Find("Astar").gameObject.SetActive(false);
+
+/*        AstarPath astarPath = map.transform.Find("Astar").GetComponent<AstarPath>();
         GridGraph graph = astarPath.data.gridGraph;
 
         AstarPath.active.Scan(graph);
-        Debug.Log("Initial scan completed.");
+        Debug.Log("Initial scan completed.");*/
     }
 
     [TargetRpc]

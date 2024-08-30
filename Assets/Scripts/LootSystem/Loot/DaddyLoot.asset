@@ -10,13 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2535027982c33c14c88bbc42daf908a6, type: 3}
-  m_Name: NewLootTable
+  m_Name: DaddyLoot
   m_EditorClassIdentifier: 
-  lootItems:
-  - item: {fileID: 11400000, guid: 900960800a986ca48bb686c63148629b, type: 2}
-    dropChance: 25
-  - item: {fileID: 11400000, guid: 2484f30618d67b247a40a021a84622f7, type: 2}
-    dropChance: 25
-  - item: {fileID: 11400000, guid: c23562f1bf78a684ea167f2589d2c38a, type: 2}
-    dropChance: 100
-  noDropChance: 1
+  lootItems: []
+  noDropChance: 0

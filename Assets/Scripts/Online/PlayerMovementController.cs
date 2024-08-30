@@ -38,39 +38,9 @@ public class PlayerMovementController : NetworkBehaviour
     [SyncVar]
     [SerializeField] private float maxHealth = 100;
 
-    [SerializeField] private AudioClip damageSound;
-    private AudioSource audioSource;
-
-    [Header("Audio Control")]
-    [SerializeField] private bool useAnimationBasedFootsteps = true;
-    [SerializeField] private float landVelocityThreshold = 5f;
-    [SerializeField] private float footstepDistance = 0.2f;
-    [Range(0f, 1f)]
-    public float audioClipVolume = 0.1f;
-    public float relativeRandomizedVolumeRange = 0.2f;
-    public AudioClip[] footStepClips;
-    public AudioClip jumpClip;
-    public AudioClip landClip;
-
-    private float currentFootstepDistance = 0f;
-    private float currentFootStepValue = 0f;
-    private bool wasGrounded = true;
-    private int lastFootStepClipIndex = -1;
-
-    [SerializeField] private float footstepInterval = 0.5f;
-    private float footstepTimer = 0f;
-    private bool isMoving = false;
-
     private void Start()
     {
         PlayerModel.SetActive(false);
-
-        audioSource = GetComponent<AudioSource>();
-        if (audioSource == null)
-        {
-            audioSource = gameObject.AddComponent<AudioSource>();
-        }
-
     }
 
     private void Update()
@@ -113,12 +83,11 @@ public class PlayerMovementController : NetworkBehaviour
                 Movement();
             }
 
-            if (!isLocalPlayer) {
+            if (!isLocalPlayer)
+            {
                 _animator.SetFloat("Forward", rb.velocity.z);
                 _animator.SetFloat("Sided", rb.velocity.x);
             }
-
-            HandleLandingSound();
         }
     }
 
@@ -137,13 +106,11 @@ public class PlayerMovementController : NetworkBehaviour
         float xDirection = Input.GetAxis("Horizontal");
         float zDirection = Input.GetAxis("Vertical");
 
-        Vector3 moveDirection = (forward  * zDirection) + (right * xDirection);
+        Vector3 moveDirection = (forward * zDirection) + (right * xDirection);
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
             rb.AddForce(Vector3.up * jumpForce);
-            PlayJumpSound();
-            wasGrounded = true;
         }
 
         rb.MovePosition(rb.position + moveDirection * Time.deltaTime * speed);
@@ -152,11 +119,6 @@ public class PlayerMovementController : NetworkBehaviour
         {
             transform.position = new Vector3(transform.position.x, 50, transform.position.z);
             rb.velocity = Vector3.zero;
-        }
-
-        if (isLocalPlayer)
-        {
-            HandleMovementInput();
         }
     }
 
@@ -171,7 +133,8 @@ public class PlayerMovementController : NetworkBehaviour
         healthBar.rectTransform.sizeDelta = new Vector2((newValue / maxHealth) * 400, healthBar.rectTransform.sizeDelta.y);
         healthText.text = newValue.ToString() + " / " + maxHealth.ToString();
 
-        if (newValue <= 0 && isDead == false) {
+        if (newValue <= 0 && isDead == false)
+        {
             Debug.Log("Dead");
             isDead = true;
             roundManager.PlayerDied();
@@ -191,121 +154,29 @@ public class PlayerMovementController : NetworkBehaviour
     public void SetHealth(float newHealth)
     {
         health = Mathf.Max(newHealth, maxHealth);
+        UpdateHealthBar(health, newHealth);
         if (health > 0)
         {
             isDead = false;
             Debug.Log("healed");
         }
-    } 
+    }
 
     public float GetMaxHealth()
     {
         return maxHealth;
     }
-
-    private void HandleMovementInput()
+    public float Health
     {
-        bool isMovingNow = Input.GetKey(KeyCode.Z) || Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D);
+        get { return health; }
+    }
 
-        if (isMovingNow)
-        {
-            footstepTimer -= Time.deltaTime;
-
-            if (footstepTimer <= 0f)
-            {
-                float movementSpeed = new Vector3(rb.velocity.x, 0, rb.velocity.z).magnitude;
-
-                PlayFootstepSound(movementSpeed);
-                footstepTimer = footstepInterval;
-            }
-        }
-
-        isMoving = isMovingNow;
+    [Command]
+    public void CmdUsePotion(float healAmount)
+    {
+        Debug.Log("CmdUsePotion called with healAmount: " + healAmount);
+        SetHealth(health + healAmount);
     }
 
 
-    private void PlayFootstepSound(float movementSpeed)
-    {
-        int footStepClipIndex;
-
-        do
-        {
-            footStepClipIndex = Random.Range(0, footStepClips.Length);
-        }
-        while (footStepClipIndex == lastFootStepClipIndex && footStepClips.Length > 1);
-
-        lastFootStepClipIndex = footStepClipIndex;
-
-        float adjustedVolume = audioClipVolume + audioClipVolume * Random.Range(-relativeRandomizedVolumeRange, relativeRandomizedVolumeRange);
-
-        audioSource.PlayOneShot(footStepClips[footStepClipIndex], adjustedVolume);
-    }
-
-    private void PlayDamageSound()
-    {
-        if (audioSource != null && damageSound != null)
-        {
-            audioSource.PlayOneShot(damageSound);
-        }
-    }
-
-    private void PlayJumpSound()
-    {
-        if (jumpClip != null)
-        {
-            audioSource.PlayOneShot(jumpClip, audioClipVolume);
-        }
-    }
-
-    private void HandleLandingSound()
-    {
-        if (IsGrounded() && !wasGrounded)
-        {
-            PlayLandSound();
-        }
-        wasGrounded = IsGrounded();
-    }
-
-    private void PlayLandSound()
-    {
-        if (landClip != null)
-        {
-            audioSource.PlayOneShot(landClip, audioClipVolume);
-        }
-    }
-
-    private bool IsGrounded()
-    {
-        return Physics.Raycast(transform.position, Vector3.down, 1.1f);
-    }
-
-    private void UpdateFootstepSound(Vector3 velocity)
-    {
-        float movementSpeed = new Vector3(velocity.x, 0, velocity.z).magnitude;
-        float speedThreshold = 0.05f;
-
-        if (useAnimationBasedFootsteps && _animator != null)
-        {
-            float newFootStepValue = _animator.GetFloat("FootStep");
-
-            if ((currentFootStepValue <= 0f && newFootStepValue > 0f) || (currentFootStepValue >= 0f && newFootStepValue < 0f))
-            {
-                if (movementSpeed > speedThreshold && IsGrounded())
-                    PlayFootstepSound(movementSpeed);
-            }
-            currentFootStepValue = newFootStepValue;
-        }
-        else
-        {
-            currentFootstepDistance += Time.deltaTime * movementSpeed;
-
-            if (currentFootstepDistance > footstepDistance)
-            {
-                if (movementSpeed > speedThreshold && IsGrounded())
-                    PlayFootstepSound(movementSpeed);
-
-                currentFootstepDistance = 0f;
-            }
-        }
-    }
 }

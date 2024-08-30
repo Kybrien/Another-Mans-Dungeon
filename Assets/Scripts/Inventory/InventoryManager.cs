@@ -17,6 +17,8 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
 
     [SerializeField] private GameObject[] slots = new GameObject[20];
 
+    private GameObject lastSlot;
+
     [SyncVar]
     private List<GameObject> playerItems = new List<GameObject>();
 
@@ -37,11 +39,17 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
     bool isInventoryOpened;
 
     int selectedHotbarSlot = 0;
+
+    [SerializeField] private AudioClip sound1;
+    [SerializeField] private AudioClip sound2;
+    private AudioSource audioSource;
+
     void Start()
     {
         HotbarItemChanged();
-        //Cursor.lockState = CursorLockMode.Locked;
+        audioSource = GetComponent<AudioSource>(); //
     }
+
 
     void Update()
     {
@@ -71,7 +79,14 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
                 isInventoryOpened = true;
             }
         }
+
+        // Nouveau code pour détecter le clic droit
+        if (Input.GetMouseButtonDown(1)) // 1 est pour le clic droit
+        {
+            UseSelectedHotbarItem();
+        }
     }
+
 
     private void CheckForHotbarInput()
     {
@@ -94,6 +109,8 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
 
     private void HotbarItemChanged()
     {
+        Debug.Log("Hotbar item changed to slot: " + selectedHotbarSlot);
+
         for (int i = 0; i < handParent.childCount; i++)
         {
             handParent.GetChild(i).gameObject.SetActive(false);
@@ -112,18 +129,33 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
                 if (heldItem != null)
                 {
                     ItemSO itemData = heldItem.GetComponent<InventoryItem>().itemScriptableObject;
-                    combatController.weaponType = itemData.type;
-                    combatController.isRange = itemData.isRange;
-                    Debug.Log(combatController.weaponType);
+                    Debug.Log("Selected item: " + itemData.name);
 
-                    for (int i = 0; i < handParent.childCount; i++)
+                    if (!(itemData is PotionSO))
                     {
-                        if (handParent.GetChild(i).GetComponent<ItemHand>().itemScriptableObject
-                            == hotbarSlots[selectedHotbarSlot].GetComponent<InventorySlot>().HeldItem.GetComponent<InventoryItem>().itemScriptableObject)
+                        // Autres types d'items
+                        Debug.Log("Item is not a potion, it is of type: " + itemData.type);
+                        combatController.weaponType = itemData.type;
+                        combatController.isRange = itemData.isRange;
+                        Debug.Log("Weapon type set to: " + combatController.weaponType);
+
+                        for (int i = 0; i < handParent.childCount; i++)
                         {
-                            handParent.GetChild(i).gameObject.SetActive(true);
+                            if (handParent.GetChild(i).GetComponent<ItemHand>().itemScriptableObject
+                                == hotbarSlots[selectedHotbarSlot].GetComponent<InventorySlot>().HeldItem.GetComponent<InventoryItem>().itemScriptableObject)
+                            {
+                                handParent.GetChild(i).gameObject.SetActive(true);
+                            }
                         }
                     }
+                    else
+                    {
+                        Debug.Log("Potion selected, waiting for right-click to use.");
+                    }
+                }
+                else
+                {
+                    Debug.Log("No item in selected slot.");
                 }
             }
             else
@@ -135,22 +167,47 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
         }
     }
 
+
+
+
+
     public void OnPointerDown(PointerEventData eventData)
     {
-        if (eventData.button == PointerEventData.InputButton.Left)
-        {
-            GameObject clickedObject = eventData.pointerCurrentRaycast.gameObject;
-            InventorySlot slot = clickedObject.GetComponent<InventorySlot>();
+        GameObject clickedObject = eventData.pointerCurrentRaycast.gameObject;
+        InventorySlot slot = clickedObject.GetComponent<InventorySlot>();
 
-            //There is item in the slot - pick it up
-            if (slot != null && slot.HeldItem != null)
+        if (slot != null && slot.HeldItem != null)
+        {
+            // Si c'est un clic gauche
+            if (eventData.button == PointerEventData.InputButton.Left)
             {
                 draggedObject = slot.HeldItem;
                 slot.HeldItem = null;
                 lastItemSlot = clickedObject;
             }
+            // Si c'est un clic droit
+            else if (eventData.button == PointerEventData.InputButton.Right)
+            {
+                InventoryItem item = slot.HeldItem.GetComponent<InventoryItem>();
+                if (item != null && item.itemScriptableObject is PotionSO potion)
+                {
+                    Debug.Log("Right-click detected on potion: " + potion.name);
+                    UsePotion(potion, slot.gameObject);
+                }
+                else
+                {
+                    Debug.Log("Right-click detected, but item is not a potion.");
+                }
+            }
+        }
+        else
+        {
+            Debug.Log("Clicked object is not a valid inventory slot.");
         }
     }
+
+
+
 
     public void OnPointerUp(PointerEventData eventData)
     {
@@ -250,6 +307,8 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
 
         if (emptySlot != null)
         {
+            lastSlot = emptySlot;
+
             GameObject newItem = Instantiate(itemPrefab);
             newItem.GetComponent<InventoryItem>().itemScriptableObject = pickedItem.GetComponent<ItemPickable>().itemScriptableObject;
             newItem.transform.SetParent(emptySlot.transform);
@@ -284,7 +343,7 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
 
         playerItems.Add(itemToRemoveId.gameObject);
 
-        RpcPickItem(itemToRemoveId.gameObject);
+        RpcPickItem(connectionToClient, itemToRemoveId.gameObject);
 
         Debug.Log(itemToRemoveId.gameObject.GetComponent<ItemPickable>().itemScriptableObject);
 
@@ -293,10 +352,10 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
         //NetworkServer.UnSpawn(itemToRemoveId.gameObject);
     }
 
-    [ClientRpc]
-    void RpcPickItem(GameObject pickedItem)
+    [TargetRpc]
+    void RpcPickItem(NetworkConnection conn, GameObject pickedItem)
     {
-        pickedItem.SetActive(false);
+        Debug.Log(lastSlot);
 
         /*        GameObject newItem = Instantiate(itemPrefab);
                 newItem.GetComponent<InventoryItem>().itemScriptableObject = pickedItem.GetComponent<ItemPickable>().itemScriptableObject;
@@ -305,6 +364,8 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
                 newItem.transform.localScale = new Vector3(1, 1, 1);*/
 
         Debug.Log(pickedItem.GetComponent<ItemPickable>().itemScriptableObject.prefab);
+
+        lastSlot = null;
     }
 
     [Command]
@@ -342,8 +403,72 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
     [ClientRpc]
     void RpcDropItem(GameObject playerItem, Vector3 position)
     {
-        playerItem.SetActive(true);
-        playerItem.transform.position = position;
+        //playerItem.transform.position = position;
     }
-}
 
+    private void UsePotion(PotionSO potion, GameObject slot)
+    {
+        Debug.Log("Using potion: " + potion.name);
+
+        // Récupération du script de vie du joueur
+        PlayerMovementController player = FindObjectOfType<PlayerMovementController>();
+        if (player == null)
+        {
+            Debug.LogError("PlayerMovementController not found!");
+            return;
+        }
+
+        // Calcul correct de la nouvelle santé du joueur
+        float newHealth = Mathf.Min(player.GetMaxHealth(), player.Health + potion.healAmount);
+        Debug.Log("Healing player. New health: " + newHealth);
+        player.SetHealth(newHealth);
+        player.CmdUsePotion(potion.healAmount);
+
+        // Suppression de la potion de l'inventaire
+        Destroy(slot.GetComponent<InventorySlot>().HeldItem);
+        slot.GetComponent<InventorySlot>().SetHeldItem(null);
+
+        // Jouer les sons
+        StartCoroutine(PlayPotionSounds());
+
+        Debug.Log("Potion consumed and removed from inventory.");
+        HotbarItemChanged(); // Rafraîchir la barre de raccourcis
+    }
+
+    private IEnumerator PlayPotionSounds()
+    {
+        // Jouer le premier son
+        audioSource.PlayOneShot(sound1);
+        // Attendre la fin du premier son avant de jouer le deuxième
+        yield return new WaitForSeconds(sound1.length);
+        // Jouer le deuxième son
+        audioSource.PlayOneShot(sound2);
+    }
+
+
+    private void UseSelectedHotbarItem()
+    {
+        GameObject selectedSlot = hotbarSlots[selectedHotbarSlot];
+        GameObject heldItem = selectedSlot.GetComponent<InventorySlot>().HeldItem;
+
+        if (heldItem != null)
+        {
+            InventoryItem inventoryItem = heldItem.GetComponent<InventoryItem>();
+            if (inventoryItem != null && inventoryItem.itemScriptableObject is PotionSO potion)
+            {
+                UsePotion(potion, selectedSlot);
+            }
+            else
+            {
+                Debug.Log("The selected item is not a potion.");
+            }
+        }
+        else
+        {
+            Debug.Log("No item selected in the hotbar slot.");
+        }
+    }
+
+
+
+}

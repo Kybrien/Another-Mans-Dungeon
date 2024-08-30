@@ -3,7 +3,15 @@ guid: 8e9766933fc2dc040a9c823b79fb2c3e
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - combatController: {instanceID: 0}
+  - inventoryParent: {instanceID: 0}
+  - storageParent: {instanceID: 0}
+  - handParent: {instanceID: 0}
+  - itemPrefab: {instanceID: 0}
+  - cam: {instanceID: 0}
+  - sound1: {fileID: 8300000, guid: cbf75dadf85fc414589ef3983dab152c, type: 3}
+  - sound2: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

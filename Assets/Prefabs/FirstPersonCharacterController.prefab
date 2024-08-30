@@ -689,18 +689,6 @@ MonoBehaviour:
   health: 0
   isDead: 0
   maxHealth: 100
-  damageSound: {fileID: 8300000, guid: d7de2387373d67c4299f3be203a6c324, type: 3}
-  useAnimationBasedFootsteps: 1
-  landVelocityThreshold: 5
-  footstepDistance: 0.05
-  audioClipVolume: 0.24
-  relativeRandomizedVolumeRange: 0.2
-  footStepClips:
-  - {fileID: 8300000, guid: 7341ba07f02fa6941b16a463ddd73f99, type: 3}
-  - {fileID: 8300000, guid: 3efdd4c11a4bdc54a9087ab115c1de9e, type: 3}
-  jumpClip: {fileID: 8300000, guid: 99ab8a4503de1f448ad764a5c4cdf9cc, type: 3}
-  landClip: {fileID: 8300000, guid: c212aa2d646dfe248b7c96b4f0e4cb27, type: 3}
-  footstepInterval: 0.25
 --- !u!114 &1952947601223086896
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -830,6 +818,8 @@ MonoBehaviour:
   handParent: {fileID: 8286635159006019536}
   itemPrefab: {fileID: 2663416163909636493}
   cam: {fileID: 1465814743072176744}
+  sound1: {fileID: 8300000, guid: cbf75dadf85fc414589ef3983dab152c, type: 3}
+  sound2: {fileID: 8300000, guid: 5ca8439334522724781875c71e95bd53, type: 3}
 --- !u!136 &1401897784522932907
 CapsuleCollider:
   m_ObjectHideFlags: 0

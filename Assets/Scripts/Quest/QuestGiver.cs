@@ -1,5 +1,6 @@
 using UnityEngine;
 using Mirror;
+using System.Collections.Generic;
 
 public class QuestGiver : NetworkBehaviour
 {
@@ -9,14 +10,16 @@ public class QuestGiver : NetworkBehaviour
     public GameObject npc; // Assign in the Inspector
     public QuestManager questManager; // Assign in the Inspector
     public BoxCollider boxCollider; // Assign in the Inspector
-    public GameObject weaponPrefab; // Assigner dans l'Inspecteur
+
+    [Header("Reward Settings")]
+    public List<RandomSpawningItems> rewardItemsList; // Liste de ScriptableObjects à assigner dans l'inspecteur
 
     private bool playerInRange = false;
 
     [SyncVar(hook = nameof(OnQuestAcceptedChanged))]
     private bool questAccepted = false;
 
-    public int questIndex; // L'index de la quête à accepter, assigné dans l'inspecteur
+    private int questIndex; // L'index de la quête sera maintenant sélectionné aléatoirement
 
     private void Update()
     {
@@ -99,11 +102,14 @@ public class QuestGiver : NetworkBehaviour
             return;
         }
 
-        if (questIndex < 0 || questIndex >= questManager.quests.Count)
+        if (questManager.quests.Count == 0)
         {
-            Debug.LogError("Invalid quest index! Quest index: " + questIndex);
+            Debug.LogError("No quests available in questManager!");
             return;
         }
+
+        // Sélectionner un questIndex aléatoire
+        questIndex = Random.Range(0, questManager.quests.Count);
 
         questAccepted = true;
         questManager.StartQuest(questIndex);
@@ -135,10 +141,24 @@ public class QuestGiver : NetworkBehaviour
     {
         Debug.Log("Reward claimed");
 
-        if (questManager.currentQuest != null && questManager.currentQuest.isComplete && weaponPrefab != null)
+        if (questManager.currentQuest != null && questManager.currentQuest.isComplete && rewardItemsList != null && rewardItemsList.Count > 0)
         {
-            GameObject weapon = Instantiate(weaponPrefab, transform.position + transform.forward * 2, Quaternion.identity);
-            NetworkServer.Spawn(weapon);
+            // Sélectionner un ScriptableObject aléatoire de la liste
+            int randomSOIndex = Random.Range(0, rewardItemsList.Count);
+            RandomSpawningItems selectedRewardItems = rewardItemsList[randomSOIndex];
+
+            if (selectedRewardItems.itemsToSpawn.Count > 0)
+            {
+                // Sélectionner un objet aléatoire dans le ScriptableObject sélectionné
+                int randomItemIndex = Random.Range(0, selectedRewardItems.itemsToSpawn.Count);
+                ItemSO randomItemSO = selectedRewardItems.itemsToSpawn[randomItemIndex];
+
+                if (randomItemSO.prefab != null)
+                {
+                    GameObject weapon = Instantiate(randomItemSO.prefab, transform.position + transform.forward * 2, Quaternion.identity);
+                    NetworkServer.Spawn(weapon);
+                }
+            }
         }
 
         RpcHideQuestUI();

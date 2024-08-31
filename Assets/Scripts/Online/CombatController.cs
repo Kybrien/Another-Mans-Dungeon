@@ -82,7 +82,7 @@ public class CombatController : NetworkBehaviour
             enemy.GetComponent<MonsterController>().TakeDamage(damage);
         } else if (enemy.tag == "Player")
         {
-            enemy.GetComponent<PlayerMovementController>().TakeDamage(damage);
+            enemy.GetComponent<PlayerMovementController>().TakeDamage(enemy, damage);
         }
     }
 
@@ -189,7 +189,7 @@ public class CombatController : NetworkBehaviour
             if (isRange)
             {
                 RaycastHit result = SendRaycast();
-                if (result.transform != null)
+                if (result.transform != null && (result.transform.tag == "Enemy" || result.transform.tag == "Player"))
                 {
                     CmdDealMonsterDamage(result.transform.gameObject);
                 };

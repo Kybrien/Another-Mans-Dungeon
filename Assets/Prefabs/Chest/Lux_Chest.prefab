@@ -228,10 +228,10 @@ MonoBehaviour:
   syncInterval: 0
   name: Lux Chest
   size: 1
-  items: []
   itemsToSpawn: {fileID: 11400000, guid: f9b9f8024d9b59d44a7831d8c9f91b97, type: 2}
   spawnItems: 1
   upperChest: {fileID: 843161099818703747}
+  openChestSound: {fileID: 8300000, guid: c5dcc139f53efa24fa689d99375e92f4, type: 3}
   proximityPrompt: {fileID: 3560998511257027047}
   promptDistance: 3
 --- !u!82 &8175153886382088399
@@ -244,11 +244,11 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: c5dcc139f53efa24fa689d99375e92f4, type: 3}
-  m_PlayOnAwake: 0
-  m_Volume: 1
+  m_audioClip: {fileID: 8300000, guid: 2e20553691897e4429daefa572123fbb, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 0.5
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -290,7 +290,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0

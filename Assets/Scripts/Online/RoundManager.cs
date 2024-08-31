@@ -67,11 +67,6 @@ public class RoundManager : NetworkBehaviour
 
     void Start()
     {
-
-    }
-
-    public override void OnStartServer()
-    {
         StartCoroutine(HandleRounds());
     }
 
@@ -248,11 +243,9 @@ public class RoundManager : NetworkBehaviour
 
                         yield return new WaitForSeconds(1);
 
-                        CreateNewGraph(NewMap, mapFolder);
-
-                        Debug.Log("map scannée");
-
+                        astarPath.gameObject.GetComponent<MapAstarManager>().CreateGraph(chosenMap.name, mapFolder.transform.position, true);
                         //RpcScanGraph(NewMap);
+                        Debug.Log("map scannée");
 
                         PlayerMovementController plrData = player.GetComponent<PlayerMovementController>();
                         plrData.SetHealth(plrData.GetMaxHealth());
@@ -273,6 +266,12 @@ public class RoundManager : NetworkBehaviour
         currentRound = -2;
         RpcUpdateStatus();
 
+        yield return new WaitForSeconds(5);
+
+        RpcStartLoadingScreen(true, "");
+
+        yield return new WaitForSeconds(1);
+
         EndGameAndReturnToLobby();
     }
 
@@ -292,6 +291,8 @@ public class RoundManager : NetworkBehaviour
         newGraph.collision.heightMask = graphReference.collision.heightMask;
         newGraph.collision.fromHeight = graphReference.collision.fromHeight;
         newGraph.SetDimensions(graphReference.width, graphReference.depth, graphReference.nodeSize);
+
+        NewMap.transform.Find("Astar").gameObject.SetActive(false);
 
         Debug.Log("reference pos: " + graphReference.center.ToString() + "; newmap pos: " + NewMap.transform.position.ToString() + "; mapFolder pos: " + mapFolder.position.ToString());
 
@@ -330,11 +331,11 @@ public class RoundManager : NetworkBehaviour
     [Command(requiresAuthority = false)]
     public void CmdInvadeWorld(GameObject portal, GameObject player)
     {
-        Debug.Log("received portal request on server");
+        //Debug.Log("received portal request on server");
         playerThroughPortal += 1;
 
-        Debug.Log(playerThroughPortal);
-        Debug.Log(NetworkManager.singleton.numPlayers);
+        //Debug.Log(playerThroughPortal);
+        //Debug.Log(NetworkManager.singleton.numPlayers);
 
         if (playerThroughPortal == NetworkManager.singleton.numPlayers)
         {
@@ -386,8 +387,6 @@ public class RoundManager : NetworkBehaviour
     [ClientRpc]
     public void RpcSwitchMap(GameObject map, Transform parent)
     {
-        AstarPath astarPath = map.transform.Find("Astar").GetComponent<AstarPath>();
-        Pathfinding.GridGraph graph = astarPath.data.gridGraph;
         Vector3 offset = new Vector3(0, 0, parent.transform.position.z);
 
         map.transform.parent = parent;
@@ -395,19 +394,18 @@ public class RoundManager : NetworkBehaviour
         {
             map.transform.position += offset;
         }
-
-        graph.center += offset;
     }
 
     [ClientRpc]
     public void RpcScanGraph(GameObject map)
     {
+        Debug.Log(map.transform.Find("Astar").gameObject);
+        map.transform.Find("Astar").gameObject.SetActive(false);
+
         if (isServer && isClient)
         {
             CreateNewGraph(map, map.transform.parent);
         };
-
-        map.transform.Find("Astar").gameObject.SetActive(false);
 
 /*        AstarPath astarPath = map.transform.Find("Astar").GetComponent<AstarPath>();
         GridGraph graph = astarPath.data.gridGraph;

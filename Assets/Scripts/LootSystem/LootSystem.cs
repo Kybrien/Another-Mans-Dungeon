@@ -1,3 +1,4 @@
+using Mirror;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -47,6 +48,8 @@ public class LootSystem : MonoBehaviour
                     }
                     rb.isKinematic = false;
                     rb.detectCollisions = true;
+
+                    NetworkServer.Spawn(loot);
                 }
             }
         }

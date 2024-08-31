@@ -22,6 +22,9 @@ public class PlayerMovementController : NetworkBehaviour
     [SerializeField] private TextMeshProUGUI roundText;
     [SerializeField] private TextMeshProUGUI timerText;
 
+    [SerializeField] private Image bloodVignette;
+    private Coroutine bloodVignetteCoroutine;
+
     [SerializeField] private Animator _animator;
 
     [Tooltip("Player Values")]
@@ -72,7 +75,6 @@ public class PlayerMovementController : NetworkBehaviour
         }
 
     }
-
     private void Update()
     {
         if (SceneManager.GetActiveScene().name == "OnlineGame")
@@ -160,9 +162,11 @@ public class PlayerMovementController : NetworkBehaviour
         }
     }
 
-    public void TakeDamage(float value)
+    public void TakeDamage(GameObject enemy, float value)
     {
         health = Mathf.Max(health - value, 0);
+
+        RpcTakeDamage(enemy.GetComponent<NetworkIdentity>().connectionToClient);
     }
 
     void UpdateHealthBar(float oldValue, float newValue)
@@ -184,7 +188,21 @@ public class PlayerMovementController : NetworkBehaviour
         int seconds = Mathf.FloorToInt(timer % 60);
 
         timerText.text = "Time Left - " + string.Format("{0:00}:{1:00}", minutes, seconds);
-        roundText.text = (round == 0 ? "Intermission" : "Round " + round.ToString());
+
+        string indicator = "Round";
+
+        if (round == 0)
+        {
+            indicator = "Intermission";
+        } else if (round == -2)
+        {
+            indicator = "GAME ENDED !";
+        } else
+        {
+            indicator = "Round " + round.ToString();
+        }
+
+        roundText.text = indicator;
     }
 
     [Server]
@@ -307,5 +325,29 @@ public class PlayerMovementController : NetworkBehaviour
                 currentFootstepDistance = 0f;
             }
         }
+    }
+
+    [TargetRpc]
+    void RpcTakeDamage(NetworkConnectionToClient conn)
+    {
+        if (bloodVignetteCoroutine != null)
+        {
+            StopCoroutine(bloodVignetteCoroutine);
+        }
+
+        bloodVignetteCoroutine = StartCoroutine(PlayVignetteAnimation());
+    }
+
+    IEnumerator PlayVignetteAnimation()
+    {
+        bloodVignette.color = new Color(255, 255, 255, 0.5f);
+
+        for (float i = 0.5f; i > 0; i -= 0.02f)
+        {
+            bloodVignette.color = new Color(255, 255, 255, Mathf.Max(i, 0));
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        yield return null;
     }
 }

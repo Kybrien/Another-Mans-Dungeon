@@ -178,10 +178,10 @@ public class InventoryManager : NetworkBehaviour, IPointerDownHandler, IPointerU
                 else if (inventorySlot != null && !inventorySlot.IsEmpty())
                 {
                     lastItemSlot.GetComponent<InventorySlot>().SetHeldItem(inventorySlot.HeldItem);
-                    inventorySlot.HeldItem.transform.SetParent(inventorySlot.transform);
+                    inventorySlot.HeldItem.transform.SetParent(lastItemSlot.transform);
 
                     inventorySlot.SetHeldItem(draggedObject);
-                    draggedObject.transform.SetParent(lastItemSlot.transform);
+                    draggedObject.transform.SetParent(inventorySlot.transform);
                 }
                 // Si on relâche l'item sur un slot de crafting qui contient déjà un item
                 else if (craftingSlot != null && !craftingSlot.IsEmpty())

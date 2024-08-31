@@ -20,6 +20,8 @@ public class Storage : NetworkBehaviour
 
     [SerializeField] private GameObject upperChest;
 
+    [SerializeField] AudioClip openChestSound;
+
     [SerializeField] private GameObject proximityPrompt;
     [SerializeField] private float promptDistance = 3f;
 
@@ -105,7 +107,9 @@ public class Storage : NetworkBehaviour
     {
         proximityPrompt.SetActive(false);
 
-        GetComponent<AudioSource>().Play();
+        GetComponent<AudioSource>().Stop();
+
+        GetComponent<AudioSource>().PlayOneShot(openChestSound);
 
         if (upperChest != null)
         {

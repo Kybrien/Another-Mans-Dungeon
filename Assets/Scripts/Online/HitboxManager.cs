@@ -9,16 +9,11 @@ public class HitboxManager : NetworkBehaviour
     private SyncList<GameObject> debounce = new SyncList<GameObject>();
 
     [SerializeField] private AudioClip hitSound;
-    private AudioSource audioSource;
 
     // Start is called before the first frame update
     void Start()
     {
-        audioSource = GetComponent<AudioSource>();
-        if (audioSource == null)
-        {
-            audioSource = gameObject.AddComponent<AudioSource>();
-        }
+
     }
 
     // Update is called once per frame
@@ -44,14 +39,14 @@ public class HitboxManager : NetworkBehaviour
                 MonsterController monsterHealth = other.GetComponent<MonsterController>();
                 monsterHealth.TakeDamage(10);
 
-                PlayHitSound();
+                PlayHitSound(other.gameObject);
             }
             else if (other.tag == "Player")
             {
                 PlayerMovementController playerHealth = other.GetComponent<PlayerMovementController>();
-                playerHealth.TakeDamage(10);
+                playerHealth.TakeDamage(other.gameObject, 10);
 
-                PlayHitSound();
+                PlayHitSound(other.gameObject);
             }
 
             //monsterHealth.LocalUpdateHealthBar();
@@ -65,10 +60,13 @@ public class HitboxManager : NetworkBehaviour
         debounce.Add(target);
     }
 
-    private void PlayHitSound()
+    private void PlayHitSound(GameObject enemy)
     {
+        AudioSource audioSource = enemy.GetComponent<AudioSource>();
+
         if (audioSource != null && hitSound != null)
         {
+            audioSource.pitch = Random.Range(0.9f, 1.1f);
             audioSource.PlayOneShot(hitSound);
         }
     }

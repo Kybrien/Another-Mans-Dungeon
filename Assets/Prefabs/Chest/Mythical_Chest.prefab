@@ -396,10 +396,10 @@ MonoBehaviour:
   syncInterval: 0
   name: Mythical Chest
   size: 1
-  items: []
   itemsToSpawn: {fileID: 11400000, guid: 46f6cadf638989b4699843e72b926a2a, type: 2}
   spawnItems: 1
   upperChest: {fileID: 557069593914762575}
+  openChestSound: {fileID: 8300000, guid: c5dcc139f53efa24fa689d99375e92f4, type: 3}
   proximityPrompt: {fileID: 3576017547219848820}
   promptDistance: 3
 --- !u!82 &-2096106294697641763
@@ -414,7 +414,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: c5dcc139f53efa24fa689d99375e92f4, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -458,7 +458,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0

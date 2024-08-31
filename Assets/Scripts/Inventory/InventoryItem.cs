@@ -29,6 +29,9 @@ public class InventoryItem : MonoBehaviour
         if (stackMax > 1)
         {
             stackText.text = stackCurrent.ToString();
+        } else
+        {
+            stackText.text = "";
         }
     }
 }

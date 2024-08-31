@@ -130,6 +130,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1311057820655099053, guid: 4ba038c0a666dc948854cc152fb51236, type: 3}
+      propertyPath: sceneId
+      value: 551828252
+      objectReference: {fileID: 0}
     - target: {fileID: 5361448047971008462, guid: 4ba038c0a666dc948854cc152fb51236, type: 3}
       propertyPath: m_Name
       value: MapDesertThermal
@@ -175,7 +179,8 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 3504973164330563256, guid: 4ba038c0a666dc948854cc152fb51236, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4ba038c0a666dc948854cc152fb51236, type: 3}

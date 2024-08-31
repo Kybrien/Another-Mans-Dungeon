@@ -54,7 +54,7 @@ public class AttackState : StateCaC
 
             //Debug.Log("Performing attack: " + random);
 
-            Player.GetComponent<PlayerMovementController>().TakeDamage(5);
+            Player.GetComponent<PlayerMovementController>().TakeDamage(Player, 5);
 
             // Attendre l'intervalle avant de permettre une nouvelle attaque
             yield return new WaitForSeconds(attackInterval);

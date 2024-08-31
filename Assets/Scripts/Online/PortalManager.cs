@@ -11,14 +11,10 @@ public class PortalManager : NetworkBehaviour
     [SyncVar]
     private bool canEnter = true;
 
-    private AudioSource audioSource;
-    private bool hasPlayed = false;
-
     // Start is called before the first frame update
     public override void OnStartClient()
     {
         roundManager = GameObject.Find("RoundManager").GetComponent<RoundManager>();
-        audioSource = GetComponent<AudioSource>(); 
     }
 
     // Update is called once per frame
@@ -37,12 +33,7 @@ public class PortalManager : NetworkBehaviour
 
             if (plrIdentity)
             {
-                if (!hasPlayed && audioSource != null)
-                {
-                    audioSource.Play();
-                    hasPlayed = true; 
-                }
-
+                other.GetComponent<PlayerLoadingScreen>().PlayPortalSound();
                 CmdDisablePortal();
                 roundManager.CmdInvadeWorld(gameObject, other.gameObject);
             }

@@ -5,6 +5,7 @@ using Mirror;
 using UnityEngine.UI;
 using System;
 using TMPro;
+using Steamworks;
 
 [Serializable]
 public struct MapImage
@@ -19,6 +20,7 @@ public class PlayerLoadingScreen : NetworkBehaviour
     [SerializeField] private RawImage loadingImage;
     [SerializeField] private List<MapImage> mapImages = new List<MapImage>();
     [SerializeField] private TextMeshProUGUI mapText;
+    [SerializeField] private AudioClip portalSound;
 
     // Start is called before the first frame update
     void Start()
@@ -56,5 +58,13 @@ public class PlayerLoadingScreen : NetworkBehaviour
     public void Complete()
     {
         loadingScreen.SetActive(false);
+    }
+
+    public void PlayPortalSound()
+    {
+        if (portalSound != null)
+        {
+            GetComponent<AudioSource>().PlayOneShot(portalSound);
+        }
     }
 }

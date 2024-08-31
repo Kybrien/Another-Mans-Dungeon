@@ -168,7 +168,7 @@ public class RoundManager : NetworkBehaviour
                     yield return new WaitForSeconds(0.1f);
 
                     GameObject NewMap = Instantiate(chosenMap.gameObject);
-                    NewMap.isStatic = true;
+                    //NewMap.isStatic = true;
                     NetworkServer.Spawn(NewMap);
 
                     current1v1map = NewMap;
@@ -233,7 +233,7 @@ public class RoundManager : NetworkBehaviour
                         //Transform mapFolder = GameObject.Find("Map" + entry.Key.ToString()).transform;
                         Transform mapFolder = playerMapFolders[(int)conn.identity.netId].transform;
                         GameObject NewMap = Instantiate(chosenMap.gameObject, mapFolder);
-                        NewMap.isStatic = true;
+                        //NewMap.isStatic = true;
 
                         //NewMap.transform.SetParent(mapFolder);
                         //NewMap.transform.position = mapFolder.transform.position;

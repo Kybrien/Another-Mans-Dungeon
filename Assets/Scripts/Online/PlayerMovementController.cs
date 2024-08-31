@@ -166,6 +166,8 @@ public class PlayerMovementController : NetworkBehaviour
     {
         health = Mathf.Max(health - value, 0);
 
+        PlayDamageSound();
+
         RpcTakeDamage(enemy.GetComponent<NetworkIdentity>().connectionToClient);
     }
 

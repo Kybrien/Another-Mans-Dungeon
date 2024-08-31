@@ -28,7 +28,9 @@ public class CombatController : NetworkBehaviour
 
     [SerializeField] private AudioClip swordSound1;
     [SerializeField] private AudioClip swordSound2;
+    [SerializeField] private AudioClip gunSound;
     private AudioSource audioSource;
+
 
     // Start is called before the first frame update
     void Start()
@@ -49,6 +51,8 @@ public class CombatController : NetworkBehaviour
         {
             currCooldown = Math.Max(0, currCooldown - Time.deltaTime);
         }
+
+        SendDebugRaycast();
     }
     private void FixedUpdate()
     {
@@ -89,14 +93,14 @@ public class CombatController : NetworkBehaviour
     private void SendDebugRaycast()
     {
         RaycastHit hit;
-        if (Physics.Raycast(ModelRoot.transform.position, CameraRoot.transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity))
+        if (Physics.Raycast(CameraRoot.transform.position, CameraRoot.transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity))
         {
-            Debug.DrawRay(ModelRoot.transform.position, CameraRoot.transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
+            Debug.DrawRay(CameraRoot.transform.position, CameraRoot.transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
             //Debug.Log("Did Hit");
         }
         else
         {
-            Debug.DrawRay(ModelRoot.transform.position, CameraRoot.transform.TransformDirection(Vector3.forward) * 1000, Color.white);
+            Debug.DrawRay(CameraRoot.transform.position, CameraRoot.transform.TransformDirection(Vector3.forward) * 1000, Color.white);
             //Debug.Log("Did not Hit");
         }
     }
@@ -105,7 +109,7 @@ public class CombatController : NetworkBehaviour
     {
 
         RaycastHit hit;
-        Physics.Raycast(ModelRoot.transform.position, CameraRoot.transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity);
+        Physics.Raycast(CameraRoot.transform.position, CameraRoot.transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity);
 
         return hit;
     }
@@ -193,6 +197,8 @@ public class CombatController : NetworkBehaviour
                 {
                     CmdDealMonsterDamage(result.transform.gameObject);
                 };
+
+                audioSource.PlayOneShot(gunSound);
             }
             else
             {

@@ -819,6 +819,7 @@ MonoBehaviour:
   damage: 10
   swordSound1: {fileID: 8300000, guid: fe0b1f9aeb45b41b089175aeeabd5d95, type: 3}
   swordSound2: {fileID: 8300000, guid: d46323e22e74e46baa241cbf48c85671, type: 3}
+  gunSound: {fileID: 8300000, guid: 0dbe91efb8ee94e6695ef0f552d202ce, type: 3}
 --- !u!114 &4090609396020732146
 MonoBehaviour:
   m_ObjectHideFlags: 0
